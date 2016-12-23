@@ -1,4 +1,4 @@
-package org.sysmob.biblivirti.activities.utils;
+package org.sysmob.biblivirti.utils;
 
 /**
  * @author djalmocruzjr
@@ -11,8 +11,9 @@ package org.sysmob.biblivirti.activities.utils;
 public abstract class BiblivirtiConstants {
 
     /**
-     * Constantes que definem ...
+     * Constantes relacionadas a tela SplachActivity
      */
+    public static final int ACTIVITY_SPLASH_TIME_OUT = 3000;
 
     /**
      * Constantes que definem a localizacao da API de servicos
