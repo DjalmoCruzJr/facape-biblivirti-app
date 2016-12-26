@@ -1,13 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context="org.sysmob.biblivirti.activities.LoginActivity">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
         android:id="@+id/formLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -59,6 +63,7 @@
             android:background="@color/colorWhite"
             android:text="@string/activity_login_button_entrar"
             android:textAllCaps="false"
+            android:onClick="clickLogin"
             android:textColor="@color/colorPrimary" />
 
         <Button
@@ -67,6 +72,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/activity_login_button_recuperar_senha"
+            android:onClick="clickRecuperarSenha"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
 
@@ -75,6 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
+            android:onClick="clickNovaConta"
             android:text="@string/activity_login_button_nova_conta"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
@@ -85,6 +92,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_rounded"
             android:text="@string/activity_login_button_facebook"
+            android:onClick="clickFacebookLogin"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
 
@@ -97,4 +105,5 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -2,7 +2,7 @@
     <string name="application_name">Biblivirti</string>
     <string name="activity_splash_footer_text">© 2016 Sysmob - Todos os direitos reservados.</string>
     <string name="activity_splsh_logo_description">Biblivirti Logo</string>
-    <string name="title_activity_login">Login</string>
+    <string name="activity_login_label">Login</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -22,4 +22,22 @@
     <string name="activity_login_button_recuperar_senha">Esqueci minha senha!</string>
     <string name="activity_login_button_nova_conta">Ainda n\'ao membro? CADASTRE-SE AGORA!</string>
     <string name="activity_login_button_facebook">Entrar com Facebook</string>
+    <string name="activity_splash_label">Splash</string>
+    <string name="activity_nova_conta_label">Nova Conta</string>
+    <string name="activity_nova_conta_email_hint">E-mail (Ex: pedro@gmail.com)</string>
+    <string name="activity_nova_conta_senha_hint">Senha</string>
+    <string name="activity_nova_conta_confirmar_senha_hint">Confirmar Senha</string>
+    <string name="activity_nova_conta_login_hint">Login (Ex: pedrosilva)</string>
+    <string name="activity_nova_conta_button_criar_conta">Criar Conta</string>
+    <string name="activity_recuperar_senha_label">Recuperar Senha</string>
+    <string name="activity_novo_grupo_label">Novo Grupo</string>
+    <string name="activity_novo_material_label">Novo Matetial</string>
+    <string name="activity_recuperar_senha_button_recuperar_senha">Confirmar E-mail</string>
+    <string name="activity_recuperar_senha_text">Confirme seu e-mail para recupear sua senha de acesso.</string>
+    <string name="activity_novo_grupo_text">Toque na imagem para selecionar uma foto.</string>
+    <string name="activity_novo_grupo_nome_grupo_hint">Nome do Grupo (Ex: Sysmob)</string>
+    <string name="activity_novo_grupo_area_interesse_hint">Área de Interesse (Ex: Física)</string>
+    <string name="activity_novo_material_conteudos_relacionados_text">Conteúdos Relacionados</string>
+    <string name="activity_novo_material_descricao_hint">Descrição (Ex: Exercício 01)</string>
+    <string name="activity_novo_material_mensagem_text">Material Carergado com sucesso!</string>
 </resources>

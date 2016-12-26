@@ -12,7 +12,7 @@
         android:icon="@mipmap/ic_launcher_blue"
         android:label="@string/application_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/BiblivirtiTheme">
 
         <!-- Splash Activity -->
         <activity
@@ -29,8 +29,34 @@
         <!-- Login Activity -->
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
+            android:label="@string/activity_login_label"
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.NoActionBar" />
+
+        <!-- Nova Conta Activity -->
+        <activity
+            android:name=".activities.NovaContaActivity"
+            android:label="@string/activity_nova_conta_label"
+            android:screenOrientation="portrait" />
+
+        <!-- Recupear Senha Activity -->
+        <activity
+            android:name=".activities.RecuperarSenhaActivity"
+            android:label="@string/activity_recuperar_senha_label"
+            android:screenOrientation="portrait" />
+        />
+
+        <!-- Novo Grupo Activity -->
+        <activity
+            android:name=".activities.NovoGrupoActivity"
+            android:label="@string/activity_novo_grupo_label"
+            android:screenOrientation="portrait" />
+
+        <!-- Novo Matertial Activity -->
+        <activity
+            android:name=".activities.NovoMaterialActivity"
+            android:label="@string/activity_novo_material_label"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
