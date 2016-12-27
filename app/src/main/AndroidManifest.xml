@@ -57,6 +57,9 @@
             android:name=".activities.NovoMaterialActivity"
             android:label="@string/activity_novo_material_label"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.PerfilActivity" />
+        <activity android:name=".activities.EditarPerfilActivity" />
+        <activity android:name=".activities.InfoGrupoActivity"></activity>
     </application>
 
 </manifest>

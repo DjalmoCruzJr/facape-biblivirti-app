@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/imageGRCFOTO"
+            android:layout_width="62dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/ic_app_group_80px"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            tools:ignore="InefficientWeight,RtlHardcoded">
+
+            <TextView
+                android:id="@+id/editGRCNOME"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="@string/adapter_perfil_text_grcnome"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="NestedWeights" />
+
+            <TextView
+                android:id="@+id/editAICDESC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="@string/adapter_perfil_text_aicdesc"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <view
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/editUSCLOGN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="@string/adapter_perfil_text_usclogn"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageGrupoPrivado"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:paddingRight="5dp"
+                android:src="@mipmap/ic_lock_100px_blue"
+                tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/imageAdmin"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/ic_king_100px_gray"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonSairDoGrupo"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/colorRedDark"
+        android:text="Sair do Grupo"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

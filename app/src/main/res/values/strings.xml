@@ -40,4 +40,21 @@
     <string name="activity_novo_material_conteudos_relacionados_text">Conteúdos Relacionados</string>
     <string name="activity_novo_material_descricao_hint">Descrição (Ex: Exercício 01)</string>
     <string name="activity_novo_material_mensagem_text">Material Carergado com sucesso!</string>
+    <string name="informa_es_do_usu_rioactivity_perfil_text_informacoes_usuario">Informações do Usuário</string>
+    <string name="activity_perfil_text_cadastrado_em">Cadastrado em:</string>
+    <string name="activity_perfil_text_email">E-mail do Usuário</string>
+    <string name="activity_perfil_text_qtd_grupos">Grupos (xx inscrições)</string>
+    <string name="activity_perfil_text_login">Login do Usuário</string>
+    <string name="activity_perfil_text_nome">Nome do Usuário</string>
+    <string name="activity_perfil_text_data_cadastro">dd/mm/yyyy hh:mm</string>
+    <string name="adapter_perfil_text_grcnome">Nome do Grupo</string>
+    <string name="adapter_perfil_text_aicdesc">Área de Interesse</string>
+    <string name="adapter_perfil_text_usclogn">Login do Administrador</string>
+    <string name="activity_info_grupo_text_criado_em">Criado em:</string>
+    <string name="activity_info_grupo_text_info_grupo">Informações do Grupo</string>
+    <string name="activity_info_grupo_qtd_membros">Membros (xx inscritos)</string>
+    <string name="activity_info_grupo_text_grcnome">Nome do Grupo</string>
+    <string name="activity_info_grupo_button_participar">Participar do Grupo</string>
+    <string name="activity_info_grupo_text_grdcadt">dd/mm/yyyy hh:mm</string>
+    <string name="activity_info_grupo_text_aicdesc">Área de Interesse</string>
 </resources>
