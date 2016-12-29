@@ -9,4 +9,5 @@
     <color name="colorGrayDark">#666666</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorRedDark">#B71C1C</color>
+    <color name="colorBlackTransperent">#80000000</color>
 </resources>

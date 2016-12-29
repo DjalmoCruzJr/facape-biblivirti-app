@@ -59,7 +59,9 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activities.PerfilActivity" />
         <activity android:name=".activities.EditarPerfilActivity" />
-        <activity android:name=".activities.InfoGrupoActivity"></activity>
+        <activity android:name=".activities.InfoGrupoActivity" />
+        <activity android:name=".activities.NotificacaoActivity" />
+        <activity android:name=".activities.ConfirmarEmailActivity"></activity>
     </application>
 
 </manifest>

@@ -57,4 +57,9 @@
     <string name="activity_info_grupo_button_participar">Participar do Grupo</string>
     <string name="activity_info_grupo_text_grdcadt">dd/mm/yyyy hh:mm</string>
     <string name="activity_info_grupo_text_aicdesc">Área de Interesse</string>
+    <string name="activity_confirmar_email_text_informativo">Informe o token de confirmação para ativar sua conta no Biblivirti.</string>
+    <string name="acitivity_confirmar_email_text_informativo2">Pressione o botão abaixo para reenviar o token de confirmação para seu e-mail.</string>
+    <string name="activity_confirmar_email_button_reenviar_token">Reenviar Token</string>
+    <string name="activity_confirmar_email_edit_cactokn_hint">Token de Confirmação</string>
+    <string name="activity_confirmar_email_button_validar">Validar</string>
 </resources>
