@@ -32,8 +32,20 @@
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_nova_conta_email_hint"
+                android:hint="@string/activity_nova_conta_hint_email"
                 android:inputType="textEmailAddress" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/activity_nova_conta_hint_login"
+                android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -44,7 +56,7 @@
                 android:id="@+id/editSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_nova_conta_senha_hint"
+                android:hint="@string/activity_nova_conta_hint_senha"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
@@ -56,28 +68,17 @@
                 android:id="@+id/editConfirmarSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_nova_conta_confirmar_senha_hint"
+                android:hint="@string/activity_nova_conta_hint_confirmar_senha"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/editLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/activity_nova_conta_login_hint"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
         <Button
+            android:id="@+id/buttonCriarConta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:onClick="clickCriarConta"
+            android:onClick="actionCriarConta"
             android:text="@string/activity_nova_conta_button_criar_conta"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />

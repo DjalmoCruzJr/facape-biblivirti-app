@@ -1,19 +1,23 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- App base theme -->
     <style name="BiblivirtiTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
-    <style name="BiblivirtiTheme.NoActionBar" parent="BiblivirtiTheme">
+    <!-- Splash Activity Theme  -->
+    <style name="BiblivirtiTheme.SplashActivity" parent="BiblivirtiTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="BiblivirtiTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="BiblivirtiTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- Login Activity Theme  -->
+    <style name="BiblivirtiTheme.LoginActivity" parent="BiblivirtiTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
 
 </resources>

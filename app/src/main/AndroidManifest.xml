@@ -2,12 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sysmob.biblivirti">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".application.BiblivirtiApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_blue"
         android:label="@string/application_name"
@@ -18,7 +22,7 @@
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            android:theme="@style/BiblivirtiTheme.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +35,7 @@
             android:name=".activities.LoginActivity"
             android:label="@string/activity_login_label"
             android:screenOrientation="portrait"
-            android:theme="@style/BiblivirtiTheme.NoActionBar" />
+            android:theme="@style/BiblivirtiTheme.LoginActivity" />
 
         <!-- Nova Conta Activity -->
         <activity
@@ -57,11 +61,35 @@
             android:name=".activities.NovoMaterialActivity"
             android:label="@string/activity_novo_material_label"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.PerfilActivity" />
-        <activity android:name=".activities.EditarPerfilActivity" />
-        <activity android:name=".activities.InfoGrupoActivity" />
-        <activity android:name=".activities.NotificacaoActivity" />
-        <activity android:name=".activities.ConfirmarEmailActivity"></activity>
+
+        <!-- Perfil Activity -->
+        <activity
+            android:name=".activities.PerfilActivity"
+            android:label="Perfil"
+            android:screenOrientation="portrait" />
+
+        <!-- Editar Perfil Activity -->
+        <activity
+            android:name=".activities.EditarPerfilActivity"
+            android:label="Editar Perfil"
+            android:screenOrientation="portrait" />
+
+        <!-- Info Grupo Activity -->
+        <activity
+            android:name=".activities.InfoGrupoActivity"
+            android:label="Info" />
+
+        <!-- Notificacao Activity -->
+        <activity
+            android:name=".activities.NotificacaoActivity"
+            android:label="NOtificações"
+            android:screenOrientation="portrait" />
+
+        <!-- Confirmar Email Activity -->
+        <activity
+            android:name=".activities.ConfirmarEmailActivity"
+            android:label="Confirmar E-mail"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -13,7 +13,8 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:ignore="ScrollViewSize">
 
         <ImageView
             android:layout_width="100dp"
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:onClick="clickConfirmarEmail"
+            android:onClick="actionConfirmarEmail"
             android:text="@string/activity_recuperar_senha_button_recuperar_senha"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />

@@ -18,7 +18,7 @@ public abstract class BiblivirtiConstants {
     /**
      * Constantes que definem a localizacao da API de servicos
      */
-    public static final String SERVER_HOST = "localhost";
+    public static final String SERVER_HOST = "192.168.0.5";
     public static final int SERVER_PORT = 80;
     public static final String SERVER_API = "http://" + SERVER_HOST + ":" + SERVER_PORT + "/API";
 
@@ -120,10 +120,11 @@ public abstract class BiblivirtiConstants {
     /**
      * Constantes que definem as URL's dos servicos de DOUBTANSWER da API
      */
-    public static final String API_DOUBTANSWER_LIST = SERVER_API + "/doubtanswer/list";
     public static final String API_DOUBTANSWER_ADD = SERVER_API + "/doubtanswer/add";
     public static final String API_DOUBTANSWER_EDIT = SERVER_API + "/doubtanswer/edit";
     public static final String API_DOUBTANSWER_DELETE = SERVER_API + "/doubtanswer/delete";
     public static final String API_DOUBTANSWER_EMAIL = SERVER_API + "/doubtanswer/email";
     public static final String API_DOUBTANSWER_DETAILS = SERVER_API + "/doubtanswer/details";
+    public static final String API_DOUBTANSWER_LIST = SERVER_API + "/doubtanswer/list";
+
 }

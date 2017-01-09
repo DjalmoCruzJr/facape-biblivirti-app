@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        android:text="@string/informa_es_do_usu_rioactivity_perfil_text_informacoes_usuario"
+        android:text="@string/activity_perfil_text_info_usuario"
         android:textColor="@color/colorGrayDark"
         android:textSize="16sp"
         android:textStyle="bold"

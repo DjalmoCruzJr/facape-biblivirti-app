@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -57,7 +57,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/texttUSCLOGN"
+                android:id="@+id/textUSCLOGN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -92,18 +92,6 @@
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/buttonSairDoGrupo"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@color/colorRedDark"
-        android:text="Sair do Grupo"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhite"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
-
 </LinearLayout>

@@ -44,7 +44,7 @@
                     android:id="@+id/editNome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/activity_novo_grupo_nome_grupo_hint"
+                    android:hint="@string/activity_novo_grupo_hint_nome_grupo"
                     android:inputType="text"
                     android:textColor="@color/colorBlack" />
             </android.support.design.widget.TextInputLayout>
@@ -57,7 +57,7 @@
                     android:id="@+id/editAreaInteresse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/activity_novo_grupo_area_interesse_hint"
+                    android:hint="@string/activity_novo_grupo_hint_area_interesse"
                     android:inputType="textAutoComplete"
                     android:textColor="@color/colorBlack" />
             </android.support.design.widget.TextInputLayout>

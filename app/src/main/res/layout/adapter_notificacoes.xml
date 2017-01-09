@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/adapterItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,13 +13,15 @@
         android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@mipmap/ic_app_user_65px" />
+        android:src="@mipmap/ic_app_user_65px"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +39,8 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,NestedWeights" />
 
             <TextView
                 android:id="@+id/textNODCADT"
@@ -48,7 +52,8 @@
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                tools:ignore="HardcodedText" />
 
 
         </LinearLayout>
@@ -63,7 +68,8 @@
             android:text="Lorem ipsum dolor sit amet, consectetur ..."
             android:textColor="@color/colorBlack"
             android:textSize="12sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

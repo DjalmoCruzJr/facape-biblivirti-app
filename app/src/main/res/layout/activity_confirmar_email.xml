@@ -42,7 +42,7 @@
                 android:id="@+id/editCACTOKN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_confirmar_email_edit_cactokn_hint"
+                android:hint="@string/activity_confirmar_email_hint_cactokn"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 

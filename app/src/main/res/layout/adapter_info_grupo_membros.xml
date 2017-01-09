@@ -38,7 +38,7 @@
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                tools:ignore="NestedWeights" />
+                tools:ignore="HardcodedText,NestedWeights" />
 
             <TextView
                 android:id="@+id/editUSCMAIL"
@@ -49,7 +49,8 @@
                 android:text="E-mail do Usuário"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                tools:ignore="HardcodedText" />
 
             <view
                 android:layout_width="match_parent"
@@ -69,7 +70,8 @@
                     android:text="Membro desde: "
                     android:textColor="@color/colorBlack"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/editUSDCADT"
@@ -112,6 +114,7 @@
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>
