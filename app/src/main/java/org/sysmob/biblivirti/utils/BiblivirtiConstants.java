@@ -127,4 +127,12 @@ public abstract class BiblivirtiConstants {
     public static final String API_DOUBTANSWER_DETAILS = SERVER_API + "/doubtanswer/details";
     public static final String API_DOUBTANSWER_LIST = SERVER_API + "/doubtanswer/list";
 
+    /**
+     * Constantes relacionadas com os campos da respostas das requisicoes
+     */
+    public static final String RESPONSE_CODE = "response_code";
+    public static final String RESPONSE_MESSAGE = "response_message";
+    public static final String RESPONSE_DATA = "response_data";
+
+
 }

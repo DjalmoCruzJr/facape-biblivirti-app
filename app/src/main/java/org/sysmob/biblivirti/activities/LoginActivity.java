@@ -15,10 +15,14 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.business.AccountBO;
+import org.sysmob.biblivirti.exceptions.ValidationException;
+import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
 
 public class LoginActivity extends AppCompatActivity {
@@ -82,10 +86,16 @@ public class LoginActivity extends AppCompatActivity {
         this.buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle fields = new Bundle();
-                fields.putString("uscmail", editEmail.getText().toString().trim());
-                fields.putString("uscsenh", editSenha.getText().toString().trim());
-                actionLogin(fields);
+                try {
+                    if (new AccountBO(LoginActivity.this).validateLogin()) {
+                        Bundle fields = new Bundle();
+                        fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                        fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
+                        actionLogin(fields);
+                    }
+                } catch (ValidationException e) {
+                    e.printStackTrace();
+                }
             }
         });
         this.buttonNovaConta.setOnClickListener(new View.OnClickListener() {
@@ -183,8 +193,8 @@ public class LoginActivity extends AppCompatActivity {
     public void actionLogin(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
-            params.put("uscmail", fields.getString("uscmail"));
-            params.put("uscsenh", fields.getString("uscsenh"));
+            params.put(Usuario.FIELD_USCMAIL, fields.getString(Usuario.FIELD_USCMAIL));
+            params.put(Usuario.FIELD_USCSENH, fields.getString(Usuario.FIELD_USCSENH));
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
@@ -200,9 +210,27 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onAfterRequest(JSONObject response) {
+                    Log.i("Resposta", response != null ? response.toString() : "SEM RESPOSTA");
+                    if (response == null) {
+                        // Sem resposta de Servidor
+                    } else {
+                        try {
+                            Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                            BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
+                            BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
+                            /*Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);*/
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), String.format("Login efetuado com sucesso! (%s)", usuario.getUscmail()));
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                        }
+                    }
                     progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
-                    Log.i("Resposta", response != null ? response.toString() : "SEM RESPOSTA");
                 }
             });
         } catch (JSONException e) {
