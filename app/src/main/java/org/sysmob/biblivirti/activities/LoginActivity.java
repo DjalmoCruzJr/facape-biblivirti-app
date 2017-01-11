@@ -21,7 +21,7 @@ import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
 
-public class LoginActivity extends AppCompatActivity implements ITransaction {
+public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
@@ -43,15 +43,10 @@ public class LoginActivity extends AppCompatActivity implements ITransaction {
 
         // Verifica se o email e a senha ja estao salvos nas preferencias do app
         if ((email != null && !email.isEmpty()) && (senha != null && !senha.isEmpty())) {
-            try {
-                JSONObject params = new JSONObject();
-                params.put("uscmail", email);
-                params.put("uscsenh", senha);
-                RequestData requestData = new RequestData(Request.Method.POST, BiblivirtiConstants.API_ACCOUNT_LOGIN, params);
-                new NetworkConnection(this, this).execute(requestData);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Bundle fields = new Bundle();
+            fields.putString("uscmail", email);
+            fields.putString("uscsenh", senha);
+            actionLogin(fields);
         }
 
         // Carrega os widgets da tela
@@ -87,7 +82,10 @@ public class LoginActivity extends AppCompatActivity implements ITransaction {
         this.buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionLogin();
+                Bundle fields = new Bundle();
+                fields.putString("uscmail", editEmail.getText().toString().trim());
+                fields.putString("uscsenh", editSenha.getText().toString().trim());
+                actionLogin(fields);
             }
         });
         this.buttonNovaConta.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +107,58 @@ public class LoginActivity extends AppCompatActivity implements ITransaction {
             }
         });
     }
+
+    /********************************************************
+     * PUBLIC METHODS
+     *******************************************************/
+    public EditText getEditEmail() {
+        return editEmail;
+    }
+
+    public void setEditEmail(EditText editEmail) {
+        this.editEmail = editEmail;
+    }
+
+    public EditText getEditSenha() {
+        return editSenha;
+    }
+
+    public void setEditSenha(EditText editSenha) {
+        this.editSenha = editSenha;
+    }
+
+    public Button getButtonEntrar() {
+        return buttonEntrar;
+    }
+
+    public void setButtonEntrar(Button buttonEntrar) {
+        this.buttonEntrar = buttonEntrar;
+    }
+
+    public Button getButtonRecuperarSenha() {
+        return buttonRecuperarSenha;
+    }
+
+    public void setButtonRecuperarSenha(Button buttonRecuperarSenha) {
+        this.buttonRecuperarSenha = buttonRecuperarSenha;
+    }
+
+    public Button getButtonNovaConta() {
+        return buttonNovaConta;
+    }
+
+    public void setButtonNovaConta(Button buttonNovaConta) {
+        this.buttonNovaConta = buttonNovaConta;
+    }
+
+    public Button getButtonFacebookLogin() {
+        return buttonFacebookLogin;
+    }
+
+    public void setButtonFacebookLogin(Button buttonFacebookLogin) {
+        this.buttonFacebookLogin = buttonFacebookLogin;
+    }
+
     /********************************************************
      * ACTION METHODS
      *******************************************************/
@@ -130,29 +180,35 @@ public class LoginActivity extends AppCompatActivity implements ITransaction {
         this.progressBar.setVisibility(View.GONE);
     }
 
-    public void actionLogin() {
+    public void actionLogin(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
-            params.put("uscmail", this.editEmail.getText().toString());
-            params.put("uscsenh", this.editSenha.getText().toString());
-            RequestData requestData = new RequestData(Request.Method.POST, BiblivirtiConstants.API_ACCOUNT_LOGIN, params);
-            new NetworkConnection(this, this).execute(requestData);
+            params.put("uscmail", fields.getString("uscmail"));
+            params.put("uscsenh", fields.getString("uscsenh"));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_ACCOUNT_LOGIN,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
+                    enableWidgets(true);
+                    Log.i("Resposta", response != null ? response.toString() : "SEM RESPOSTA");
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onBeforeRequest() {
-        this.progressBar.setVisibility(View.VISIBLE);
-        this.enableWidgets(false);
-    }
-
-    @Override
-    public void onAfterRequest(JSONObject response) {
-        this.progressBar.setVisibility(View.GONE);
-        this.enableWidgets(true);
-        Log.i("Resposta", response != null ?  response.toString() : "SEM RESPOSTA");
-    }
 }
 

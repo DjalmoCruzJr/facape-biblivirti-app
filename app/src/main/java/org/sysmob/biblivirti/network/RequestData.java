@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class RequestData implements Serializable {
 
+    private String tag;
     private int method;
     private String url;
     private JSONObject params;
@@ -13,10 +14,19 @@ public class RequestData implements Serializable {
     public RequestData() {
     }
 
-    public RequestData(int method, String url, JSONObject params) {
+    public RequestData(String tag, int method, String url, JSONObject params) {
+        this.tag = tag;
         this.method = method;
         this.url = url;
         this.params = params;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public int getMethod() {

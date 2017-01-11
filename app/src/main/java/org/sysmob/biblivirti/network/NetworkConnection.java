@@ -17,37 +17,27 @@ import org.sysmob.biblivirti.application.BiblivirtiApplication;
 
 public class NetworkConnection {
 
-    private ITransaction transaction;
     private RequestQueue requestQueue;
 
     public NetworkConnection() {
     }
 
-    public NetworkConnection(Context context, ITransaction transaction) {
-        this.transaction = transaction;
+    public NetworkConnection(Context context) {
         this.requestQueue = ((BiblivirtiApplication) ((Activity) context).getApplication()).getRequestQueue();
-    }
-
-    public ITransaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(ITransaction transaction) {
-        this.transaction = transaction;
     }
 
     /******************************************
      * ACTION METHOD
      *****************************************/
-    public void execute(RequestData requestData) {
-        this.transaction.onBeforeRequest();
-        this.executeRequest(requestData);
+    public void execute(RequestData requestData, ITransaction transaction) {
+        transaction.onBeforeRequest();
+        this.executeRequest(requestData, transaction);
     }
 
     /******************************************
      * PRIVATE METHODS
      *****************************************/
-    private void executeRequest(final RequestData requestData) {
+    private void executeRequest(final RequestData requestData, final ITransaction transaction) {
         JsonObjectRequest request = new JsonObjectRequest(
                 requestData.getMethod(),
                 requestData.getUrl(),

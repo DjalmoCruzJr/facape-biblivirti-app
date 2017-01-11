@@ -1,4 +1,4 @@
-package org.sysmob.biblivirti.models;
+package org.sysmob.biblivirti.model;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by djalmocruzjr on 08/01/2017.
  */
 
-public class Usuario implements Serializable{
+public class Usuario implements Serializable {
 
     private String usnid;
     private String uscnome;
