@@ -26,11 +26,13 @@ public class AccountBO implements IAccountBO {
             status = false;
             String ErrorMessage = "O E-MAIL é obrigatório!";
             ((LoginActivity) activity).getEditEmail().setError(ErrorMessage);
+            ((LoginActivity) activity).getEditEmail().requestFocus();
             throw new ValidationException(ErrorMessage);
-        } else if (Pattern.compile("^(.+)@(.+)$").matcher(((LoginActivity) activity).getEditEmail().getText().toString().trim()).matches()) {
+        } else if (!(Pattern.compile("^(.+)@(.+)$").matcher(((LoginActivity) activity).getEditEmail().getText().toString().trim()).matches())) {
             status = false;
             String ErrorMessage = "Informe um E-MAIL válido!";
             ((LoginActivity) activity).getEditEmail().setError(ErrorMessage);
+            ((LoginActivity) activity).getEditEmail().requestFocus();
             throw new ValidationException(ErrorMessage);
         }
 
@@ -40,11 +42,13 @@ public class AccountBO implements IAccountBO {
             status = false;
             String ErrorMessage = "A SENHA é obrigatória!";
             ((LoginActivity) activity).getEditSenha().setError(ErrorMessage);
+            ((LoginActivity) activity).getEditSenha().requestFocus();
             throw new ValidationException(ErrorMessage);
         } else if (((LoginActivity) activity).getEditSenha().getText().toString().trim().contains(" ")) {
             status = false;
             String ErrorMessage = "A SENHA não pode conter espaço(s) em branco(s)!";
             ((LoginActivity) activity).getEditSenha().setError(ErrorMessage);
+            ((LoginActivity) activity).getEditSenha().requestFocus();
             throw new ValidationException(ErrorMessage);
         }
 

@@ -20,7 +20,7 @@ public abstract class BiblivirtiConstants {
      */
     public static final String SERVER_HOST = "192.168.0.5";
     public static final int SERVER_PORT = 80;
-    public static final String SERVER_API = "http://" + SERVER_HOST + ":" + SERVER_PORT + "/API";
+    public static final String SERVER_API = "http://" + SERVER_HOST + ":" + SERVER_PORT + "/projetos/sysmob/biblivirti/API";
 
     /**
      * Constantes que definem as URL's dos servicos de ACCOUNT da API
@@ -133,6 +133,7 @@ public abstract class BiblivirtiConstants {
     public static final String RESPONSE_CODE = "response_code";
     public static final String RESPONSE_MESSAGE = "response_message";
     public static final String RESPONSE_DATA = "response_data";
+    public static final int RESPONSE_CODE_OK = 200;
 
 
 }

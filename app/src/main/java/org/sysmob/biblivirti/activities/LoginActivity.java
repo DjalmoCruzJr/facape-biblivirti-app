@@ -22,6 +22,7 @@ import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
 
@@ -213,20 +214,34 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("Resposta", response != null ? response.toString() : "SEM RESPOSTA");
                     if (response == null) {
                         // Sem resposta de Servidor
+                        Toast.makeText(LoginActivity.this, "SEM RESPOSTA!", Toast.LENGTH_SHORT).show();
                     } else {
                         try {
-                            Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
-                            BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
-                            BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
-                            /*Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);*/
-                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), String.format("Login efetuado com sucesso! (%s)", usuario.getUscmail()));
-                            finish();
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        LoginActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                                BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
+                                BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
+                                /*Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);*/
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("Login efetuado com sucesso! (%s)", usuario.getUscmail()));
+                                //finish();
+                            }
                         } catch (JSONException e) {
-                            e.printStackTrace();
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                     progressBar.setVisibility(View.GONE);
@@ -234,6 +249,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
             e.printStackTrace();
         }
     }
