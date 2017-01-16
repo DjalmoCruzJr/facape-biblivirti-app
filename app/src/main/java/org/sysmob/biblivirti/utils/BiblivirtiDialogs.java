@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
+import org.sysmob.biblivirti.R;
+
 /**
  * Created by djalmocruzjr on 11/01/2017.
  */
@@ -11,7 +13,8 @@ import android.support.v7.app.AlertDialog;
 public abstract class BiblivirtiDialogs {
 
     public static void showMessageDialog(Context context, String title, String message, String buttonTitle) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.BiblivirtiTheme_AlertDialog);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(buttonTitle, new DialogInterface.OnClickListener() {
@@ -20,6 +23,7 @@ public abstract class BiblivirtiDialogs {
                 dialog.dismiss();
             }
         });
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:onClick="clickValidarToken"
             android:text="@string/activity_confirmar_email_button_validar"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
@@ -72,7 +71,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:onClick="clickReenviarToken"
             android:text="@string/activity_confirmar_email_button_reenviar_token"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary" />

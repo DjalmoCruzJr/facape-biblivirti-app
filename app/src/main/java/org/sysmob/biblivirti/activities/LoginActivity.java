@@ -119,6 +119,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void loadErrors(JSONObject errors) {
+        try {
+            getEditEmail().setError(errors.opt(Usuario.FIELD_USCMAIL) != null ? errors.getString(Usuario.FIELD_USCMAIL) : null);
+            getEditSenha().setError(errors.opt(Usuario.FIELD_USCSENH) != null ? errors.getString(Usuario.FIELD_USCSENH) : null);
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /********************************************************
      * PUBLIC METHODS
      *******************************************************/
@@ -211,33 +221,43 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onAfterRequest(JSONObject response) {
-                    Log.i("Resposta", response != null ? response.toString() : "SEM RESPOSTA");
                     if (response == null) {
                         // Sem resposta de Servidor
                         Toast.makeText(LoginActivity.this, "SEM RESPOSTA!", Toast.LENGTH_SHORT).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
-                                BiblivirtiDialogs.showMessageDialog(
-                                        LoginActivity.this,
-                                        "Mensagem",
-                                        String.format(
-                                                "Código: %d\n%s",
-                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
-                                        ),
-                                        "Ok"
-                                );
+                                if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) == BiblivirtiConstants.RESPONSE_CODE_UNAUTHORIZED) {
+                                    Toast.makeText(LoginActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_LONG).show();
+                                    Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
+                                    Intent intent = new Intent(LoginActivity.this, ConfirmarEmailActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    BiblivirtiDialogs.showMessageDialog(
+                                            LoginActivity.this,
+                                            "Mensagem",
+                                            String.format(
+                                                    "Código: %d\n%s",
+                                                    response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                    response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                            ),
+                                            "Ok"
+                                    );
+                                    // Carrega as mensagens de erros nos widgets
+                                    loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                                }
                             } else {
                                 Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                                Toast.makeText(LoginActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
-                                Bundle bundle = new Bundle();
+                                /*Bundle bundle = new Bundle();
                                 bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
-                                /*Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(intent);*/
-                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("Login efetuado com sucesso! (%s)", usuario.getUscmail()));
-                                //finish();
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                finish();*/
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
@@ -246,6 +266,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
                 }
             });
         } catch (JSONException e) {

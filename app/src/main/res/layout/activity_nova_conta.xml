@@ -78,7 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:onClick="actionCriarConta"
             android:text="@string/activity_nova_conta_button_criar_conta"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />

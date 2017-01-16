@@ -54,7 +54,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:onClick="actionConfirmarEmail"
             android:text="@string/activity_recuperar_senha_button_recuperar_senha"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />

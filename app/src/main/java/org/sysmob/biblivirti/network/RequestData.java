@@ -3,6 +3,7 @@ package org.sysmob.biblivirti.network;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class RequestData implements Serializable {
 
@@ -10,6 +11,7 @@ public class RequestData implements Serializable {
     private int method;
     private String url;
     private JSONObject params;
+    private Map<String, String> strParams;
 
     public RequestData() {
     }
@@ -19,6 +21,13 @@ public class RequestData implements Serializable {
         this.method = method;
         this.url = url;
         this.params = params;
+    }
+
+    public RequestData(String tag, int method, String url, Map<String, String> strParams) {
+        this.tag = tag;
+        this.method = method;
+        this.url = url;
+        this.strParams = strParams;
     }
 
     public String getTag() {
@@ -51,5 +60,13 @@ public class RequestData implements Serializable {
 
     public void setParams(JSONObject params) {
         this.params = params;
+    }
+
+    public Map<String, String> getStrParams() {
+        return strParams;
+    }
+
+    public void setStrParams(Map<String, String> strParams) {
+        this.strParams = strParams;
     }
 }

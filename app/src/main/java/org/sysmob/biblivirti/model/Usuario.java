@@ -16,6 +16,7 @@ public class Usuario implements Serializable {
     public static final String FIELD_USCLOGN = "usclogn";
     public static final String FIELD_USCFOTO = "uscfoto";
     public static final String FIELD_USCSENH = "uscsenh";
+    public static final String FIELD_USCSENH2 = "uscsenh2";
     public static final String FIELD_USCSTAT = "uscstat";
     public static final String FIELD_USDCADT = "usdcadt";
     public static final String FIELD_USDALDT = "usdaldt";

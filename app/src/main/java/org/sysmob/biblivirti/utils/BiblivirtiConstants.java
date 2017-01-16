@@ -133,7 +133,11 @@ public abstract class BiblivirtiConstants {
     public static final String RESPONSE_CODE = "response_code";
     public static final String RESPONSE_MESSAGE = "response_message";
     public static final String RESPONSE_DATA = "response_data";
+    public static final String RESPONSE_ERRORS = "response_errors";
     public static final int RESPONSE_CODE_OK = 200;
+    public static final int RESPONSE_CODE_NOT_FOUND = 404;
+    public static final int RESPONSE_CODE_BAD_REQUEST = 400;
+    public static final int RESPONSE_CODE_UNAUTHORIZED = 401;
 
 
 }
