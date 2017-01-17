@@ -176,7 +176,9 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
             public void onAfterRequest(JSONObject response) {
                 if (response == null) {
                     // Sem resposta de Servidor
-                    Toast.makeText(ConfirmarEmailActivity.this, "SEM RESPOSTA!", Toast.LENGTH_SHORT).show();
+                    String message = "Não foi possível conectar-se com o servido.\n" +
+                            "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                    Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     try {
                         if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
@@ -196,12 +198,13 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
                             Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
                             Toast.makeText(ConfirmarEmailActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                             Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
-                            /*Bundle bundle = new Bundle();
+                            Bundle bundle = new Bundle();
                             bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
-                            Intent intent = new Intent(ConfirmarEmailActivity.this, HomeActivity.class);
+                            /*Intent intent = new Intent(ConfirmarEmailActivity.this, HomeActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.putExtras(bundle);
-                            startActivity(intent);
-                            finish();*/
+                            startActivity(intent);*/
+                            finish();
                         }
                     } catch (JSONException e) {
                         Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

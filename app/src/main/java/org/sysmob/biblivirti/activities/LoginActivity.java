@@ -223,7 +223,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         // Sem resposta de Servidor
-                        Toast.makeText(LoginActivity.this, "SEM RESPOSTA!", Toast.LENGTH_SHORT).show();
+                        String message = "Não foi possível conectar-se com o servido.\n" +
+                                "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
