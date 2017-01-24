@@ -258,12 +258,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
-                                /*Bundle bundle = new Bundle();
+                                Bundle bundle = new Bundle();
                                 bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
-                                finish();*/
+                                finish();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

@@ -61,4 +61,19 @@
     <string name="activity_confirmar_email_hint_cactokn">Token de Confirmação</string>
     <string name="activity_confirmar_email_button_validar">Validar</string>
 
+    <string name="menu_drawer_grupos">Grupos</string>
+    <string name="menu_drawer_perfil">Perfil</string>
+    <string name="menu_drawer_notificacoes">Notificações</string>
+    <string name="menu_drawer_configuracoes">Configurações</string>
+    <string name="menu_drawer_sobre">Sobre</string>
+    <string name="menu_drawer_sair">sair</string>
+
+    <string name="drawer_toggle_open">Drawer Toggle Open</string>
+    <string name="drawer_toggle_close">Drawer Toggle Close</string>
+    <string name="activity_confirmar_email_label">Confirmar E-mail</string>
+    <string name="activity_info_grupo_label">Info</string>
+    <string name="activity_notificacoes_label">Notificações</string>
+    <string name="activity_editar_perfil_label">Editar Perfil</string>
+    <string name="activity_perfil_label">Perfil</string>
+
 </resources>

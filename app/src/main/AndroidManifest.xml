@@ -19,17 +19,22 @@
         android:theme="@style/BiblivirtiTheme">
 
         <!-- [START fcm_default_icon] -->
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-             See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+             Set custom default icon. This is used when no icon is set for incoming notification messages.
+             See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_app_white_medium" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
         <!-- [END fcm_default_icon] -->
+
 
         <!-- [Biblivirit Messaging Service] -->
         <service android:name=".services.BiblivirtiMessagingService">
@@ -92,31 +97,38 @@
         <!-- Perfil Activity -->
         <activity
             android:name=".activities.PerfilActivity"
-            android:label="Perfil"
+            android:label="@string/activity_perfil_label"
             android:screenOrientation="portrait" />
 
         <!-- Editar Perfil Activity -->
         <activity
             android:name=".activities.EditarPerfilActivity"
-            android:label="Editar Perfil"
+            android:label="@string/activity_editar_perfil_label"
             android:screenOrientation="portrait" />
 
         <!-- Info Grupo Activity -->
         <activity
             android:name=".activities.InfoGrupoActivity"
-            android:label="Info" />
+            android:label="@string/activity_info_grupo_label"
+            android:screenOrientation="portrait" />
 
         <!-- Notificacao Activity -->
         <activity
             android:name=".activities.NotificacaoActivity"
-            android:label="NOtificações"
+            android:label="@string/activity_notificacoes_label"
             android:screenOrientation="portrait" />
 
         <!-- Confirmar Email Activity -->
         <activity
             android:name=".activities.ConfirmarEmailActivity"
-            android:label="Confirmar E-mail"
+            android:label="@string/activity_confirmar_email_label"
             android:screenOrientation="portrait" />
+
+        <!-- Home Activity -->
+        <activity
+            android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.HomeActivity" />
     </application>
 
 </manifest>
