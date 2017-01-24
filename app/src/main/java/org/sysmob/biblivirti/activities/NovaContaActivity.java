@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.AccountBO;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Usuario;
@@ -24,6 +25,7 @@ import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 public class NovaContaActivity extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class NovaContaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
                 finish();
         }
         return super.onOptionsItemSelected(item);
@@ -134,17 +137,22 @@ public class NovaContaActivity extends AppCompatActivity {
         this.buttonCriarConta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (new AccountBO(NovaContaActivity.this).validateRegister()) {
-                        Bundle fields = new Bundle();
-                        fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
-                        fields.putString(Usuario.FIELD_USCLOGN, editLogin.getText().toString().trim());
-                        fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
-                        fields.putString(Usuario.FIELD_USCSENH2, editConfirmarSenha.getText().toString().trim());
-                        actionCriarConta(fields);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(NovaContaActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        if (new AccountBO(NovaContaActivity.this).validateRegister()) {
+                            Bundle fields = new Bundle();
+                            fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                            fields.putString(Usuario.FIELD_USCLOGN, editLogin.getText().toString().trim());
+                            fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
+                            fields.putString(Usuario.FIELD_USCSENH2, editConfirmarSenha.getText().toString().trim());
+                            actionCriarConta(fields);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ValidationException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -188,9 +196,7 @@ public class NovaContaActivity extends AppCompatActivity {
                 @Override
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
-                        // Sem resposta de Servidor
-                        String message = "Não foi possível conectar-se com o servido.\n" +
-                                "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
                         Toast.makeText(NovaContaActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {

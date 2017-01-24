@@ -1,5 +1,6 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.AccountBO;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Usuario;
@@ -24,6 +26,7 @@ import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 public class RecuperarSenhaActivity extends AppCompatActivity {
 
@@ -52,6 +55,7 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
                 finish();
         }
         return super.onOptionsItemSelected(item);
@@ -75,14 +79,19 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
         this.buttonConfirmarEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (new AccountBO(RecuperarSenhaActivity.this).validatePasswordReset()) {
-                        Bundle fields = new Bundle();
-                        fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
-                        actionConfirmarEmail(fields);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(RecuperarSenhaActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        if (new AccountBO(RecuperarSenhaActivity.this).validatePasswordReset()) {
+                            Bundle fields = new Bundle();
+                            fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                            actionConfirmarEmail(fields);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ValidationException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -132,25 +141,32 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                 @Override
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
-                        // Sem resposta de Servidor
-                        String message = "Não foi possível conectar-se com o servido.\n" +
-                                "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
                         Toast.makeText(RecuperarSenhaActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
-                                BiblivirtiDialogs.showMessageDialog(
-                                        RecuperarSenhaActivity.this,
-                                        "Mensagem",
-                                        String.format(
-                                                "Código: %d\n%s",
-                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
-                                        ),
-                                        "Ok"
-                                );
-                                // Carrega as mensagens de erro nos widgets
-                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                                // Verifica se a conta do usuario ainda não foi confirmada
+                                if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) == BiblivirtiConstants.RESPONSE_CODE_UNAUTHORIZED) {
+                                    String message = response.getString(BiblivirtiConstants.RESPONSE_MESSAGE);
+                                    Toast.makeText(RecuperarSenhaActivity.this, message, Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(RecuperarSenhaActivity.this, ConfirmarEmailActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    BiblivirtiDialogs.showMessageDialog(
+                                            RecuperarSenhaActivity.this,
+                                            "Mensagem",
+                                            String.format(
+                                                    "Código: %d\n%s",
+                                                    response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                    response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                            ),
+                                            "Ok"
+                                    );
+                                    // Carrega as mensagens de erro nos widgets
+                                    loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                                }
                             } else {
                                 Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
                                 Toast.makeText(RecuperarSenhaActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_LONG).show();

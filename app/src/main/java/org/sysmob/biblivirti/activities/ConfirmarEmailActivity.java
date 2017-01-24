@@ -1,6 +1,8 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,6 +18,7 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.AccountBO;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.ConfirmarEmail;
@@ -25,6 +29,7 @@ import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +60,7 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
                 finish();
         }
         return super.onOptionsItemSelected(item);
@@ -116,26 +122,47 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
         this.buttonValidar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (new AccountBO(ConfirmarEmailActivity.this).validateEmailConfirmation()) {
-                        Bundle fields = new Bundle();
-                        fields.putString(ConfirmarEmail.FIELD_CACTOKN, editCACTOKN.getText().toString().trim());
-                        actionValidarToken(fields);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+
+
+                        if (new AccountBO(ConfirmarEmailActivity.this).validateEmailConfirmation()) {
+                            Bundle fields = new Bundle();
+                            fields.putString(ConfirmarEmail.FIELD_CACTOKN, editCACTOKN.getText().toString().trim());
+                            actionValidarToken(fields);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ValidationException e) {
-                    e.printStackTrace();
                 }
             }
         });
         this.buttonReenviarToken.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (getIntent().getExtras() != null) {
-                    Bundle extras = getIntent().getExtras();
-                    int usnid = extras.containsKey(Usuario.FIELD_USNID) == true ? extras.getInt(Usuario.FIELD_USNID) : null;
-                    // Chamar o servico de reenviar token de confirmacao da API
-                }*/
-                Toast.makeText(ConfirmarEmailActivity.this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    BiblivirtiDialogs.showInputDialog(ConfirmarEmailActivity.this, R.layout.dialog_confirmar_email, "Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                TextView editEmail = (TextView) ((AlertDialog) dialog).findViewById(R.id.editEmail);
+                                if (new AccountBO(ConfirmarEmailActivity.this).validateRecovery()) {
+                                    Bundle fields = new Bundle();
+                                    fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                                    actionReenviarToken(fields);
+                                }
+                            } catch (ValidationException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -153,7 +180,8 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
      * ACTION METHODS
      *******************************************************/
     public void actionReenviarToken(Bundle fields) {
-        Toast.makeText(this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        Log.i(getClass().getSimpleName().toString(), String.format("E-mail=%s:", fields.get(Usuario.FIELD_USCMAIL)));
+        Toast.makeText(ConfirmarEmailActivity.this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
     }
 
     public void actionValidarToken(Bundle fields) {
@@ -175,9 +203,7 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
             @Override
             public void onAfterRequest(JSONObject response) {
                 if (response == null) {
-                    // Sem resposta de Servidor
-                    String message = "Não foi possível conectar-se com o servido.\n" +
-                            "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                    String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
                     Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     try {

@@ -13,7 +13,6 @@ import org.sysmob.biblivirti.R;
 public abstract class BiblivirtiDialogs {
 
     public static void showMessageDialog(Context context, String title, String message, String buttonTitle) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.BiblivirtiTheme_AlertDialog);
         builder.setTitle(title);
         builder.setMessage(message);
@@ -26,4 +25,20 @@ public abstract class BiblivirtiDialogs {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    public static void showInputDialog(Context context, int layoutResId, String buttonTitle, DialogInterface.OnClickListener positiveButtonOnClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.BiblivirtiTheme_AlertDialog);
+        builder.setView(layoutResId);
+        builder.setCancelable(false);
+        builder.setPositiveButton(buttonTitle, positiveButtonOnClickListener);
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

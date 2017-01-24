@@ -43,7 +43,7 @@
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="E-mail (Ex: pedro@gmailcom)"
+                android:hint="@string/activity_recuperar_senha_edit_email"
                 android:inputType="textEmailAddress"
                 tools:ignore="HardcodedText" />
         </android.support.design.widget.TextInputLayout>

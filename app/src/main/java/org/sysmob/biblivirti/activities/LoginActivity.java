@@ -25,6 +25,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -87,15 +88,20 @@ public class LoginActivity extends AppCompatActivity {
         this.buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (new AccountBO(LoginActivity.this).validateLogin()) {
-                        Bundle fields = new Bundle();
-                        fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
-                        fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
-                        actionLogin(fields);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        if (new AccountBO(LoginActivity.this).validateLogin()) {
+                            Bundle fields = new Bundle();
+                            fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                            fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
+                            actionLogin(fields);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
                     }
-                } catch (ValidationException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -222,9 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
-                        // Sem resposta de Servidor
-                        String message = "Não foi possível conectar-se com o servido.\n" +
-                                "Por Favor, verifique sua conexão com a internet e tente novamente.";
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
                         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
