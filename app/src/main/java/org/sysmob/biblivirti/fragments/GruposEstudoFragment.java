@@ -59,7 +59,20 @@ public class GruposEstudoFragment extends Fragment {
             this.recyclerGrupos = (RecyclerView) this.getView().findViewById(R.id.reciclerGrupos);
             this.recyclerGrupos.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerGrupos.setHasFixedSize(true);
-            this.recyclerGrupos.setAdapter(new GruposAdapter(this.getActivity(), grupos, ((HomeActivity) getActivity()).getUsuario()));
+            this.recyclerGrupos.setAdapter(new GruposAdapter(getActivity(), grupos, ((HomeActivity) getActivity()).getUsuario()));
+            ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnItemClickListener(new GruposAdapter.OnItemClickListener() {
+                @Override
+                public void onCLick(View view, int position) {
+                    Toast.makeText(getActivity(), String.format("OnItemClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
+                }
+            });
+            ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view, int position) {
+                    Toast.makeText(getActivity(), String.format("OnLongClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
     }
 

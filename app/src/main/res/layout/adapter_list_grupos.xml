@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="4dp"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -14,7 +15,7 @@
 
         <ImageView
             android:id="@+id/imageGRCFOTO"
-            android:layout_width="62dp"
+            android:layout_width="68dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:src="@mipmap/ic_app_group_80px"
@@ -51,9 +52,9 @@
                 android:textSize="12sp"
                 android:textStyle="italic" />
 
-            <view
+            <View
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1" />
 
             <TextView
@@ -90,8 +91,14 @@
                 android:adjustViewBounds="true"
                 android:src="@mipmap/ic_king_100px_gray"
                 tools:ignore="ContentDescription" />
-
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorGray" />
+
 </LinearLayout>

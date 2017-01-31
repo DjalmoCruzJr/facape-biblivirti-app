@@ -6,6 +6,8 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorFacebook">#285199</color>
+    <color name="colorGray">#CCCCCC</color>
+    <color name="colorGrayLight">#EEEEEE</color>
     <color name="colorGrayDark">#666666</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorRedDark">#B71C1C</color>

@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.activities;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -61,6 +62,11 @@ public class HomeActivity extends AppCompatActivity {
         this.drawerToggle.syncState();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return this.drawerToggle.onOptionsItemSelected(item);
+    }
+
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
@@ -77,6 +83,7 @@ public class HomeActivity extends AppCompatActivity {
 
         this.toolbar = (Toolbar) this.findViewById(R.id.homeToolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.navigationView = (NavigationView) this.findViewById(R.id.navigationView);
 
@@ -90,7 +97,11 @@ public class HomeActivity extends AppCompatActivity {
             if (getIntent().getExtras() != null && this.usuario == null) {
                 Bundle extras = getIntent().getExtras();
                 this.usuario = (Usuario) extras.get(Usuario.KEY_USUARIO);
-                Picasso.with(this).load(usuario.getUscfoto().toString()).into(this.imageUSCFOTO);
+                if (this.usuario.getUscfoto() != null && !this.usuario.getUscfoto().equals("null")) {
+                    Picasso.with(this).load(usuario.getUscfoto().toString()).into(this.imageUSCFOTO);
+                } else {
+                    this.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_user_80px));
+                }
                 this.textUSCNOME.setText(usuario.getUscnome() != null ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
                 this.textUSCLOGN.setText(usuario.getUsclogn().toString());
                 this.textUSCMAIL.setText(usuario.getUscmail().toString());
