@@ -9,6 +9,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 
+import org.sysmob.biblivirti.model.Usuario;
+
 public class BiblivirtiApplication extends Application {
 
     public static final String TAG = BiblivirtiApplication.class.getSimpleName();
@@ -17,6 +19,7 @@ public class BiblivirtiApplication extends Application {
     private static Context context;
 
     private RequestQueue requestQueue;
+    private Usuario loggedUser;
 
     @Override
     public void onCreate() {
@@ -51,5 +54,13 @@ public class BiblivirtiApplication extends Application {
         if (this.requestQueue != null) {
             this.requestQueue.cancelAll(tag);
         }
+    }
+
+    public Usuario getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoggedUser(Usuario loggedUser) {
+        this.loggedUser = loggedUser;
     }
 }

@@ -76,4 +76,7 @@
     <string name="activity_editar_perfil_label">Editar Perfil</string>
     <string name="activity_perfil_label">Perfil</string>
 
+    <string name="menu_activity_novo_grupo_salvar">Salvar</string>
+    <string name="menu_fragment_grupos_estudo_pesquisar">Pesquisar</string>
+
 </resources>

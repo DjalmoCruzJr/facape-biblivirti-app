@@ -17,6 +17,7 @@ public class Grupo implements Serializable {
 
     public static final String FIELD_GRNID = "grnid";
     public static final String FIELD_GRCNOME = "grcnome";
+    public static final String FIELD_GRNIDAI = "grnidai";
     public static final String FIELD_GRCFOTO = "grcfoto";
     public static final String FIELD_GRCTIPO = "grctipo";
     public static final String FIELD_GRCSTAT = "grcstat";

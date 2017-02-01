@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.AccountBO;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Usuario;
@@ -259,6 +260,7 @@ public class LoginActivity extends AppCompatActivity {
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
                                 Bundle bundle = new Bundle();
+                                BiblivirtiApplication.getInstance().setLoggedUser(usuario);
                                 bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 intent.putExtras(bundle);
