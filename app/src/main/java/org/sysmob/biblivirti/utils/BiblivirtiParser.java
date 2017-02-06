@@ -33,7 +33,6 @@ public abstract class BiblivirtiParser {
 
     public static List<Grupo> parseToGrupos(JSONArray json) throws JSONException {
         List<Grupo> grupos = new ArrayList<>();
-
         for (int i = 0; i < json.length(); i++) {
             grupos.add(
                     new Grupo(
@@ -49,9 +48,7 @@ public abstract class BiblivirtiParser {
                     )
             );
         }
-
         return grupos.size() > 0 ? grupos : null;
-
     }
 
     public static AreaInteresse parseToAreaInteresse(JSONObject json) throws JSONException {
@@ -62,5 +59,20 @@ public abstract class BiblivirtiParser {
         areaInteresse.setAidaldt(Timestamp.valueOf(json.getString(AreaInteresse.FIELD_AIDALDT)));
         return areaInteresse;
 
+    }
+
+    public static List<AreaInteresse> parseToAreasinteresse(JSONArray json) throws JSONException {
+        List<AreaInteresse> areasInteresse = new ArrayList<>();
+        for (int i = 0; i < json.length(); i++) {
+            areasInteresse.add(
+                    new AreaInteresse(
+                            json.getJSONObject(i).getInt(AreaInteresse.FIELD_AINID),
+                            json.getJSONObject(i).getString(AreaInteresse.FIELD_AICDESC),
+                            Timestamp.valueOf(json.getJSONObject(i).getString(AreaInteresse.FIELD_AIDCADT)),
+                            Timestamp.valueOf(json.getJSONObject(i).getString(AreaInteresse.FIELD_AIDALDT))
+                    )
+            );
+        }
+        return areasInteresse.size() > 0 ? areasInteresse : null;
     }
 }
