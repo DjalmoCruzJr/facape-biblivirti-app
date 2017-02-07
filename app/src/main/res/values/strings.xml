@@ -79,4 +79,16 @@
     <string name="menu_activity_novo_grupo_salvar">Salvar</string>
     <string name="menu_fragment_grupos_estudo_pesquisar">Pesquisar</string>
 
+    <string-array name="dialog_opcoes_grupos_texts">
+        <item>Informações do Grupo</item>
+        <item>Editar</item>
+        <item>Excluir</item>
+    </string-array>
+
+    <integer-array name="dialog_opcoes_grupos_images">
+        <item>@mipmap/ic_info_100px_blue</item>
+        <item>@mipmap/ic_edit_100px_blue</item>
+        <item>@mipmap/ic_delete_100px_blue</item>
+    </integer-array>
+
 </resources>

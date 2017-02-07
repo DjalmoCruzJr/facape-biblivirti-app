@@ -23,8 +23,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.HomeActivity;
+import org.sysmob.biblivirti.activities.InfoGrupoActivity;
 import org.sysmob.biblivirti.activities.NovoGrupoActivity;
 import org.sysmob.biblivirti.adapters.GruposAdapter;
+import org.sysmob.biblivirti.adapters.OpcoesGruposAdapter;
+import org.sysmob.biblivirti.dialogs.OpcoesGruposDialog;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -47,6 +50,7 @@ public class GruposEstudoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Habilita as opcoes de menu no fragment
         setHasOptionsMenu(true);
     }
 
@@ -110,8 +114,38 @@ public class GruposEstudoFragment extends Fragment {
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
-                    Toast.makeText(getActivity(), String.format("OnLongClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
-                    return false;
+                    //Toast.makeText(getActivity(), String.format("OnLongClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
+                    final OpcoesGruposDialog dialog = new OpcoesGruposDialog();
+                    dialog.setGrnid(grupos.get(position).getGrnid());
+                    dialog.setOnOptionsClickListener(new OpcoesGruposAdapter.OnItemClickListener() {
+                        @Override
+                        public void onCLick(View view, int position) {
+                            Toast.makeText(getActivity(), "Posiçao: " + position, Toast.LENGTH_SHORT).show();
+                            Intent intent;
+                            Bundle extras;
+                            switch (position) {
+                                case 0:
+                                    extras = new Bundle();
+                                    extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                    intent = new Intent(GruposEstudoFragment.this.getActivity(), InfoGrupoActivity.class);
+                                    intent.putExtras(extras);
+                                    startActivity(intent);
+                                    break;
+                                case 1:
+                                    extras = new Bundle();
+                                    extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                    //extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_EDIT, BiblivirtiConstants.ACTIVITY_MODE_EDIT);
+                                    intent = new Intent(GruposEstudoFragment.this.getActivity(), NovoGrupoActivity.class);
+                                    intent.putExtras(extras);
+                                    startActivity(intent);
+                                    break;
+                                case 2:
+                                    break;
+                            }
+                        }
+                    });
+                    dialog.show(getFragmentManager(), OpcoesGruposDialog.class.getSimpleName());
+                    return true;
                 }
             });
         }
