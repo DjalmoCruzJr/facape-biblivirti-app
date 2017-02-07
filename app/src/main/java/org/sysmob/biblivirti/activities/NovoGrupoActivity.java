@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,9 +9,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -20,7 +24,6 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.adapters.AreasInteresseAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.AreaOfInterestBO;
 import org.sysmob.biblivirti.business.GroupBO;
@@ -37,6 +40,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NovoGrupoActivity extends AppCompatActivity {
@@ -45,10 +49,12 @@ public class NovoGrupoActivity extends AppCompatActivity {
     private LinearLayout progressLayout;
     private ProgressBar progressBar;
     private EditText editGRCNOME;
+    private ImageView imageGRCFOTO;
     private AutoCompleteTextView editAreaInteresse;
     private CheckBox checkGRCTIPO;
+    private int layoutResourceId;
+    private AreaInteresse areaInteresse;
     private List<AreaInteresse> areasInteresse;
-    private int areaInteressePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +69,6 @@ public class NovoGrupoActivity extends AppCompatActivity {
 
         // Carrega os listeners do widgets
         loadListeners();
-
-        this.areaInteressePosition = -1;
     }
 
     @Override
@@ -81,24 +85,39 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.activity_novo_grupo_menu_salvar:
-                try {
-                    if (new GroupBO(this).validateAdd()) {
-                        Bundle fields = new Bundle();
-                        fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
-                        fields.putInt(Grupo.FIELD_GRNIDAI, getAreaInteresseId());
-                        fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
-                        fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
-                        actionNovoGrupo(fields);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    if (this.areaInteresse == null) {
+                        try {
+                            if (new AreaOfInterestBO(NovoGrupoActivity.this).validateAdd()) {
+                                Bundle fields = new Bundle();
+                                fields.putString(AreaInteresse.FIELD_AICDESC, editAreaInteresse.getText().toString().trim());
+                                actionNovaAreaInteresse(fields);
+                            }
+                        } catch (ValidationException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            if (new GroupBO(this).validateAdd()) {
+                                Bundle fields = new Bundle();
+                                fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
+                                fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
+                                fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                actionNovoGrupo(fields);
+                            }
+                        } catch (ValidationException e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (ValidationException e) {
-                    e.printStackTrace();
                 }
+                break;
         }
-        return super.onOptionsItemSelected(item);
-    }
 
-    private int getAreaInteresseId() {
-        return 0;
+        return true;
     }
 
     /********************************************************
@@ -112,12 +131,43 @@ public class NovoGrupoActivity extends AppCompatActivity {
     }
 
     private void loadWidgets() {
+        this.layoutResourceId = android.R.layout.simple_list_item_1;
+
         this.layoutNovoGrupo = (LinearLayout) this.findViewById(R.id.containerLayout);
+
         this.progressLayout = (LinearLayout) this.findViewById(R.id.progressLayout);
+
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+
         this.editGRCNOME = (EditText) this.findViewById(R.id.editGRCNOME);
+
+        this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
+
+        this.imageGRCFOTO = (ImageView) this.findViewById(R.id.imageGRCFOTO);
+
+        this.areasInteresse = new ArrayList<>();
         this.editAreaInteresse = (AutoCompleteTextView) this.findViewById(R.id.editAreaInteresse);
-        this.editAreaInteresse.setAdapter(new AreasInteresseAdapter(this, this.areasInteresse));
+        this.editAreaInteresse.setAdapter(new ArrayAdapter<String>(this, this.layoutResourceId, getAreasInteresseStringArray(this.areasInteresse)));
+        this.editAreaInteresse.setDropDownHeight(ActionBar.LayoutParams.WRAP_CONTENT);
+        this.editAreaInteresse.setThreshold(3);
+    }
+
+    private String[] getAreasInteresseStringArray(List<AreaInteresse> areasInteresse) {
+        String[] result = new String[areasInteresse != null ? areasInteresse.size() : 0];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = areasInteresse.get(i).getAicdesc();
+        }
+        return result;
+    }
+
+    private void loadListeners() {
+        this.imageGRCFOTO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionCarregarFoto(null);
+            }
+        });
+
         this.editAreaInteresse.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -127,6 +177,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), "TEXTO: " + text);
+                BiblivirtiApplication.getInstance().cancelPendingRequests(NovoGrupoActivity.this.getClass().getSimpleName());
             }
 
             @Override
@@ -134,7 +185,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                     Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
-                } else {
+                } else if (text.toString().trim().length() >= editAreaInteresse.getThreshold()) {
                     try {
                         if (new AreaOfInterestBO(NovoGrupoActivity.this).validateListAll()) {
                             Bundle fields = new Bundle();
@@ -145,22 +196,22 @@ public class NovoGrupoActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                Bundle fields = new Bundle();
-                fields.putString(AreaInteresse.FIELD_AICDESC, text.toString());
-                actionCarregarAreaInteresse(fields);
             }
         });
-        this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
-    }
-
-    private void loadListeners() {
-
+        this.editAreaInteresse.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(NovoGrupoActivity.this, "Posição: " + position, Toast.LENGTH_SHORT).show();
+                areaInteresse = areasInteresse.get(position);
+            }
+        });
     }
 
     private void loadErrors(JSONObject errors) {
         try {
-            getEditGRCNOME().setError(errors.opt(Grupo.FIELD_GRCNOME) != null ? errors.getString(Grupo.FIELD_GRCNOME) : null);
+            editGRCNOME.setError(errors.opt(Grupo.FIELD_GRCNOME) != null ? errors.getString(Grupo.FIELD_GRCNOME) : null);
             getEditAreaInteresse().setError(errors.opt(Grupo.FIELD_GRNIDAI) != null ? errors.getString(Grupo.FIELD_GRNIDAI) : null);
+            getEditAreaInteresse().setError(errors.opt(AreaInteresse.FIELD_AICDESC) != null ? errors.getString(AreaInteresse.FIELD_AICDESC) : null);
             getCheckGRCTIPO().setError(errors.opt(Grupo.FIELD_GRCTIPO) != null ? errors.getString(Grupo.FIELD_GRCTIPO) : null);
         } catch (JSONException e) {
             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
@@ -252,6 +303,74 @@ public class NovoGrupoActivity extends AppCompatActivity {
     }
 
     public void actionNovaAreaInteresse(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(AreaInteresse.FIELD_AICDESC, fields.getString(AreaInteresse.FIELD_AICDESC));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_AREAOFINTEREST_ADD,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressLayout.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(final JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoGrupoActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                                // Carrega as mensagens de erros nos widgets
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                            } else {
+                                int areasInteresseId = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(AreaInteresse.FIELD_AINID);
+                                try {
+                                    if (new GroupBO(NovoGrupoActivity.this).validateAdd()) {
+                                        Bundle fields = new Bundle();
+                                        fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
+                                        fields.putInt(Grupo.FIELD_GRNIDAI, areasInteresseId);
+                                        fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                        fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                        actionNovoGrupo(fields);
+                                    }
+                                } catch (ValidationException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressLayout.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void actionCarregarAreaInteresse(Bundle fields) {
@@ -282,8 +401,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                             } else {
                                 areasInteresse = BiblivirtiParser.parseToAreasinteresse(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-
-
+                                editAreaInteresse.setAdapter(new ArrayAdapter<String>(NovoGrupoActivity.this, layoutResourceId, getAreasInteresseStringArray(areasInteresse)));
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
@@ -305,6 +423,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
     }
 
     public void actionCarregarFoto(Bundle fields) {
+        Toast.makeText(this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
     }
 
 }

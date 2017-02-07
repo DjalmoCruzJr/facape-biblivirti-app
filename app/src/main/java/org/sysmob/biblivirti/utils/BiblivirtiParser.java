@@ -73,6 +73,6 @@ public abstract class BiblivirtiParser {
                     )
             );
         }
-        return areasInteresse.size() > 0 ? areasInteresse : null;
+        return areasInteresse;
     }
 }
