@@ -11,6 +11,14 @@ package org.sysmob.biblivirti.utils;
 public abstract class BiblivirtiConstants {
 
     /**
+     * Constantes relacionadas ao modo de apresentacao dos dados
+     */
+    public static final String ACTIVITY_MODE_KEY = "activity_mode";
+    public static final int ACTIVITY_MODE_INSERTING = 0;
+    public static final int ACTIVITY_MODE_EDITING = 1;
+
+
+    /**
      * Constantes relacionadas a tela SplachActivity
      */
     public static final int ACTIVITY_SPLASH_TIME_OUT = 3000;
@@ -50,6 +58,7 @@ public abstract class BiblivirtiConstants {
      * Constantes que definem as URL's dos servicos de GROUP da API
      */
     public static final String API_GROUP_LIST = SERVER_API + "/group/list";
+    public static final String API_GROUP_GET = SERVER_API + "/group/get";
     public static final String API_GROUP_ADD = SERVER_API + "/group/add";
     public static final String API_GROUP_EDIT = SERVER_API + "/group/edit";
     public static final String API_GROUP_DELETE = SERVER_API + "/group/delete";

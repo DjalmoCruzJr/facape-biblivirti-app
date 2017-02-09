@@ -57,7 +57,7 @@ public abstract class BiblivirtiParser {
         areaInteresse.setAicdesc(json.getString(AreaInteresse.FIELD_AICDESC));
         areaInteresse.setAidcadt(Timestamp.valueOf(json.getString(AreaInteresse.FIELD_AIDCADT)));
         areaInteresse.setAidaldt(Timestamp.valueOf(json.getString(AreaInteresse.FIELD_AIDALDT)));
-        return areaInteresse;
+        return areaInteresse != null ? areaInteresse : null;
 
     }
 
@@ -73,6 +73,20 @@ public abstract class BiblivirtiParser {
                     )
             );
         }
-        return areasInteresse;
+        return areasInteresse.size() > 0 ? areasInteresse : null;
+    }
+
+    public static Grupo parseToGrupo(JSONObject json) throws JSONException {
+        Grupo grupo = new Grupo();
+        grupo.setGrnid(json.getInt(Grupo.FIELD_GRNID));
+        grupo.setAreaInteresse(parseToAreaInteresse(json.getJSONObject(Grupo.FIELD_GRAREAOFINTEREST)));
+        grupo.setGrcnome(json.getString(Grupo.FIELD_GRCNOME));
+        grupo.setGrcfoto(json.getString(Grupo.FIELD_GRCFOTO));
+        grupo.setGrctipo(ETipoGrupo.ABERTO.getValue() == json.getString(Grupo.FIELD_GRCTIPO).charAt(0) ? ETipoGrupo.ABERTO : ETipoGrupo.FECHADO);
+        grupo.setGrcstat(EStatusGrupo.ATIVO.getValue() == json.getString(Grupo.FIELD_GRCSTAT).charAt(0) ? EStatusGrupo.ATIVO : EStatusGrupo.INATIVO);
+        grupo.setAdmin(parseToUsuario(json.getJSONObject(Grupo.FIELD_GRADMIN)));
+        grupo.setGrdcadt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDCADT)));
+        grupo.setGrdaldt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDALDT)));
+        return grupo != null ? grupo : null;
     }
 }

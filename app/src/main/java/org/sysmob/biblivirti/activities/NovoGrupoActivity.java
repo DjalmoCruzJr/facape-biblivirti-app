@@ -45,6 +45,7 @@ import java.util.List;
 
 public class NovoGrupoActivity extends AppCompatActivity {
 
+    private int activityMode;
     private LinearLayout layoutNovoGrupo;
     private LinearLayout progressLayout;
     private ProgressBar progressBar;
@@ -55,6 +56,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
     private int layoutResourceId;
     private AreaInteresse areaInteresse;
     private List<AreaInteresse> areasInteresse;
+    private Grupo grupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,17 @@ public class NovoGrupoActivity extends AppCompatActivity {
 
         // Carrega os listeners do widgets
         loadListeners();
+
+        if (getIntent() != null) {
+            if (getIntent().getExtras() != null) {
+                this.activityMode = getIntent().getExtras().getInt(BiblivirtiConstants.ACTIVITY_MODE_KEY);
+                if (this.activityMode == BiblivirtiConstants.ACTIVITY_MODE_EDITING) {
+                    Bundle fields = new Bundle();
+                    fields.putInt(Grupo.FIELD_GRNID, getIntent().getExtras().getInt(Grupo.FIELD_GRNID));
+                    actionCarregarGrupo(fields);
+                }
+            }
+        }
     }
 
     @Override
@@ -99,7 +112,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
                         } catch (ValidationException e) {
                             e.printStackTrace();
                         }
-                    } else {
+                    } else if (this.activityMode == BiblivirtiConstants.ACTIVITY_MODE_INSERTING) {
                         try {
                             if (new GroupBO(this).validateAdd()) {
                                 Bundle fields = new Bundle();
@@ -108,6 +121,20 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
                                 actionNovoGrupo(fields);
+                            }
+                        } catch (ValidationException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            if (new GroupBO(this).validateEdit()) {
+                                Bundle fields = new Bundle();
+                                fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
+                                fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
+                                fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
+                                fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                actionEditarGrupo(fields);
                             }
                         } catch (ValidationException e) {
                             e.printStackTrace();
@@ -132,17 +159,11 @@ public class NovoGrupoActivity extends AppCompatActivity {
 
     private void loadWidgets() {
         this.layoutResourceId = android.R.layout.simple_list_item_1;
-
         this.layoutNovoGrupo = (LinearLayout) this.findViewById(R.id.containerLayout);
-
         this.progressLayout = (LinearLayout) this.findViewById(R.id.progressLayout);
-
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-
         this.editGRCNOME = (EditText) this.findViewById(R.id.editGRCNOME);
-
         this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
-
         this.imageGRCFOTO = (ImageView) this.findViewById(R.id.imageGRCFOTO);
 
         this.areasInteresse = new ArrayList<>();
@@ -158,6 +179,11 @@ public class NovoGrupoActivity extends AppCompatActivity {
             result[i] = areasInteresse.get(i).getAicdesc();
         }
         return result;
+    }
+
+    private void loadFields() {
+        this.editGRCNOME.setText(this.grupo.getGrcnome().toString());
+        this.editAreaInteresse.setText(this.areaInteresse.getAicdesc().toString());
     }
 
     private void loadListeners() {
@@ -201,7 +227,6 @@ public class NovoGrupoActivity extends AppCompatActivity {
         this.editAreaInteresse.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(NovoGrupoActivity.this, "Posição: " + position, Toast.LENGTH_SHORT).show();
                 areaInteresse = areasInteresse.get(position);
             }
         });
@@ -237,6 +262,133 @@ public class NovoGrupoActivity extends AppCompatActivity {
     /********************************************************
      * ACTION METHODS
      *******************************************************/
+    private void actionEditarGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Grupo.FIELD_GRCNOME, fields.getString(Grupo.FIELD_GRCNOME));
+            params.put(Grupo.FIELD_GRNIDAI, fields.getInt(Grupo.FIELD_GRNIDAI));
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Grupo.FIELD_GRCTIPO, fields.getString(Grupo.FIELD_GRCTIPO));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_GROUP_EDIT,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressLayout.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoGrupoActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                                // Carrega as mensagens de erros nos widgets
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                            } else {
+                                int grnid = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(Grupo.FIELD_GRNID);
+                                Toast.makeText(NovoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grnid));
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressLayout.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void actionCarregarGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_GROUP_GET,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressLayout.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoGrupoActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                grupo = BiblivirtiParser.parseToGrupo(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                                areaInteresse = grupo.getAreaInteresse();
+                                Toast.makeText(NovoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
+                                loadFields();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressLayout.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void actionNovoGrupo(Bundle fields) {
         try {
             JSONObject params = new JSONObject();

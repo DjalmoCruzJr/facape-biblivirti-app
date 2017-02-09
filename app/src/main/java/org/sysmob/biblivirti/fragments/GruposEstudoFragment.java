@@ -27,7 +27,10 @@ import org.sysmob.biblivirti.activities.InfoGrupoActivity;
 import org.sysmob.biblivirti.activities.NovoGrupoActivity;
 import org.sysmob.biblivirti.adapters.GruposAdapter;
 import org.sysmob.biblivirti.adapters.OpcoesGruposAdapter;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
+import org.sysmob.biblivirti.business.GroupBO;
 import org.sysmob.biblivirti.dialogs.OpcoesGruposDialog;
+import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -36,6 +39,7 @@ import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
@@ -114,7 +118,6 @@ public class GruposEstudoFragment extends Fragment {
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
-                    //Toast.makeText(getActivity(), String.format("OnLongClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
                     final OpcoesGruposDialog dialog = new OpcoesGruposDialog();
                     dialog.setGrnid(grupos.get(position).getGrnid());
                     dialog.setOnOptionsClickListener(new OpcoesGruposAdapter.OnItemClickListener() {
@@ -123,24 +126,42 @@ public class GruposEstudoFragment extends Fragment {
                             Toast.makeText(getActivity(), "Posiçao: " + position, Toast.LENGTH_SHORT).show();
                             Intent intent;
                             Bundle extras;
-                            switch (position) {
-                                case 0:
-                                    extras = new Bundle();
-                                    extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
-                                    intent = new Intent(GruposEstudoFragment.this.getActivity(), InfoGrupoActivity.class);
-                                    intent.putExtras(extras);
-                                    startActivity(intent);
-                                    break;
-                                case 1:
-                                    extras = new Bundle();
-                                    extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
-                                    //extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_EDIT, BiblivirtiConstants.ACTIVITY_MODE_EDIT);
-                                    intent = new Intent(GruposEstudoFragment.this.getActivity(), NovoGrupoActivity.class);
-                                    intent.putExtras(extras);
-                                    startActivity(intent);
-                                    break;
-                                case 2:
-                                    break;
+                            if (!BiblivirtiUtils.isNetworkConnected()) {
+                                String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            } else {
+                                switch (position) {
+                                    case 0:
+                                        extras = new Bundle();
+                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                        intent = new Intent(GruposEstudoFragment.this.getActivity(), InfoGrupoActivity.class);
+                                        intent.putExtras(extras);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                        break;
+                                    case 1:
+                                        extras = new Bundle();
+                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                        extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
+                                        intent = new Intent(GruposEstudoFragment.this.getActivity(), NovoGrupoActivity.class);
+                                        intent.putExtras(extras);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                        break;
+                                    case 2:
+                                        try {
+                                            if (new GroupBO(getActivity()).validateDelete()) {
+                                                extras = new Bundle();
+                                                extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                                extras.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                                actionExcluirGrupo(extras);
+                                            }
+                                        } catch (ValidationException e) {
+                                            e.printStackTrace();
+                                        }
+                                        dialog.dismiss();
+                                        break;
+                                }
                             }
                         }
                     });
@@ -162,6 +183,62 @@ public class GruposEstudoFragment extends Fragment {
     /********************************************************
      * ACTION METHODS
      *******************************************************/
+    private void actionExcluirGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_GROUP_DELETE,
+                    params
+            );
+            new NetworkConnection(getActivity()).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        getActivity(),
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                Toast.makeText(getActivity(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void actionNovoGrupo(Bundle fields) {
         Intent intent = new Intent(getActivity(), NovoGrupoActivity.class);
         intent.putExtras(fields);
