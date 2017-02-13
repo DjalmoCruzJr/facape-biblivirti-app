@@ -1,6 +1,10 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -44,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NovoGrupoActivity extends AppCompatActivity {
+
+    private static final int REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE = 1;
 
     private int activityMode;
     private LinearLayout layoutNovoGrupo;
@@ -120,6 +126,9 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
                                 fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                if (!((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap().equals(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_group_80px))) {
+                                    fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap()));
+                                }
                                 actionNovoGrupo(fields);
                             }
                         } catch (ValidationException e) {
@@ -145,6 +154,19 @@ public class NovoGrupoActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE:
+                    imageGRCFOTO.setImageURI(data.getData());
+                    Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 
     /********************************************************
@@ -190,7 +212,9 @@ public class NovoGrupoActivity extends AppCompatActivity {
         this.imageGRCFOTO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionCarregarFoto(null);
+                if (imageGRCFOTO.getDrawable() != null) {
+                    actionCarregarFoto(null);
+                }
             }
         });
 
@@ -257,6 +281,10 @@ public class NovoGrupoActivity extends AppCompatActivity {
 
     public CheckBox getCheckGRCTIPO() {
         return checkGRCTIPO;
+    }
+
+    public ImageView getImageGRCFOTO() {
+        return imageGRCFOTO;
     }
 
     /********************************************************
@@ -396,6 +424,9 @@ public class NovoGrupoActivity extends AppCompatActivity {
             params.put(Grupo.FIELD_GRNIDAI, fields.getInt(Grupo.FIELD_GRNIDAI));
             params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
             params.put(Grupo.FIELD_GRCTIPO, fields.getString(Grupo.FIELD_GRCTIPO));
+            if (fields.containsKey(Grupo.FIELD_GRCFOTO)) {
+                params.put(Grupo.FIELD_GRCFOTO, fields.getString(Grupo.FIELD_GRCFOTO));
+            }
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
@@ -500,6 +531,9 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                         fields.putInt(Grupo.FIELD_GRNIDAI, areasInteresseId);
                                         fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                         fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                        if (!((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap().equals(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_group_80px))) {
+                                            fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap()));
+                                        }
                                         actionNovoGrupo(fields);
                                     }
                                 } catch (ValidationException e) {
@@ -575,7 +609,8 @@ public class NovoGrupoActivity extends AppCompatActivity {
     }
 
     public void actionCarregarFoto(Bundle fields) {
-        Toast.makeText(this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE);
     }
 
 }
