@@ -84,7 +84,6 @@ public abstract class BiblivirtiParser {
         grupo.setGrcfoto(json.getString(Grupo.FIELD_GRCFOTO));
         grupo.setGrctipo(ETipoGrupo.ABERTO.getValue() == json.getString(Grupo.FIELD_GRCTIPO).charAt(0) ? ETipoGrupo.ABERTO : ETipoGrupo.FECHADO);
         grupo.setGrcstat(EStatusGrupo.ATIVO.getValue() == json.getString(Grupo.FIELD_GRCSTAT).charAt(0) ? EStatusGrupo.ATIVO : EStatusGrupo.INATIVO);
-        grupo.setAdmin(parseToUsuario(json.getJSONObject(Grupo.FIELD_GRADMIN)));
         grupo.setGrdcadt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDCADT)));
         grupo.setGrdaldt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDALDT)));
         return grupo != null ? grupo : null;

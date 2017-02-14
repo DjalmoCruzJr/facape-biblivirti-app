@@ -1,7 +1,6 @@
 package org.sysmob.biblivirti.activities;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +32,7 @@ import org.sysmob.biblivirti.business.AreaOfInterestBO;
 import org.sysmob.biblivirti.business.GroupBO;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
 import org.sysmob.biblivirti.exceptions.ValidationException;
+import org.sysmob.biblivirti.fragments.GruposFragment;
 import org.sysmob.biblivirti.model.AreaInteresse;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
@@ -47,11 +47,12 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NovoGrupoActivity extends AppCompatActivity {
+public class NovoEditarGrupoActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE = 1;
 
     private int activityMode;
+    private String imageMimeType;
     private LinearLayout layoutNovoGrupo;
     private LinearLayout progressLayout;
     private ProgressBar progressBar;
@@ -67,7 +68,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_novo_grupo);
+        setContentView(R.layout.activity_novo_editar_grupo);
 
         // Habilita o botao voltar na actionar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,6 +83,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
             if (getIntent().getExtras() != null) {
                 this.activityMode = getIntent().getExtras().getInt(BiblivirtiConstants.ACTIVITY_MODE_KEY);
                 if (this.activityMode == BiblivirtiConstants.ACTIVITY_MODE_EDITING) {
+                    getSupportActionBar().setTitle(getIntent().getExtras().getString(BiblivirtiConstants.ACTIVITY_TITLE));
                     Bundle fields = new Bundle();
                     fields.putInt(Grupo.FIELD_GRNID, getIntent().getExtras().getInt(Grupo.FIELD_GRNID));
                     actionCarregarGrupo(fields);
@@ -106,11 +108,11 @@ public class NovoGrupoActivity extends AppCompatActivity {
             case R.id.activity_novo_grupo_menu_salvar:
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                    Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     if (this.areaInteresse == null) {
                         try {
-                            if (new AreaOfInterestBO(NovoGrupoActivity.this).validateAdd()) {
+                            if (new AreaOfInterestBO(NovoEditarGrupoActivity.this).validateAdd()) {
                                 Bundle fields = new Bundle();
                                 fields.putString(AreaInteresse.FIELD_AICDESC, editAreaInteresse.getText().toString().trim());
                                 actionNovaAreaInteresse(fields);
@@ -126,8 +128,8 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
                                 fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
-                                if (!((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap().equals(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_group_80px))) {
-                                    fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap()));
+                                if (imageMimeType != null) {
+                                    fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap(), imageMimeType));
                                 }
                                 actionNovoGrupo(fields);
                             }
@@ -163,6 +165,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE:
                     imageGRCFOTO.setImageURI(data.getData());
+                    imageMimeType = data.getType();
                     Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -227,17 +230,17 @@ public class NovoGrupoActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), "TEXTO: " + text);
-                BiblivirtiApplication.getInstance().cancelPendingRequests(NovoGrupoActivity.this.getClass().getSimpleName());
+                BiblivirtiApplication.getInstance().cancelPendingRequests(NovoEditarGrupoActivity.this.getClass().getSimpleName());
             }
 
             @Override
             public void afterTextChanged(Editable text) {
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                    Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                 } else if (text.toString().trim().length() >= editAreaInteresse.getThreshold()) {
                     try {
-                        if (new AreaOfInterestBO(NovoGrupoActivity.this).validateListAll()) {
+                        if (new AreaOfInterestBO(NovoEditarGrupoActivity.this).validateListAll()) {
                             Bundle fields = new Bundle();
                             fields.putString(AreaInteresse.FIELD_AICDESC, text.toString().trim());
                             actionCarregarAreaInteresse(fields);
@@ -315,12 +318,12 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        NovoGrupoActivity.this,
+                                        NovoEditarGrupoActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -333,7 +336,8 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                             } else {
                                 int grnid = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(Grupo.FIELD_GRNID);
-                                Toast.makeText(NovoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                GruposFragment.hasDataChanged = true;
+                                Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grnid));
                                 finish();
                             }
@@ -377,12 +381,12 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        NovoGrupoActivity.this,
+                                        NovoEditarGrupoActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -394,7 +398,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
                             } else {
                                 grupo = BiblivirtiParser.parseToGrupo(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
                                 areaInteresse = grupo.getAreaInteresse();
-                                Toast.makeText(NovoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
                                 loadFields();
                             }
@@ -444,12 +448,12 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        NovoGrupoActivity.this,
+                                        NovoEditarGrupoActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -462,7 +466,7 @@ public class NovoGrupoActivity extends AppCompatActivity {
                                 loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                             } else {
                                 int grnid = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(Grupo.FIELD_GRNID);
-                                Toast.makeText(NovoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grnid));
                                 finish();
                             }
@@ -506,12 +510,12 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 public void onAfterRequest(final JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        NovoGrupoActivity.this,
+                                        NovoEditarGrupoActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -525,14 +529,14 @@ public class NovoGrupoActivity extends AppCompatActivity {
                             } else {
                                 int areasInteresseId = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(AreaInteresse.FIELD_AINID);
                                 try {
-                                    if (new GroupBO(NovoGrupoActivity.this).validateAdd()) {
+                                    if (new GroupBO(NovoEditarGrupoActivity.this).validateAdd()) {
                                         Bundle fields = new Bundle();
                                         fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
                                         fields.putInt(Grupo.FIELD_GRNIDAI, areasInteresseId);
                                         fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                         fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
-                                        if (!((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap().equals(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_group_80px))) {
-                                            fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap()));
+                                        if (imageMimeType != null) {
+                                            fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap(), imageMimeType));
                                         }
                                         actionNovoGrupo(fields);
                                     }
@@ -580,14 +584,14 @@ public class NovoGrupoActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(NovoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(NovoEditarGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                             } else {
                                 areasInteresse = BiblivirtiParser.parseToAreasinteresse(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-                                editAreaInteresse.setAdapter(new ArrayAdapter<String>(NovoGrupoActivity.this, layoutResourceId, getAreasInteresseStringArray(areasInteresse)));
+                                editAreaInteresse.setAdapter(new ArrayAdapter<String>(NovoEditarGrupoActivity.this, layoutResourceId, getAreasInteresseStringArray(areasInteresse)));
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

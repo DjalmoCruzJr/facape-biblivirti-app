@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.fragments.GruposEstudoFragment;
+import org.sysmob.biblivirti.fragments.GruposFragment;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
 
@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         loadListeners();
 
         if (currentFragment == null) {
-            currentFragment = new GruposEstudoFragment();
+            currentFragment = new GruposFragment();
             changeFragment(navigationView.getMenu().getItem(0));
         }
     }
@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         Fragment fragment = currentFragment;
         switch (item.getItemId()) {
             case R.id.drawer_menu_grupos:
-                fragment = currentItemId != item.getItemId() ? new GruposEstudoFragment() : currentFragment;
+                fragment = currentItemId != item.getItemId() ? new GruposFragment() : currentFragment;
                 break;
             case R.id.drawer_menu_perfil:
                 break;

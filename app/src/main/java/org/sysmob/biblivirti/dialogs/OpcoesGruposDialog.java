@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.dialogs;
 
 import android.app.Dialog;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +25,7 @@ public class OpcoesGruposDialog extends DialogFragment {
     private RecyclerView recyclerOpcoes;
     private OpcoesGruposAdapter.OnItemClickListener onOptionsClickListener;
     private String[] textOpcoes;
-    private int[] imageOpcoes;
+    private TypedArray imageOpcoes;
     private int grnid = 0;
 
     public OpcoesGruposDialog() {
@@ -37,13 +38,13 @@ public class OpcoesGruposDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_opcoes_grupos, container, false);
 
         this.textOpcoes = getActivity().getResources().getStringArray(R.array.dialog_opcoes_grupos_texts);
-        this.imageOpcoes = getActivity().getResources().getIntArray(R.array.dialog_opcoes_grupos_images);
+        this.imageOpcoes = getActivity().getResources().obtainTypedArray(R.array.dialog_opcoes_grupos_images);
 
         this.recyclerOpcoes = (RecyclerView) view.findViewById(R.id.recyclerOpcoes);
         this.recyclerOpcoes.setLayoutManager(new LinearLayoutManager(getActivity()));
         this.recyclerOpcoes.setHasFixedSize(true);
         this.recyclerOpcoes.setAdapter(new OpcoesGruposAdapter(getActivity(), this.textOpcoes, this.imageOpcoes));
-
+        ((OpcoesGruposAdapter) this.recyclerOpcoes.getAdapter()).setOnItemClickListener(this.onOptionsClickListener);
         return view;
     }
 
@@ -59,7 +60,7 @@ public class OpcoesGruposDialog extends DialogFragment {
      * PUBLIC METHODS
      *******************************************************/
     public void setOnOptionsClickListener(OpcoesGruposAdapter.OnItemClickListener onOptionsClickListener) {
-        ((OpcoesGruposAdapter) this.recyclerOpcoes.getAdapter()).setOnItemClickListener(onOptionsClickListener);
+        this.onOptionsClickListener = onOptionsClickListener;
     }
 
     public int getGrnid() {

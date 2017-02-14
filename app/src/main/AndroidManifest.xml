@@ -83,7 +83,7 @@
 
         <!-- Novo Grupo Activity -->
         <activity
-            android:name=".activities.NovoGrupoActivity"
+            android:name=".activities.NovoEditarGrupoActivity"
             android:label="@string/activity_novo_grupo_label"
             android:screenOrientation="portrait" />
 

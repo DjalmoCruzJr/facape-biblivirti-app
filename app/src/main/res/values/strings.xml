@@ -26,6 +26,7 @@
     <string name="activity_recuperar_senha_edit_email">E-mail (Ex: pedro@gmailcom)</string>
 
     <string name="activity_novo_grupo_label">Novo Grupo</string>
+    <string name="activity_editar_grupo_label">Editar Grupo</string>
     <string name="activity_novo_grupo_text">Toque na imagem para selecionar uma foto.</string>
     <string name="activity_novo_grupo_hint_nome_grupo">Nome do Grupo (Ex: Sysmob)</string>
     <string name="activity_novo_grupo_hint_area_interesse">Área de Interesse (Ex: Física)</string>
@@ -71,7 +72,7 @@
     <string name="drawer_toggle_open">Drawer Toggle Open</string>
     <string name="drawer_toggle_close">Drawer Toggle Close</string>
     <string name="activity_confirmar_email_label">Confirmar E-mail</string>
-    <string name="activity_info_grupo_label">Info</string>
+    <string name="activity_info_grupo_label">Informações do Grupo</string>
     <string name="activity_notificacoes_label">Notificações</string>
     <string name="activity_editar_perfil_label">Editar Perfil</string>
     <string name="activity_perfil_label">Perfil</string>
@@ -85,10 +86,10 @@
         <item>Excluir</item>
     </string-array>
 
-    <integer-array name="dialog_opcoes_grupos_images">
+    <array name="dialog_opcoes_grupos_images">
         <item>@mipmap/ic_info_100px_blue</item>
         <item>@mipmap/ic_edit_100px_blue</item>
         <item>@mipmap/ic_delete_100px_blue</item>
-    </integer-array>
+    </array>
 
 </resources>

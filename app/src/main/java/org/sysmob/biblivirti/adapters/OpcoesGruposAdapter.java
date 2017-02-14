@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,9 +21,9 @@ public class OpcoesGruposAdapter extends RecyclerView.Adapter<OpcoesGruposAdapte
     private Context context;
     private OnItemClickListener onItemClickListener;
     private String[] textOpcoes;
-    private int[] imageOpcoes;
+    private TypedArray imageOpcoes;
 
-    public OpcoesGruposAdapter(Context context, String[] textOpcoes, int[] imageOpcoes) {
+    public OpcoesGruposAdapter(Context context, String[] textOpcoes, TypedArray imageOpcoes) {
         this.context = context;
         this.textOpcoes = textOpcoes;
         this.imageOpcoes = imageOpcoes;
@@ -50,7 +51,7 @@ public class OpcoesGruposAdapter extends RecyclerView.Adapter<OpcoesGruposAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.image.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), this.imageOpcoes[position]));
+        holder.image.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), this.imageOpcoes.getResourceId(position, 0)));
         holder.text.setText(this.textOpcoes[position].toString());
     }
 

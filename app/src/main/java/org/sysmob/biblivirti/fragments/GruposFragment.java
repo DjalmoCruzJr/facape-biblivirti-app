@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.HomeActivity;
 import org.sysmob.biblivirti.activities.InfoGrupoActivity;
-import org.sysmob.biblivirti.activities.NovoGrupoActivity;
+import org.sysmob.biblivirti.activities.NovoEditarGrupoActivity;
 import org.sysmob.biblivirti.adapters.GruposAdapter;
 import org.sysmob.biblivirti.adapters.OpcoesGruposAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
@@ -43,9 +44,12 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
-public class GruposEstudoFragment extends Fragment {
+public class GruposFragment extends Fragment {
+
+    public static boolean hasDataChanged;
 
     private ProgressBar progressBar;
+    private LinearLayout layoutEmpty;
     private RecyclerView recyclerGrupos;
     private FloatingActionButton buttonNovoGrupo;
     private List<Grupo> grupos;
@@ -60,9 +64,10 @@ public class GruposEstudoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grupos_estudo, container, false);
+        View view = inflater.inflate(R.layout.fragment_grupos, container, false);
 
         this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        this.layoutEmpty = (LinearLayout) view.findViewById(R.id.layoutEmpty);
         this.buttonNovoGrupo = (FloatingActionButton) view.findViewById(R.id.buttonNovoGrupo);
         this.buttonNovoGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +102,18 @@ public class GruposEstudoFragment extends Fragment {
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (GruposFragment.hasDataChanged) {
+            GruposFragment.hasDataChanged = false;
+            this.grupos = null;
+            Bundle fields = new Bundle();
+            fields.putInt(Usuario.FIELD_USNID, ((HomeActivity) getActivity()).getUsuario().getUsnid());
+            actionCarregarGrupos(fields);
+        }
+    }
+
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
@@ -123,7 +140,6 @@ public class GruposEstudoFragment extends Fragment {
                     dialog.setOnOptionsClickListener(new OpcoesGruposAdapter.OnItemClickListener() {
                         @Override
                         public void onCLick(View view, int position) {
-                            Toast.makeText(getActivity(), "Posiçao: " + position, Toast.LENGTH_SHORT).show();
                             Intent intent;
                             Bundle extras;
                             if (!BiblivirtiUtils.isNetworkConnected()) {
@@ -134,7 +150,7 @@ public class GruposEstudoFragment extends Fragment {
                                     case 0:
                                         extras = new Bundle();
                                         extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
-                                        intent = new Intent(GruposEstudoFragment.this.getActivity(), InfoGrupoActivity.class);
+                                        intent = new Intent(GruposFragment.this.getActivity(), InfoGrupoActivity.class);
                                         intent.putExtras(extras);
                                         startActivity(intent);
                                         dialog.dismiss();
@@ -143,7 +159,8 @@ public class GruposEstudoFragment extends Fragment {
                                         extras = new Bundle();
                                         extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
                                         extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
-                                        intent = new Intent(GruposEstudoFragment.this.getActivity(), NovoGrupoActivity.class);
+                                        extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getString(R.string.activity_editar_grupo_label));
+                                        intent = new Intent(GruposFragment.this.getActivity(), NovoEditarGrupoActivity.class);
                                         intent.putExtras(extras);
                                         startActivity(intent);
                                         dialog.dismiss();
@@ -220,6 +237,8 @@ public class GruposEstudoFragment extends Fragment {
                                 );
                             } else {
                                 Toast.makeText(getActivity(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                GruposFragment.hasDataChanged = true;
+                                onResume();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
@@ -240,7 +259,7 @@ public class GruposEstudoFragment extends Fragment {
     }
 
     private void actionNovoGrupo(Bundle fields) {
-        Intent intent = new Intent(getActivity(), NovoGrupoActivity.class);
+        Intent intent = new Intent(getActivity(), NovoEditarGrupoActivity.class);
         intent.putExtras(fields);
         startActivity(intent);
     }
@@ -265,6 +284,7 @@ public class GruposEstudoFragment extends Fragment {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        layoutEmpty.setVisibility(View.VISIBLE);
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     } else {
                         try {

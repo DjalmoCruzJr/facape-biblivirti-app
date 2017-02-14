@@ -23,9 +23,9 @@ public abstract class BiblivirtiUtils {
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
-    public static String encondImage(Bitmap bitmap) {
+    public static String encondImage(Bitmap bitmap, String mimeType) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
+        return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT) + "." + mimeType;
     }
 }
