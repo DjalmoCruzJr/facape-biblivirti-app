@@ -31,24 +31,14 @@ public abstract class BiblivirtiParser {
         return usuario != null ? usuario : null;
     }
 
-    public static List<Grupo> parseToGrupos(JSONArray json) throws JSONException {
-        List<Grupo> grupos = new ArrayList<>();
+    public static List<Usuario> parseToUsuarios(JSONArray json) throws JSONException {
+        List<Usuario> usuarios = new ArrayList<>();
+        Usuario usuario = null;
         for (int i = 0; i < json.length(); i++) {
-            grupos.add(
-                    new Grupo(
-                            json.getJSONObject(i).getInt(Grupo.FIELD_GRNID),
-                            parseToAreaInteresse(json.getJSONObject(i).getJSONObject(Grupo.FIELD_GRAREAOFINTEREST)),
-                            json.getJSONObject(i).getString(Grupo.FIELD_GRCNOME),
-                            json.getJSONObject(i).getString(Grupo.FIELD_GRCFOTO),
-                            ETipoGrupo.ABERTO.getValue() == json.getJSONObject(i).getString(Grupo.FIELD_GRCTIPO).charAt(0) ? ETipoGrupo.ABERTO : ETipoGrupo.FECHADO,
-                            EStatusGrupo.ATIVO.getValue() == json.getJSONObject(i).getString(Grupo.FIELD_GRCSTAT).charAt(0) ? EStatusGrupo.ATIVO : EStatusGrupo.INATIVO,
-                            parseToUsuario(json.getJSONObject(i).getJSONObject(Grupo.FIELD_GRADMIN)),
-                            Timestamp.valueOf(json.getJSONObject(i).getString(Grupo.FIELD_GRDCADT)),
-                            Timestamp.valueOf(json.getJSONObject(i).getString(Grupo.FIELD_GRDALDT))
-                    )
-            );
+            usuario = parseToUsuario(json.getJSONObject(i));
+            usuarios.add(usuario);
         }
-        return grupos.size() > 0 ? grupos : null;
+        return usuarios.size() > 0 ? usuarios : null;
     }
 
     public static AreaInteresse parseToAreaInteresse(JSONObject json) throws JSONException {
@@ -63,15 +53,10 @@ public abstract class BiblivirtiParser {
 
     public static List<AreaInteresse> parseToAreasinteresse(JSONArray json) throws JSONException {
         List<AreaInteresse> areasInteresse = new ArrayList<>();
+        AreaInteresse areaInteresse = null;
         for (int i = 0; i < json.length(); i++) {
-            areasInteresse.add(
-                    new AreaInteresse(
-                            json.getJSONObject(i).getInt(AreaInteresse.FIELD_AINID),
-                            json.getJSONObject(i).getString(AreaInteresse.FIELD_AICDESC),
-                            Timestamp.valueOf(json.getJSONObject(i).getString(AreaInteresse.FIELD_AIDCADT)),
-                            Timestamp.valueOf(json.getJSONObject(i).getString(AreaInteresse.FIELD_AIDALDT))
-                    )
-            );
+            areaInteresse = parseToAreaInteresse(json.getJSONObject(i));
+            areasInteresse.add(areaInteresse);
         }
         return areasInteresse.size() > 0 ? areasInteresse : null;
     }
@@ -86,6 +71,17 @@ public abstract class BiblivirtiParser {
         grupo.setGrcstat(EStatusGrupo.ATIVO.getValue() == json.getString(Grupo.FIELD_GRCSTAT).charAt(0) ? EStatusGrupo.ATIVO : EStatusGrupo.INATIVO);
         grupo.setGrdcadt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDCADT)));
         grupo.setGrdaldt(Timestamp.valueOf(json.getString(Grupo.FIELD_GRDALDT)));
+        grupo.setUsuarios(parseToUsuarios(json.getJSONArray(Grupo.FIELD_GRUSERS)));
         return grupo != null ? grupo : null;
+    }
+
+    public static List<Grupo> parseToGrupos(JSONArray json) throws JSONException {
+        List<Grupo> grupos = new ArrayList<>();
+        Grupo grupo = null;
+        for (int i = 0; i < json.length(); i++) {
+            grupo = parseToGrupo(json.getJSONObject(i));
+            grupos.add(grupo);
+        }
+        return grupos.size() > 0 ? grupos : null;
     }
 }

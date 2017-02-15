@@ -5,6 +5,7 @@ import org.sysmob.biblivirti.enums.ETipoGrupo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by djalmocruzjr on 30/01/2017.
@@ -25,6 +26,7 @@ public class Grupo implements Serializable {
     public static final String FIELD_GRDALDT = "grdaldt";
     public static final String FIELD_GRAREAOFINTEREST = "areaofinterest";
     public static final String FIELD_GRADMIN = "admin";
+    public static final String FIELD_GRUSERS = "users";
 
     private int grnid;
     private AreaInteresse areaInteresse;
@@ -35,11 +37,12 @@ public class Grupo implements Serializable {
     private Usuario admin;
     private Date grdcadt;
     private Date grdaldt;
+    private List<Usuario> usuarios;
 
     public Grupo() {
     }
 
-    public Grupo(int grnid, AreaInteresse areaInteresse, String grcnome, String grcfoto, ETipoGrupo grctipo, EStatusGrupo grcstat, Usuario admin, Date grdcadt, Date grdaldt) {
+    public Grupo(int grnid, AreaInteresse areaInteresse, String grcnome, String grcfoto, ETipoGrupo grctipo, EStatusGrupo grcstat, Usuario admin, Date grdcadt, Date grdaldt, List<Usuario> usuarios) {
         this.grnid = grnid;
         this.areaInteresse = areaInteresse;
         this.grcnome = grcnome;
@@ -49,6 +52,7 @@ public class Grupo implements Serializable {
         this.admin = admin;
         this.grdcadt = grdcadt;
         this.grdaldt = grdaldt;
+        this.usuarios = usuarios;
     }
 
     public int getGrnid() {
@@ -121,5 +125,13 @@ public class Grupo implements Serializable {
 
     public void setGrdaldt(Date grdaldt) {
         this.grdaldt = grdaldt;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

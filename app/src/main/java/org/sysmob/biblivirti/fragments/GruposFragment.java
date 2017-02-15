@@ -117,7 +117,7 @@ public class GruposFragment extends Fragment {
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
-    private void loadData() {
+    private void loadFields() {
         if (grupos == null) {
             // Nenhum grupo encontrado
             Toast.makeText(getActivity(), "Nenhum grupo encontrado!", Toast.LENGTH_SHORT).show();
@@ -301,7 +301,7 @@ public class GruposFragment extends Fragment {
                                 );
                             } else {
                                 grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-                                loadData();
+                                loadFields();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
