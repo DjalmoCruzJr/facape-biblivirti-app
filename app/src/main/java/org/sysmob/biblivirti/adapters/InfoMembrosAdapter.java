@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.adapters;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.model.Usuario;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -23,10 +28,13 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
     private List<Usuario> usuarios;
     private Usuario admin;
     private OnItemClickListener onItemClickListener;
+    private Usuario loggedUser;
 
-    public InfoMembrosAdapter(Context context, List<Usuario> usuarios) {
+    public InfoMembrosAdapter(Context context, List<Usuario> usuarios, Usuario admin) {
         this.context = context;
         this.usuarios = usuarios;
+        this.admin = admin;
+        this.loggedUser = BiblivirtiApplication.getInstance().getLoggedUser();
     }
 
     public OnItemClickListener getOnItemClickListener() {
@@ -47,7 +55,16 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Usuario usuario = this.usuarios.get(position);
-        holder.imageAdmin.setVisibility(View.VISIBLE);
+        holder.imageAdmin.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
+        if (usuario.getUscfoto() != null && !usuario.getUscfoto().equals("null")) {
+            Picasso.with(this.context).load(usuario.getUscfoto()).into(holder.imageUSCFOTO);
+        } else {
+            holder.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_user_80px));
+        }
+        holder.editUSCNOME.setText(usuario.getUscnome().toString());
+        holder.editUSCMAIL.setText(usuario.getUscmail().toString());
+        holder.editGRDCADT.setText(new SimpleDateFormat("dd/MM/yyy HH:mm").format(usuario.getUsdcadt()));
+        holder.buttonRemoverDoGrupo.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -69,11 +86,10 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
             view.setOnClickListener(this);
             imageUSCFOTO = (ImageView) view.findViewById(R.id.imageUSCFOTO);
             imageAdmin = (ImageView) view.findViewById(R.id.imageAdmin);
-            editUSCNOME = (TextView) view.findViewById(R.id.editUSCNOME);
-            editUSCMAIL = (TextView) view.findViewById(R.id.editUSCMAIL);
-            editGRDCADT = (TextView) view.findViewById(R.id.editGRDCADT);
+            editUSCNOME = (TextView) view.findViewById(R.id.textUSCNOME);
+            editUSCMAIL = (TextView) view.findViewById(R.id.textUSCMAIL);
+            editGRDCADT = (TextView) view.findViewById(R.id.textGRDCADT);
             buttonRemoverDoGrupo = (Button) view.findViewById(R.id.buttonRemoverDoGrupo);
-
         }
 
         @Override
@@ -88,4 +104,5 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
     public interface OnItemClickListener {
         public void onCLick(View view, int position);
     }
+
 }

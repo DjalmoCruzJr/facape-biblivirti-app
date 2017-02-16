@@ -38,7 +38,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/editGRCNOME"
+                android:id="@+id/textGRCNOME"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nome ou Apelido (Ex: José da Silva)"

@@ -187,7 +187,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
         this.layoutNovoGrupo = (LinearLayout) this.findViewById(R.id.containerLayout);
         this.progressLayout = (LinearLayout) this.findViewById(R.id.progressLayout);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-        this.editGRCNOME = (EditText) this.findViewById(R.id.editGRCNOME);
+        this.editGRCNOME = (EditText) this.findViewById(R.id.textGRCNOME);
         this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
         this.imageGRCFOTO = (ImageView) this.findViewById(R.id.imageGRCFOTO);
 

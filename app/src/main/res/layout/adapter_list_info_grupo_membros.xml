@@ -29,7 +29,7 @@
             tools:ignore="InefficientWeight,RtlHardcoded">
 
             <TextView
-                android:id="@+id/editUSCNOME"
+                android:id="@+id/textUSCNOME"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -41,7 +41,7 @@
                 tools:ignore="HardcodedText,NestedWeights" />
 
             <TextView
-                android:id="@+id/editUSCMAIL"
+                android:id="@+id/textUSCMAIL"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -74,7 +74,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/editGRDCADT"
+                    android:id="@+id/textGRDCADT"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -117,4 +117,9 @@
         android:textStyle="normal"
         tools:ignore="HardcodedText" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorGray" />
 </LinearLayout>

@@ -49,7 +49,7 @@
             tools:ignore="RtlHardcoded">
 
             <TextView
-                android:id="@+id/editUSCNOME"
+                android:id="@+id/textUSCNOME"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -71,7 +71,7 @@
                 android:textStyle="normal" />
 
             <TextView
-                android:id="@+id/editUSCMAIL"
+                android:id="@+id/textUSCMAIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -96,7 +96,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/editGRDCADT"
+                    android:id="@+id/textGRDCADT"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

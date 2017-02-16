@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/editGRCNOME"
+                    android:id="@+id/textGRCNOME"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/activity_novo_grupo_hint_nome_grupo"
