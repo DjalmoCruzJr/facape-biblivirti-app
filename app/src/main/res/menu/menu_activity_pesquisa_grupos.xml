@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/fragment_grupos_estudo_menu_pesquisar"
-        android:icon="@mipmap/ic_search_100px_white"
-        android:title="@string/menu_fragment_grupos_estudo_pesquisar"
+        android:id="@+id/activity_pesquisar_menu_pesquisar"
         android:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="@mipmap/ic_search_100px_white"
+        android:title="@string/menu_activity_pesquisar_pesquisar"
         app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

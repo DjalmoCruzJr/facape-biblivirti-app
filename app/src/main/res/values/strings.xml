@@ -78,7 +78,11 @@
     <string name="activity_perfil_label">Perfil</string>
 
     <string name="menu_activity_novo_grupo_salvar">Salvar</string>
-    <string name="menu_fragment_grupos_estudo_pesquisar">Pesquisar</string>
+    <string name="menu_activity_info_grupo_editar">Editar</string>
+    <string name="menu_fragment_grupos_estudo_pesquisar">@string/menu_activity_pesquisar_pesquisar</string>
+    <string name="menu_activity_pesquisar_pesquisar">Pesquisar...</string>
+    <string name="search_hint">Pesquisar...</string>
+    <string name="activity_pesquisar_grupos_label">Pesquisar Grupos</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>

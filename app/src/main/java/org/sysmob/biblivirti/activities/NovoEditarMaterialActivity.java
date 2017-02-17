@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.sysmob.biblivirti.R;
 
-public class NovoMaterialActivity extends AppCompatActivity {
+public class NovoEditarMaterialActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +74,14 @@ public class InfoGrupoActivity extends AppCompatActivity {
                 actionCarregarGrupo(fields);
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getMenuInflater().inflate(R.menu.menu_activity_info_grupo, menu);
+        menu.findItem(R.menu.menu_activity_info_grupo).setEnabled(this.loggedUser != null);
+        menu.findItem(R.menu.menu_activity_info_grupo).setVisible(this.loggedUser != null);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

@@ -151,9 +151,11 @@ public abstract class BiblivirtiConstants {
 
     public static final int RESPONSE_CODE_UNAUTHORIZED = 401;
     /**
-     * Constantes relacionadas as requisicoes com o a API
+     * Constantes relacionadas as requisicoes a API
      */
     public static final int REQUEST_TIMEOUT = 10000;
     public static final int DEFAULT_MAX_RETRIES = 0;
     public static final float DEFAULT_BACKOFF_MULT = 0;
+
+    public static final String FIELD_SEARCH_REFERENCE = "reference";
 }

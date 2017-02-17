@@ -1,5 +1,7 @@
 package org.sysmob.biblivirti.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -89,6 +92,23 @@ public class GruposFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_fragment_grupos_estudo, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.menu.menu_fragment_grupos_estudo).getActionView();
+        searchView.setSearchableInfo(((SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -320,4 +340,5 @@ public class GruposFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 }

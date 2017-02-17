@@ -17,38 +17,33 @@
         android:supportsRtl="true"
         android:theme="@style/BiblivirtiTheme">
 
-        <!-- [START fcm_default_icon] -->
-        <!--
-             Set custom default icon. This is used when no icon is set for incoming notification messages.
-             See README(https://goo.gl/l4GJaQ) for more.
-        -->
+        <!-- META-DATAS -->
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="org.sysmob.biblivirti.activities.PesquisarActivity" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_app_white_medium" />
-        <!--
-             Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more.
-        -->
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-        <!-- [END fcm_default_icon] -->
+            android:resource="@color/colorPrimary" />
 
-
-        <!-- [Biblivirit Messaging Service] -->
+        <!-- SERVICES -->
         <service android:name=".services.BiblivirtiMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- [Biblivirit Instance ID Service] -->
         <service android:name=".services.BiblivirtiInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
+        <!-- ACTIVITIES -->
         <!-- Splash Activity -->
         <activity
             android:name=".activities.SplashActivity"
@@ -81,15 +76,15 @@
             android:screenOrientation="portrait" />
         />
 
-        <!-- Novo Grupo Activity -->
+        <!-- Novo/Editar Grupo Activity -->
         <activity
             android:name=".activities.NovoEditarGrupoActivity"
             android:label="@string/activity_novo_grupo_label"
             android:screenOrientation="portrait" />
 
-        <!-- Novo Matertial Activity -->
+        <!-- Novo/Editar Matertial Activity -->
         <activity
-            android:name=".activities.NovoMaterialActivity"
+            android:name=".activities.NovoEditarMaterialActivity"
             android:label="@string/activity_novo_material_label"
             android:screenOrientation="portrait" />
 
@@ -128,6 +123,23 @@
             android:name=".activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BiblivirtiTheme.HomeActivity" />
+
+        <!-- Pesquisar Activity -->
+        <activity
+            android:name=".activities.PesquisarGruposActivity"
+            android:label="@string/activity_pesquisar_grupos_label"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.PesquisarGruposActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
     </application>
 
 </manifest>
