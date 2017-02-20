@@ -83,6 +83,8 @@
     <string name="menu_activity_pesquisar_pesquisar">Pesquisar...</string>
     <string name="search_hint">Pesquisar...</string>
     <string name="activity_pesquisar_grupos_label">Pesquisar Grupos</string>
+    <string name="adapter_pesquisar_grupos_fragment_button_sair_text">Sair do Grupo</string>
+    <string name="adapter_pesquisar_grupos_fragment_button_participar_text">Participar do Grupo</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>
