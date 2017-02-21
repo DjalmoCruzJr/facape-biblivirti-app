@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/activity_pesquisar_menu_pesquisar"
-        android:actionViewClass="android.support.v7.widget.SearchView"
-        android:icon="@mipmap/ic_search_100px_white"
+        android:icon="@mipmap/ic_search_50px_white"
         android:title="@string/menu_activity_pesquisar_pesquisar"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
 
 </menu>

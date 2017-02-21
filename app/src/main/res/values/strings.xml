@@ -81,8 +81,8 @@
     <string name="menu_activity_info_grupo_editar">Editar</string>
     <string name="menu_fragment_grupos_estudo_pesquisar">@string/menu_activity_pesquisar_pesquisar</string>
     <string name="menu_activity_pesquisar_pesquisar">Pesquisar...</string>
-    <string name="search_hint">Pesquisar...</string>
-    <string name="activity_pesquisar_grupos_label">Pesquisar Grupos</string>
+    <string name="activity_pesquisar_hint">Pesquisar...</string>
+    <string name="activity_pesquisar_label">Pesquisar...</string>
     <string name="adapter_pesquisar_grupos_fragment_button_sair_text">Sair do Grupo</string>
     <string name="adapter_pesquisar_grupos_fragment_button_participar_text">Participar do Grupo</string>
 

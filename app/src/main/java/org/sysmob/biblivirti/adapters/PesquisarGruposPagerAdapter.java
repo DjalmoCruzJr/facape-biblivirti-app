@@ -2,7 +2,7 @@ package org.sysmob.biblivirti.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.fragments.PesquisarGruposFragment;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by micro99 on 17/02/2017.
  */
 
-public class PesquisarGruposAdapter extends FragmentPagerAdapter {
+public class PesquisarGruposPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final int FRAGMENTS_COUNT = 3;
 
@@ -25,7 +25,7 @@ public class PesquisarGruposAdapter extends FragmentPagerAdapter {
     private List<Grupo> gruposOutros;
     private Usuario loggedUser;
 
-    public PesquisarGruposAdapter(FragmentManager fm, List<Grupo> grupos) {
+    public PesquisarGruposPagerAdapter(FragmentManager fm, List<Grupo> grupos) {
         super(fm);
         this.gruposTodos = grupos;
         this.gruposMeus = new ArrayList<>();

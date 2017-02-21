@@ -59,6 +59,7 @@ public class NovaContaActivity extends AppCompatActivity {
             case android.R.id.home:
                 BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
                 finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

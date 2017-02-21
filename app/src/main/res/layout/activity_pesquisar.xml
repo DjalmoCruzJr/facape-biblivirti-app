@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorGrayLight"
     android:orientation="vertical"
-    tools:context="org.sysmob.biblivirti.activities.PerfilActivity">
+    tools:context="org.sysmob.biblivirti.activities.PesquisarActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

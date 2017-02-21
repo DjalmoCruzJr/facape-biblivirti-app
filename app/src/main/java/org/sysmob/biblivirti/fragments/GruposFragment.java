@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -92,26 +91,29 @@ public class GruposFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_fragment_grupos_estudo, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.menu.menu_fragment_grupos_estudo).getActionView();
-        searchView.setSearchableInfo(((SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getActivity().getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.fragment_grupos_estudo_menu_pesquisar).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setQueryHint(getResources().getString(R.string.activity_pesquisar_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getActivity(), String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
+                Toast.makeText(getActivity(), String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
         });
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
@@ -120,7 +122,7 @@ public class GruposFragment extends Fragment {
                 break;
         }
         return true;
-    }
+    }*/
 
     @Override
     public void onResume() {

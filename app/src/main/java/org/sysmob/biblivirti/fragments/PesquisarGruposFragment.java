@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.adapters.PesquisaGruposFragmentAdapter;
-import org.sysmob.biblivirti.adapters.PesquisarGruposAdapter;
+import org.sysmob.biblivirti.adapters.PesquisarGruposPagerAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.model.Grupo;
 
@@ -36,7 +36,7 @@ public class PesquisarGruposFragment extends Fragment {
         this.layoutEmpty = (LinearLayout) view.findViewById(R.id.layoutEmpty);
         this.layoutEmpty.setVisibility(this.grupos == null ? View.VISIBLE : View.GONE);
         this.recyclerGrupos = (RecyclerView) view.findViewById(R.id.recyclerGrupos);
-        new PesquisarGruposAdapter(getFragmentManager(), this.grupos);
+        new PesquisarGruposPagerAdapter(getFragmentManager(), this.grupos);
         this.recyclerGrupos.setAdapter(new PesquisaGruposFragmentAdapter(getActivity(), this.grupos, BiblivirtiApplication.getInstance().getLoggedUser()));
 
         return view;

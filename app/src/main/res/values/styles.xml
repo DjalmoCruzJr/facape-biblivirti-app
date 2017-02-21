@@ -28,7 +28,7 @@
     </style>
 
     <!-- Pesquisar Grupos Activity Theme  -->
-    <style name="BiblivirtiTheme.PesquisarGruposActivity" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BiblivirtiTheme.PesquisarActivity" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

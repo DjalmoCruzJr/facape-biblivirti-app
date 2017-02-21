@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
         this.drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_toggle_open, R.string.drawer_toggle_close);
         this.drawerLayout.addDrawerListener(drawerToggle);
 
-        this.toolbar = (Toolbar) this.findViewById(R.id.homeToolbar);
+        this.toolbar = (Toolbar) this.findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
