@@ -21,11 +21,9 @@
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activities.PesquisarActivity" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_app_white_medium" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
@@ -36,7 +34,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".services.BiblivirtiInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -131,7 +128,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/BiblivirtiTheme.PesquisarActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -139,8 +135,13 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
+
+        <!-- Grupo Activity -->
+        <activity
+            android:name=".activities.GrupoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.GrupoActivity" />
     </application>
 
 </manifest>
