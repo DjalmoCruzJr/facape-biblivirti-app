@@ -142,6 +142,7 @@ public class GruposFragment extends Fragment {
     private void loadFields() {
         if (grupos == null) {
             // Nenhum grupo encontrado
+            layoutEmpty.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Nenhum grupo encontrado!", Toast.LENGTH_SHORT).show();
         } else {
             this.recyclerGrupos = (RecyclerView) this.getView().findViewById(R.id.recyclerGrupos);

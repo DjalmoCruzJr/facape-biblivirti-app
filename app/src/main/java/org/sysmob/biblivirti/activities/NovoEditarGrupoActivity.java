@@ -2,8 +2,10 @@ package org.sysmob.biblivirti.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -165,7 +167,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE:
                     imageGRCFOTO.setImageURI(data.getData());
-                    imageMimeType = data.getType();
+                    imageMimeType = getContentResolver().getType(data.getData());
                     Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -506,6 +508,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                     enableWidgets(false);
                 }
 
+                @RequiresApi(api = Build.VERSION_CODES.FROYO)
                 @Override
                 public void onAfterRequest(final JSONObject response) {
                     if (response == null) {
