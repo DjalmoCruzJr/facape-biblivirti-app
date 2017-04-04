@@ -69,7 +69,7 @@ public class GruposAdapter extends RecyclerView.Adapter<GruposAdapter.ViewHolder
         Grupo grupo = this.grupos.get(position);
         holder.imageGrupoPrivado.setVisibility(grupo.getGrctipo().equals(ETipoGrupo.FECHADO) ? View.VISIBLE : View.GONE);
         holder.imageAdmin.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), grupo.getAdmin().getUsnid() == this.usuario.getUsnid() ? R.mipmap.ic_king_100px_blue : R.mipmap.ic_king_100px_gray));
-        if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equals("null")) {
+        if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equalsIgnoreCase("null")) {
             Picasso.with(this.context).load(grupo.getGrcfoto()).into(holder.imageGRCFOTO);
         } else {
             holder.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_group_80px));

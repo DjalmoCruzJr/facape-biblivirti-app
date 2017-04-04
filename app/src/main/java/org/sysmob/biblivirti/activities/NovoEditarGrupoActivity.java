@@ -1,7 +1,9 @@
 package org.sysmob.biblivirti.activities;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,6 +150,9 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
                                 fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putString(Grupo.FIELD_GRCTIPO, checkGRCTIPO.isChecked() ? String.valueOf(ETipoGrupo.FECHADO.getValue()) : String.valueOf(ETipoGrupo.ABERTO.getValue()));
+                                if (imageMimeType != null) {
+                                    fields.putString(Grupo.FIELD_GRCFOTO, BiblivirtiUtils.encondImage(((BitmapDrawable) imageGRCFOTO.getDrawable()).getBitmap(), imageMimeType));
+                                }
                                 actionEditarGrupo(fields);
                             }
                         } catch (ValidationException e) {
@@ -209,6 +215,11 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
+        if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equalsIgnoreCase("null")) {
+            Picasso.with(this).load(grupo.getGrcfoto()).into(this.imageGRCFOTO);
+        } else {
+            this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
+        }
         this.editGRCNOME.setText(this.grupo.getGrcnome().toString());
         this.editAreaInteresse.setText(this.areaInteresse.getAicdesc().toString());
     }
@@ -303,6 +314,9 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             params.put(Grupo.FIELD_GRNIDAI, fields.getInt(Grupo.FIELD_GRNIDAI));
             params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
             params.put(Grupo.FIELD_GRCTIPO, fields.getString(Grupo.FIELD_GRCTIPO));
+            if (fields.containsKey(Grupo.FIELD_GRCFOTO)) {
+                params.put(Grupo.FIELD_GRCFOTO, fields.getString(Grupo.FIELD_GRCFOTO));
+            }
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,

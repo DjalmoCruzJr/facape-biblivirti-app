@@ -85,6 +85,12 @@
     <string name="activity_pesquisar_label">Pesquisar...</string>
     <string name="adapter_pesquisar_grupos_fragment_button_sair_text">Sair do Grupo</string>
     <string name="adapter_pesquisar_grupos_fragment_button_participar_text">Participar do Grupo</string>
+    <string name="activity_confirmar_recuperacao_text_informativo">Informe o token de recuperação para alterar seus dados de acesso.</string>
+    <string name="activity_confirmar_recuperacao_hint_rsctokn">Token de Recuperaçao</string>
+    <string name="activity_confirmar_recuperacao_button_validar">Validar</string>
+    <string name="acitivity_confirmar_recuperacao_text_informativo2">Pressione o botão abaixo para reenviar o token de recuperação para seu e-mail.</string>
+    <string name="activity_confirmar_recuperacao_button_reenviar_token">Reenviar Token de Recuperação</string>
+    <string name="activity_confirmar_recuperacao_label">Confirmar Recuperação</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>

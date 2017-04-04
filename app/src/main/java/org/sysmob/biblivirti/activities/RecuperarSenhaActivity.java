@@ -171,12 +171,12 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                 Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
                                 Toast.makeText(RecuperarSenhaActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_LONG).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
-                                /*Bundle bundle = new Bundle();
+                                Bundle bundle = new Bundle();
                                 bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
                                 Intent intent = new Intent(RecuperarSenhaActivity.this, ConfirmarRecuperacaoActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
-                                finish();*/
+                                finish();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
