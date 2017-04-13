@@ -3,6 +3,7 @@ package org.sysmob.biblivirti.activities;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -40,6 +41,7 @@ import java.text.SimpleDateFormat;
 
 public class InfoGrupoActivity extends AppCompatActivity {
 
+    private LinearLayout activityLayout;
     private ProgressBar progressBar;
     private LinearLayout layoutEmpty;
     private RecyclerView recyclerMembros;
@@ -79,8 +81,6 @@ public class InfoGrupoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.menu_activity_info_grupo, menu);
-        menu.findItem(R.menu.menu_activity_info_grupo).setEnabled(this.loggedUser != null);
-        menu.findItem(R.menu.menu_activity_info_grupo).setVisible(this.loggedUser != null);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -110,6 +110,9 @@ public class InfoGrupoActivity extends AppCompatActivity {
 
     private void loadWidgets() {
         this.loggedUser = BiblivirtiApplication.getInstance().getLoggedUser();
+        this.activityLayout = (LinearLayout) findViewById(R.id.activityLayout);
+        this.activityLayout.setVisibility(View.GONE);
+
         this.layoutEmpty = (LinearLayout) findViewById(R.id.layoutEmpty);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.recyclerMembros = (RecyclerView) findViewById(R.id.recyclerMembros);
@@ -134,7 +137,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
                         if (new GroupBO(InfoGrupoActivity.this).validateSubscribe()) {
                             Bundle fields = new Bundle();
                             fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
-                            fields.putInt(Usuario.FIELD_USNID, grupo.getGrnid());
+                            fields.putInt(Usuario.FIELD_USNID, loggedUser.getUsnid());
                             actionParticiparGrupo(fields);
                         }
                     } catch (ValidationException e) {
@@ -147,16 +150,20 @@ public class InfoGrupoActivity extends AppCompatActivity {
 
     private void loadFields() {
         this.imageGrupoPrivado.setVisibility(this.grupo.getGrctipo().equals(ETipoGrupo.FECHADO) ? View.VISIBLE : View.GONE);
+        this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
         if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equals("null")) {
             Picasso.with(this).load(grupo.getGrcfoto()).into(this.imageGRCFOTO);
-        } else {
-            this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
         }
         this.textGRCNOME.setText(this.grupo.getGrcnome().toString());
         this.textAICDESC.setText(this.grupo.getAreaInteresse().getAicdesc().toString());
         this.textGRDCADT.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(this.grupo.getGrdcadt()));
         this.textQtdMembros.setText(this.textQtdMembros.getText().toString().replace("xx", String.valueOf(this.grupo.getUsuarios().size())));
+
+        this.recyclerMembros.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerMembros.setHasFixedSize(true);
         this.recyclerMembros.setAdapter(new InfoMembrosAdapter(this, grupo.getUsuarios(), grupo.getAdmin()));
+
+        this.activityLayout.setVisibility(View.VISIBLE);
     }
 
     /********************************************************
@@ -263,7 +270,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
-                                // Falta mudar o status do botao "Participar do Grupo"
+                                buttonParticiparGrupo.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

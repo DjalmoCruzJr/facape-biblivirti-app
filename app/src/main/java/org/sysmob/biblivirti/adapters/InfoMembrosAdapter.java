@@ -55,13 +55,12 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Usuario usuario = this.usuarios.get(position);
-        holder.imageAdmin.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
+        holder.imageAdmin.setVisibility(this.admin.getUsnid() == usuario.getUsnid() ? View.VISIBLE : View.GONE);
+        holder.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_user_80px));
         if (usuario.getUscfoto() != null && !usuario.getUscfoto().equals("null")) {
             Picasso.with(this.context).load(usuario.getUscfoto()).into(holder.imageUSCFOTO);
-        } else {
-            holder.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_user_80px));
         }
-        holder.editUSCNOME.setText(usuario.getUscnome().toString());
+        holder.editUSCNOME.setText(usuario.getUscnome() != null ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
         holder.editUSCMAIL.setText(usuario.getUscmail().toString());
         holder.editGRDCADT.setText(new SimpleDateFormat("dd/MM/yyy HH:mm").format(usuario.getUsdcadt()));
         holder.buttonRemoverDoGrupo.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
