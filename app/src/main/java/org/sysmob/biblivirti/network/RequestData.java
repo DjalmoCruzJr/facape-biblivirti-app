@@ -47,7 +47,18 @@ public class RequestData implements Serializable {
     }
 
     public String getUrl() {
-        return url;
+        if (this.getStrParams() != null) {
+            this.url += "?";
+            for (int i = 0; i < this.getStrParams().size(); i++) {
+                this.url += (String) this.getStrParams().keySet().toArray()[i];
+                this.url += "=";
+                this.url += (String) this.getStrParams().values().toArray()[i];
+                if (i + 1 < this.getStrParams().size()) {
+                    this.url += "&";
+                }
+            }
+        }
+        return this.url;
     }
 
     public void setUrl(String url) {

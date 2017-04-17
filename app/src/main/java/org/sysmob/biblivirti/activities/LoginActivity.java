@@ -260,8 +260,8 @@ public class LoginActivity extends AppCompatActivity {
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());
                                 Bundle bundle = new Bundle();
-                                BiblivirtiApplication.getInstance().setLoggedUser(usuario);
                                 bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
+                                BiblivirtiApplication.getInstance().setLoggedUser(usuario);
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 intent.putExtras(bundle);
                                 startActivity(intent);

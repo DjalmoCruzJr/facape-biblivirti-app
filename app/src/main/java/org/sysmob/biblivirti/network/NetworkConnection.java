@@ -3,24 +3,17 @@ package org.sysmob.biblivirti.network;
 import android.app.Activity;
 import android.content.Context;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
-import org.sysmob.biblivirti.model.ConfirmarEmail;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by djalmocruzjr on 09/01/2017.
@@ -48,6 +41,7 @@ public class NetworkConnection {
     /******************************************
      * PRIVATE METHODS
      *****************************************/
+
     private void executeRequest(final RequestData requestData, final ITransaction transaction) {
         Request request = null;
         if (requestData.getMethod() == Request.Method.GET) {
@@ -66,12 +60,7 @@ public class NetworkConnection {
                             transaction.onAfterRequest((String) null);
                         }
                     }
-            ){
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    return requestData.getStrParams();
-                }
-            };
+            );
         } else {
             request = new JsonObjectRequest(
                     requestData.getMethod(),

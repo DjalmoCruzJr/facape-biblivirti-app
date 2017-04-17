@@ -1,5 +1,6 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -93,6 +94,25 @@ public class InfoGrupoActivity extends AppCompatActivity {
             case android.R.id.home:
                 BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
                 finish();
+                break;
+
+            case R.id.activity_info_grupo_menu_editar:
+                Bundle fields;
+                Intent intent;
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    fields = new Bundle();
+                    fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
+                    fields.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
+                    fields.putString(BiblivirtiConstants.ACTIVITY_TITLE, getString(R.string.activity_editar_grupo_label));
+                    intent = new Intent(this, NovoEditarGrupoActivity.class);
+                    intent.putExtras(fields);
+                    startActivity(intent);
+                    finish();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

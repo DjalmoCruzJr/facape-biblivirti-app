@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -202,34 +203,40 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
 
             @Override
             public void onAfterRequest(JSONObject response) {
+            }
+
+            @Override
+            public void onAfterRequest(String response) {
                 if (response == null) {
                     String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
                     Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     try {
-                        if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                        JSONObject json = new JSONObject(response);
+                        if (json.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                             BiblivirtiDialogs.showMessageDialog(
                                     ConfirmarEmailActivity.this,
                                     "Mensagem",
                                     String.format(
                                             "Código: %d\n%s",
-                                            response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                            response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                            json.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                            json.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
                                     ),
                                     "Ok"
                             );
                             // Carrega as mensagens de erros nos widgets
-                            loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                            loadErrors(json.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                         } else {
-                            Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
-                            Toast.makeText(ConfirmarEmailActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
-                            Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
+                            Usuario usuario = BiblivirtiParser.parseToUsuario(json.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                            Toast.makeText(ConfirmarEmailActivity.this, json.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                            Log.i(String.format("%s:", getClass().getSimpleName().toString()), json.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
-                            /*Intent intent = new Intent(ConfirmarEmailActivity.this, HomeActivity.class);
+                            BiblivirtiApplication.getInstance().setLoggedUser(usuario);
+                            Intent intent = new Intent(ConfirmarEmailActivity.this, HomeActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.putExtras(bundle);
-                            startActivity(intent);*/
+                            startActivity(intent);
                             finish();
                         }
                     } catch (JSONException e) {
@@ -239,10 +246,6 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.GONE);
                 enableWidgets(true);
-            }
-
-            @Override
-            public void onAfterRequest(String response) {
             }
         });
     }
