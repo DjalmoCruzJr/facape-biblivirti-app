@@ -255,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             } else {
                                 Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(LoginActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(LoginActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL, usuario.getUscmail());
                                 BiblivirtiPreferences.saveProperty(LoginActivity.this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA, usuario.getUscsenh());

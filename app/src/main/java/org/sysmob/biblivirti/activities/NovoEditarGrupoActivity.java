@@ -3,7 +3,6 @@ package org.sysmob.biblivirti.activities;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -59,7 +58,6 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     private int activityMode;
     private String imageMimeType;
     private LinearLayout layoutNovoGrupo;
-    private LinearLayout progressLayout;
     private ProgressBar progressBar;
     private EditText editGRCNOME;
     private ImageView imageGRCFOTO;
@@ -193,7 +191,6 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     private void loadWidgets() {
         this.layoutResourceId = android.R.layout.simple_list_item_1;
         this.layoutNovoGrupo = (LinearLayout) this.findViewById(R.id.containerLayout);
-        this.progressLayout = (LinearLayout) this.findViewById(R.id.progressLayout);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         this.editGRCNOME = (EditText) this.findViewById(R.id.textGRCNOME);
         this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
@@ -215,10 +212,9 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
+        this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
         if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equalsIgnoreCase("null")) {
             Picasso.with(this).load(grupo.getGrcfoto()).into(this.imageGRCFOTO);
-        } else {
-            this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
         }
         this.editGRCNOME.setText(this.grupo.getGrcnome().toString());
         this.editAreaInteresse.setText(this.areaInteresse.getAicdesc().toString());
@@ -326,7 +322,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             new NetworkConnection(this).execute(requestData, new ITransaction() {
                 @Override
                 public void onBeforeRequest() {
-                    progressLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     enableWidgets(false);
                 }
 
@@ -352,9 +348,9 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                                 loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                             } else {
                                 int grnid = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(Grupo.FIELD_GRNID);
-                                GruposFragment.hasDataChanged = true;
                                 Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grnid));
+                                GruposFragment.hasDataChanged = true;
                                 finish();
                             }
                         } catch (JSONException e) {
@@ -362,7 +358,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    progressLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
                 }
 
@@ -389,7 +385,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             new NetworkConnection(this).execute(requestData, new ITransaction() {
                 @Override
                 public void onBeforeRequest() {
-                    progressLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     enableWidgets(false);
                 }
 
@@ -414,7 +410,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                             } else {
                                 grupo = BiblivirtiParser.parseToGrupo(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
                                 areaInteresse = grupo.getAreaInteresse();
-                                Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
                                 loadFields();
                             }
@@ -423,7 +419,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    progressLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
                 }
 
@@ -456,7 +452,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             new NetworkConnection(this).execute(requestData, new ITransaction() {
                 @Override
                 public void onBeforeRequest() {
-                    progressLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     enableWidgets(false);
                 }
 
@@ -484,6 +480,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                                 int grnid = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getInt(Grupo.FIELD_GRNID);
                                 Toast.makeText(NovoEditarGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grnid));
+                                GruposFragment.hasDataChanged = true;
                                 finish();
                             }
                         } catch (JSONException e) {
@@ -491,7 +488,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    progressLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
                 }
 
@@ -518,12 +515,12 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             new NetworkConnection(this).execute(requestData, new ITransaction() {
                 @Override
                 public void onBeforeRequest() {
-                    progressLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     enableWidgets(false);
                 }
 
-                @RequiresApi(api = Build.VERSION_CODES.FROYO)
                 @Override
+                @RequiresApi(api = Build.VERSION_CODES.FROYO)
                 public void onAfterRequest(final JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
@@ -566,7 +563,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    progressLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
                 }
 

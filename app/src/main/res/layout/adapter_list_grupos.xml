@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/imageGRCFOTO"
             android:layout_width="68dp"
-            android:layout_height="wrap_content"
+            android:layout_height="68dp"
             android:adjustViewBounds="true"
             android:src="@mipmap/ic_app_group_80px"
             tools:ignore="ContentDescription" />

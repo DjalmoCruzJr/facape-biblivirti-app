@@ -54,6 +54,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
     private Button buttonParticiparGrupo;
     private Grupo grupo;
     private Usuario loggedUser;
+    private boolean showMenuOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,8 @@ public class InfoGrupoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getMenuInflater().inflate(R.menu.menu_activity_info_grupo, menu);
+        menu.findItem(R.id.activity_info_grupo_menu_editar).setEnabled(this.showMenuOptions);
+        menu.findItem(R.id.activity_info_grupo_menu_editar).setVisible(this.showMenuOptions);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -123,6 +126,8 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.textAICDESC = (TextView) findViewById(R.id.textAICDESC);
         this.textQtdMembros = (TextView) findViewById(R.id.textQtdMembros);
         this.buttonParticiparGrupo = (Button) findViewById(R.id.buttonParticiparGrupo);
+
+        this.showMenuOptions = false;
     }
 
     private void loadListeners() {
@@ -149,11 +154,17 @@ public class InfoGrupoActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
+        if (this.loggedUser.getUsnid() == this.grupo.getAdmin().getUsnid()) {
+            this.showMenuOptions = true;
+            this.invalidateOptionsMenu();
+        }
+
         this.imageGrupoPrivado.setVisibility(this.grupo.getGrctipo().equals(ETipoGrupo.FECHADO) ? View.VISIBLE : View.GONE);
         this.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_app_group_80px));
         if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equals("null")) {
             Picasso.with(this).load(grupo.getGrcfoto()).into(this.imageGRCFOTO);
         }
+
         this.textGRCNOME.setText(this.grupo.getGrcnome().toString());
         this.textAICDESC.setText(this.grupo.getAreaInteresse().getAicdesc().toString());
         this.textGRDCADT.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(this.grupo.getGrdcadt()));
@@ -207,7 +218,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
                                 );
                             } else {
                                 grupo = BiblivirtiParser.parseToGrupo(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
                                 loadFields();
                             }
