@@ -143,6 +143,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                         try {
                             if (new GroupBO(this).validateEdit()) {
                                 Bundle fields = new Bundle();
+                                fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Grupo.FIELD_GRCNOME, editGRCNOME.getText().toString().trim());
                                 fields.putInt(Grupo.FIELD_GRNIDAI, this.areaInteresse.getAinid());
@@ -218,6 +219,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
         }
         this.editGRCNOME.setText(this.grupo.getGrcnome().toString());
         this.editAreaInteresse.setText(this.areaInteresse.getAicdesc().toString());
+        this.checkGRCTIPO.setChecked(this.grupo.getGrctipo().equals(ETipoGrupo.FECHADO));
     }
 
     private void loadListeners() {
@@ -305,6 +307,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     private void actionEditarGrupo(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
             params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
             params.put(Grupo.FIELD_GRCNOME, fields.getString(Grupo.FIELD_GRCNOME));
             params.put(Grupo.FIELD_GRNIDAI, fields.getInt(Grupo.FIELD_GRNIDAI));

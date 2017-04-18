@@ -311,8 +311,8 @@ public class GruposFragment extends Fragment {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
-                            layoutEmpty.setVisibility(View.VISIBLE);
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                layoutEmpty.setVisibility(View.VISIBLE);
                                 BiblivirtiDialogs.showMessageDialog(
                                         getActivity(),
                                         "Mensagem",
