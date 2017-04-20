@@ -148,6 +148,12 @@
             android:name=".activities.ConfirmarRecuperacaoActivity"
             android:label="@string/activity_confirmar_recuperacao_label"
             android:screenOrientation="portrait" />
+
+        <!-- Editar Senha Activity -->
+        <activity
+            android:name=".activities.EditarSenhaActivity"
+            android:label="@string/activity_editar_senha_label"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

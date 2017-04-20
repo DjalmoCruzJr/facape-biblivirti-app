@@ -128,8 +128,6 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
                     Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     try {
-
-
                         if (new AccountBO(ConfirmarEmailActivity.this).validateEmailConfirmation()) {
                             Bundle fields = new Bundle();
                             fields.putString(ConfirmarEmail.FIELD_CACTOKN, editCACTOKN.getText().toString().trim());
