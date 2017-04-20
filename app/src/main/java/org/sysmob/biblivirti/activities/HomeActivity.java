@@ -97,12 +97,11 @@ public class HomeActivity extends AppCompatActivity {
             if (getIntent().getExtras() != null && this.usuario == null) {
                 Bundle extras = getIntent().getExtras();
                 this.usuario = (Usuario) extras.get(Usuario.KEY_USUARIO);
+                this.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_user_80px));
                 if (this.usuario.getUscfoto() != null && !this.usuario.getUscfoto().equals("null")) {
                     Picasso.with(this).load(usuario.getUscfoto().toString()).into(this.imageUSCFOTO);
-                } else {
-                    this.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_user_80px));
                 }
-                this.textUSCNOME.setText(usuario.getUscnome() != null ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
+                this.textUSCNOME.setText((usuario.getUscnome() != null && !usuario.getUscnome().equals("null")) ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
                 this.textUSCLOGN.setText(usuario.getUsclogn().toString());
                 this.textUSCMAIL.setText(usuario.getUscmail().toString());
             }
