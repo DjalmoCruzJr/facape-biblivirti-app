@@ -60,7 +60,7 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
         if (usuario.getUscfoto() != null && !usuario.getUscfoto().equals("null")) {
             Picasso.with(this.context).load(usuario.getUscfoto()).into(holder.imageUSCFOTO);
         }
-        holder.editUSCNOME.setText(usuario.getUscnome() != null ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
+        holder.editUSCNOME.setText((usuario.getUscnome() != null && !usuario.getUscnome().equals("null")) ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
         holder.editUSCMAIL.setText(usuario.getUscmail().toString());
         holder.editGRDCADT.setText(new SimpleDateFormat("dd/MM/yyy HH:mm").format(usuario.getUsdcadt()));
         holder.buttonRemoverDoGrupo.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);

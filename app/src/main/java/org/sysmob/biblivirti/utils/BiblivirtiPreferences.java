@@ -9,10 +9,10 @@ import android.content.SharedPreferences;
 
 public abstract class BiblivirtiPreferences {
 
-    private static final String PREFERENCE_FILE_NAME = "BiblivirtiPreferences";
+    private static final String PREFERENCE_FILE_NAME = "org.sysmob.biblivirti.BIBLIVIRTI_PREFERENCES";
 
-    public static final String PREFERENCE_PROPERTY_EMAIL = "property_email";
-    public static final String PREFERENCE_PROPERTY_SENHA = "property_senha";
+    public static final String PREFERENCE_PROPERTY_EMAIL = "org.sysmob.biblivirti.PREFERENCE_PROPERTY_EMAIL";
+    public static final String PREFERENCE_PROPERTY_SENHA = "org.sysmob.biblivirti.PREFERENCE_PROPERTY_SENHA";
 
     public static String getProperty(Context context, String propertyName) {
         SharedPreferences preferences = context.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
