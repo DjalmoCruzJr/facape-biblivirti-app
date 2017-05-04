@@ -26,7 +26,7 @@ public class BiblivirtiMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        // Falta implementar o metodo de recebimento de notifications mesages
+        // Falta implementar o metodo de recebimento de notifications messages
     }
 
     private void sendNotification(String messageBody, Class<Activity> activityClass) {

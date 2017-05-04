@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1025303689282",
+    "firebase_url": "https://biblivirti.firebaseio.com",
+    "project_id": "biblivirti",
+    "storage_bucket": "biblivirti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025303689282:android:e79a3de37e2db2fc",
+        "android_client_info": {
+          "package_name": "org.sysmob.biblivirti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025303689282-kbjsvbsou4ubtpfu02srklcjrbgkbga9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNZxJNKuFVnJ5EoCsVhi3AAZd6rLJtk9E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

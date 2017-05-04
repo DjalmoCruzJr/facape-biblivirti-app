@@ -19,10 +19,6 @@ public class BiblivirtiInstanceIDService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
-        sendRegistrationToServer(refreshedToken);
-    }
-
-    private void sendRegistrationToServer(String token) {
         // Falta imlementar o metodo de envio do registration_id do app para o servidor
     }
 }

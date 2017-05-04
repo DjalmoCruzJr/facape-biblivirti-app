@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.fragments.GruposFragment;
 import org.sysmob.biblivirti.model.Usuario;
+import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiPreferences;
 
 public class HomeActivity extends AppCompatActivity {
@@ -147,6 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                     )
                     .commit();
             toolbar.setTitle(item.getTitle().toString());
+            getSupportActionBar().setTitle(item.getTitle().toString());
             item.setChecked(true);
         }
         drawerLayout.closeDrawers();
@@ -170,8 +172,8 @@ public class HomeActivity extends AppCompatActivity {
     private void actionSair(Bundle fields) {
         this.progressBar.setVisibility(View.VISIBLE);
         this.enableWidgets(false);
-        BiblivirtiPreferences.deleteProperty(this, BiblivirtiPreferences.PREFERENCE_PROPERTY_EMAIL);
-        BiblivirtiPreferences.deleteProperty(this, BiblivirtiPreferences.PREFERENCE_PROPERTY_SENHA);
+        BiblivirtiPreferences.deleteProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_EMAIL);
+        BiblivirtiPreferences.deleteProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_SENHA);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();

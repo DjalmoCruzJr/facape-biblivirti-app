@@ -2,6 +2,7 @@ package org.sysmob.biblivirti.network;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -76,6 +77,7 @@ public class NetworkConnection {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             transaction.onAfterRequest((JSONObject) null);
+                            Log.e(getClass().getSimpleName(), error.getMessage());
                         }
                     }
             );
