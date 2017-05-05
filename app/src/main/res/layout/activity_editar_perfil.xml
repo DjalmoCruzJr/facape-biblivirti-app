@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/activity_novo_grupo_text"
+            android:text="@string/activity_novo_grupo_text_image_info_set"
             android:textColor="@color/colorBlack"
             android:textStyle="italic" />
 

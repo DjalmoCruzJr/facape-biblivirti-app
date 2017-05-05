@@ -77,7 +77,7 @@ public class NetworkConnection {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             transaction.onAfterRequest((JSONObject) null);
-                            Log.e(getClass().getSimpleName(), error.getMessage());
+                            Log.e(NetworkConnection.class.getSimpleName(), error.getMessage());
                         }
                     }
             );

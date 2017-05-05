@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -60,6 +61,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     private LinearLayout layoutNovoGrupo;
     private ProgressBar progressBar;
     private EditText editGRCNOME;
+    private TextView textImageInfo;
     private ImageView imageGRCFOTO;
     private AutoCompleteTextView editAreaInteresse;
     private CheckBox checkGRCTIPO;
@@ -173,6 +175,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                 case REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE:
                     imageGRCFOTO.setImageURI(data.getData());
                     imageMimeType = getContentResolver().getType(data.getData());
+                    textImageInfo.setText(getResources().getString(R.string.activity_novo_grupo_text_image_info_unset));
                     Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -184,6 +187,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
      *******************************************************/
     private void enableWidgets(boolean status) {
         this.layoutNovoGrupo.setEnabled(status);
+        this.imageGRCFOTO.setEnabled(status);
         this.editGRCNOME.setEnabled(status);
         this.editAreaInteresse.setEnabled(status);
         this.checkGRCTIPO.setEnabled(status);
@@ -193,6 +197,7 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
         this.layoutResourceId = android.R.layout.simple_list_item_1;
         this.layoutNovoGrupo = (LinearLayout) this.findViewById(R.id.containerLayout);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+        this.textImageInfo = (TextView) this.findViewById(R.id.textImageInfo);
         this.editGRCNOME = (EditText) this.findViewById(R.id.textGRCNOME);
         this.checkGRCTIPO = (CheckBox) this.findViewById(R.id.checkGRCTIPO);
         this.imageGRCFOTO = (ImageView) this.findViewById(R.id.imageGRCFOTO);
@@ -226,8 +231,12 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
         this.imageGRCFOTO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageGRCFOTO.getDrawable() != null) {
+                if (imageMimeType == null) {
                     actionCarregarFoto(null);
+                } else {
+                    imageMimeType = null;
+                    imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app_group_80px));
+                    textImageInfo.setText(getResources().getString(R.string.activity_novo_grupo_text_image_info_set));
                 }
             }
         });
@@ -523,7 +532,6 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
                 }
 
                 @Override
-                @RequiresApi(api = Build.VERSION_CODES.FROYO)
                 public void onAfterRequest(final JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
