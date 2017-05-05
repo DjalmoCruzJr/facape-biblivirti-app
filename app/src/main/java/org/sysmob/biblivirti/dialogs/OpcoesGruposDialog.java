@@ -15,6 +15,7 @@ import android.view.Window;
 
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.adapters.OpcoesGruposAdapter;
+import org.sysmob.biblivirti.model.Grupo;
 
 /**
  * Created by micro99 on 07/02/2017.
@@ -26,9 +27,10 @@ public class OpcoesGruposDialog extends DialogFragment {
     private OpcoesGruposAdapter.OnItemClickListener onOptionsClickListener;
     private String[] textOpcoes;
     private TypedArray imageOpcoes;
-    private int grnid = 0;
+    private Grupo grupo;
 
     public OpcoesGruposDialog() {
+        this.grupo = null;
     }
 
     @Nullable
@@ -43,7 +45,7 @@ public class OpcoesGruposDialog extends DialogFragment {
         this.recyclerOpcoes = (RecyclerView) view.findViewById(R.id.recyclerOpcoes);
         this.recyclerOpcoes.setLayoutManager(new LinearLayoutManager(getActivity()));
         this.recyclerOpcoes.setHasFixedSize(true);
-        this.recyclerOpcoes.setAdapter(new OpcoesGruposAdapter(getActivity(), this.textOpcoes, this.imageOpcoes));
+        this.recyclerOpcoes.setAdapter(new OpcoesGruposAdapter(getActivity(), this.textOpcoes, this.imageOpcoes, this.grupo));
         ((OpcoesGruposAdapter) this.recyclerOpcoes.getAdapter()).setOnItemClickListener(this.onOptionsClickListener);
         return view;
     }
@@ -63,11 +65,11 @@ public class OpcoesGruposDialog extends DialogFragment {
         this.onOptionsClickListener = onOptionsClickListener;
     }
 
-    public int getGrnid() {
-        return grnid;
+    public Grupo getGrupo() {
+        return grupo;
     }
 
-    public void setGrnid(int grnid) {
-        this.grnid = grnid;
+    public void setGrupo(Grupo grupo) {
+        this.grupo = grupo;
     }
 }

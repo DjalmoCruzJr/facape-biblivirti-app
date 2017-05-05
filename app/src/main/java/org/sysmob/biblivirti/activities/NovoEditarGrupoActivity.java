@@ -250,7 +250,6 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence text, int start, int before, int count) {
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), "TEXTO: " + text);
-                BiblivirtiApplication.getInstance().cancelPendingRequests(NovoEditarGrupoActivity.this.getClass().getSimpleName());
             }
 
             @Override

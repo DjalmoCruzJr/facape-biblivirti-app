@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -89,6 +90,12 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
             editUSCMAIL = (TextView) view.findViewById(R.id.textUSCMAIL);
             editGRDCADT = (TextView) view.findViewById(R.id.textGRDCADT);
             buttonRemoverDoGrupo = (Button) view.findViewById(R.id.buttonRemoverDoGrupo);
+            buttonRemoverDoGrupo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, String.format("buttonRemoverDoGrupo.onClick(): %d", getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         @Override

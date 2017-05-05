@@ -152,14 +152,14 @@ public class GruposFragment extends Fragment {
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnItemClickListener(new GruposAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
-                    Toast.makeText(getActivity(), String.format("OnItemClickListener(): Posição %d", position), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), String.format("recyclerGrupos.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
                 }
             });
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
                     final OpcoesGruposDialog dialog = new OpcoesGruposDialog();
-                    dialog.setGrnid(grupos.get(position).getGrnid());
+                    dialog.setGrupo(grupos.get(position));
                     dialog.setOnOptionsClickListener(new OpcoesGruposAdapter.OnItemClickListener() {
                         @Override
                         public void onCLick(View view, int position) {
@@ -172,7 +172,7 @@ public class GruposFragment extends Fragment {
                                 switch (position) {
                                     case 0:
                                         extras = new Bundle();
-                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
                                         intent = new Intent(GruposFragment.this.getActivity(), InfoGrupoActivity.class);
                                         intent.putExtras(extras);
                                         startActivity(intent);
@@ -180,7 +180,7 @@ public class GruposFragment extends Fragment {
                                         break;
                                     case 1:
                                         extras = new Bundle();
-                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                        extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
                                         extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
                                         extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getString(R.string.activity_editar_grupo_label));
                                         intent = new Intent(GruposFragment.this.getActivity(), NovoEditarGrupoActivity.class);
@@ -192,7 +192,7 @@ public class GruposFragment extends Fragment {
                                         try {
                                             if (new GroupBO(getActivity()).validateDelete()) {
                                                 extras = new Bundle();
-                                                extras.putInt(Grupo.FIELD_GRNID, dialog.getGrnid());
+                                                extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
                                                 extras.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                                 actionExcluirGrupo(extras);
                                             }
