@@ -26,7 +26,8 @@ public class OpcoesGruposDialog extends DialogFragment {
     private RecyclerView recyclerOpcoes;
     private OpcoesGruposAdapter.OnItemClickListener onOptionsClickListener;
     private String[] textOpcoes;
-    private TypedArray imageOpcoes;
+    private TypedArray imageOpcoesAtivas;
+    private TypedArray imageOpcoesInativas;
     private Grupo grupo;
 
     public OpcoesGruposDialog() {
@@ -40,12 +41,13 @@ public class OpcoesGruposDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_opcoes_grupos, container, false);
 
         this.textOpcoes = getActivity().getResources().getStringArray(R.array.dialog_opcoes_grupos_texts);
-        this.imageOpcoes = getActivity().getResources().obtainTypedArray(R.array.dialog_opcoes_grupos_images);
+        this.imageOpcoesAtivas = getActivity().getResources().obtainTypedArray(R.array.dialog_opcoes_grupos_images_ativo);
+        this.imageOpcoesInativas = getActivity().getResources().obtainTypedArray(R.array.dialog_opcoes_grupos_images_inativo);
 
         this.recyclerOpcoes = (RecyclerView) view.findViewById(R.id.recyclerOpcoes);
         this.recyclerOpcoes.setLayoutManager(new LinearLayoutManager(getActivity()));
         this.recyclerOpcoes.setHasFixedSize(true);
-        this.recyclerOpcoes.setAdapter(new OpcoesGruposAdapter(getActivity(), this.textOpcoes, this.imageOpcoes, this.grupo));
+        this.recyclerOpcoes.setAdapter(new OpcoesGruposAdapter(getActivity(), this.textOpcoes, this.imageOpcoesAtivas, this.imageOpcoesInativas, this.grupo));
         ((OpcoesGruposAdapter) this.recyclerOpcoes.getAdapter()).setOnItemClickListener(this.onOptionsClickListener);
         return view;
     }

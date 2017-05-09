@@ -102,10 +102,16 @@
         <item>Excluir</item>
     </string-array>
 
-    <array name="dialog_opcoes_grupos_images">
+    <array name="dialog_opcoes_grupos_images_ativo">
         <item>@mipmap/ic_info_100px_blue</item>
         <item>@mipmap/ic_edit_100px_blue</item>
         <item>@mipmap/ic_delete_100px_blue</item>
+    </array>
+
+    <array name="dialog_opcoes_grupos_images_inativo">
+        <item>@mipmap/ic_info_100px_gray</item>
+        <item>@mipmap/ic_edit_100px_gray</item>
+        <item>@mipmap/ic_delete_100px_gray</item>
     </array>
 
 </resources>
