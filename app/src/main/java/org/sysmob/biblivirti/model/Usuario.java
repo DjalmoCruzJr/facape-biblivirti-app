@@ -10,6 +10,7 @@ public class Usuario implements Serializable {
     public static final String KEY_USUARIO = "usuario";
 
     public static final String FIELD_USNID = "usnid";
+    public static final String FIELD_USNID2 = "usnid2";
     public static final String FIELD_USCFBID = "uscfbid";
     public static final String FIELD_USCNOME = "uscnome";
     public static final String FIELD_USCMAIL = "uscmail";

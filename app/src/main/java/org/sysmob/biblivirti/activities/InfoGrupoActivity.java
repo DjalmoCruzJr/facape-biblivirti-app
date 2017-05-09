@@ -26,8 +26,10 @@ import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.adapters.InfoMembrosAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.GroupBO;
+import org.sysmob.biblivirti.comparators.UsuarioComparatorByUsnid;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
 import org.sysmob.biblivirti.exceptions.ValidationException;
+import org.sysmob.biblivirti.fragments.GruposFragment;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -39,6 +41,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 public class InfoGrupoActivity extends AppCompatActivity {
 
@@ -52,7 +55,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
     private TextView textAICDESC;
     private TextView textGRDCADT;
     private TextView textQtdMembros;
-    private Button buttonParticiparGrupo;
+    private Button buttonSairParticiparGrupo;
     private Grupo grupo;
     private Usuario loggedUser;
     private boolean showMenuOptions;
@@ -128,7 +131,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.textGRCNOME.setEnabled(status);
         this.textAICDESC.setEnabled(status);
         this.textGRDCADT.setEnabled(status);
-        this.buttonParticiparGrupo.setEnabled(status);
+        this.buttonSairParticiparGrupo.setEnabled(status);
     }
 
     private void loadWidgets() {
@@ -145,29 +148,45 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.textGRDCADT = (TextView) findViewById(R.id.textGRDCADT);
         this.textAICDESC = (TextView) findViewById(R.id.textAICDESC);
         this.textQtdMembros = (TextView) findViewById(R.id.textQtdMembros);
-        this.buttonParticiparGrupo = (Button) findViewById(R.id.buttonParticiparGrupo);
+        this.buttonSairParticiparGrupo = (Button) findViewById(R.id.buttonSairParticiparGrupo);
 
         this.showMenuOptions = false;
     }
 
     private void loadListeners() {
-        this.buttonParticiparGrupo.setOnClickListener(new View.OnClickListener() {
+        this.buttonSairParticiparGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                     Toast.makeText(InfoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
-                    try {
-                        if (new GroupBO(InfoGrupoActivity.this).validateSubscribe()) {
-                            Bundle fields = new Bundle();
-                            fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
-                            fields.putInt(Usuario.FIELD_USNID, loggedUser.getUsnid());
-                            actionParticiparGrupo(fields);
+                    // Verifica se o usuario logado EH membro do grupo em questao
+                    if (Collections.binarySearch(grupo.getUsuarios(), loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+                        try {
+                            if (new GroupBO(InfoGrupoActivity.this).validateUnsubscribe()) {
+                                Bundle fields = new Bundle();
+                                fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                                fields.putInt(Usuario.FIELD_USNID, grupo.getAdmin().getUsnid());
+                                fields.putInt(Usuario.FIELD_USNID2, loggedUser.getUsnid());
+                                actionSairGrupo(fields);
+                            }
+                        } catch (ValidationException e) {
+                            e.printStackTrace();
                         }
-                    } catch (ValidationException e) {
-                        e.printStackTrace();
+                    } else {
+                        try {
+                            if (new GroupBO(InfoGrupoActivity.this).validateSubscribe()) {
+                                Bundle fields = new Bundle();
+                                fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                                fields.putInt(Usuario.FIELD_USNID, loggedUser.getUsnid());
+                                actionParticiparGrupo(fields);
+                            }
+                        } catch (ValidationException e) {
+                            e.printStackTrace();
+                        }
                     }
+
                 }
             }
         });
@@ -189,6 +208,14 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.textAICDESC.setText(this.grupo.getAreaInteresse().getAicdesc().toString());
         this.textGRDCADT.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(this.grupo.getGrdcadt()));
         this.textQtdMembros.setText(this.textQtdMembros.getText().toString().replace("xx", String.valueOf(this.grupo.getUsuarios().size())));
+
+        if (Collections.binarySearch(grupo.getUsuarios(), this.loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+            this.buttonSairParticiparGrupo.setText(getResources().getString(R.string.activity_info_grupo_button_sairparticipar_sair));
+            this.buttonSairParticiparGrupo.setBackgroundColor(this.getResources().getColor(R.color.colorRedDark));
+        } else {
+            this.buttonSairParticiparGrupo.setText(getResources().getString(R.string.activity_info_grupo_button_sairparticipar_participar));
+            this.buttonSairParticiparGrupo.setBackgroundColor(this.getResources().getColor(R.color.colorPrimary));
+        }
 
         this.recyclerMembros.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerMembros.setHasFixedSize(true);
@@ -301,7 +328,70 @@ public class InfoGrupoActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
-                                buttonParticiparGrupo.setVisibility(View.GONE);
+                                buttonSairParticiparGrupo.setVisibility(View.GONE);
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    layoutEmpty.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void actionSairGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Usuario.FIELD_USNID2, fields.getInt(Usuario.FIELD_USNID2));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_GROUP_UNSUBSCRIBE,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(InfoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        InfoGrupoActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
+                                GruposFragment.hasDataChanged = true;
+                                finish();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

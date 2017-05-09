@@ -60,4 +60,8 @@ public class PesquisarGruposFragment extends Fragment {
     public void setGrupos(List<Grupo> grupos) {
         this.grupos = grupos;
     }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
 }

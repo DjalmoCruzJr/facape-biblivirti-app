@@ -131,11 +131,11 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/buttonParticiparGrupo"
+                android:id="@+id/buttonSairParticiparGrupo"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@color/colorPrimary"
-                android:text="@string/activity_info_grupo_button_participar"
+                android:text="@string/activity_info_grupo_button_sairparticipar_participar"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />

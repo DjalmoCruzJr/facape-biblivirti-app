@@ -2,22 +2,37 @@ package org.sysmob.biblivirti.adapters;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.activities.InfoGrupoActivity;
 import org.sysmob.biblivirti.comparators.UsuarioComparatorByUsnid;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
+import org.sysmob.biblivirti.fragments.GruposFragment;
+import org.sysmob.biblivirti.fragments.PesquisarGruposFragment;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
+import org.sysmob.biblivirti.network.ITransaction;
+import org.sysmob.biblivirti.network.NetworkConnection;
+import org.sysmob.biblivirti.network.RequestData;
+import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
+import org.sysmob.biblivirti.utils.BiblivirtiParser;
 
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +105,7 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        ProgressBar progressBar;
         ImageView imageGrupoPrivado;
         ImageView imageAdmin;
         ImageView imageGRCFOTO;
@@ -101,6 +117,7 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
         public ViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             imageGrupoPrivado = (ImageView) view.findViewById(R.id.imageGrupoPrivado);
             imageAdmin = (ImageView) view.findViewById(R.id.imageAdmin);
             imageGRCFOTO = (ImageView) view.findViewById(R.id.imageGRCFOTO);

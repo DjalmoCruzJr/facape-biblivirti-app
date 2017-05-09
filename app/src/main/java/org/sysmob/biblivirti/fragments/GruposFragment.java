@@ -99,14 +99,14 @@ public class GruposFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getActivity(), String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                Toast.makeText(getActivity(), String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
