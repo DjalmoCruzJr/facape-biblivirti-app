@@ -74,14 +74,14 @@ public class PesquisarActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(PesquisarActivity.this, String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PesquisarActivity.this, String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                Toast.makeText(PesquisarActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PesquisarActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
@@ -183,6 +183,8 @@ public class PesquisarActivity extends AppCompatActivity {
                                         ),
                                         "Ok"
                                 );
+                                grupos = null;
+                                loadFields();
                             } else {
                                 grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
                                 Toast.makeText(PesquisarActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();

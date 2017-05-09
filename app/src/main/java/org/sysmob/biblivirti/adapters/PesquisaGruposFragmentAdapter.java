@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.comparators.UsuarioComparator;
+import org.sysmob.biblivirti.comparators.UsuarioComparatorByUsnid;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
@@ -31,16 +31,12 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
     private Context context;
     private OnItemClickListener onItemClickListener;
     private List<Grupo> grupos;
-    private Usuario usuario;
+    private Usuario loggedUser;
 
-    public PesquisaGruposFragmentAdapter(Context context, List<Grupo> grupos, Usuario usuario) {
+    public PesquisaGruposFragmentAdapter(Context context, List<Grupo> grupos, Usuario loggedUser) {
         this.context = context;
         this.grupos = grupos;
-        this.usuario = usuario;
-    }
-
-    public OnItemClickListener getOnItemClickListener() {
-        return onItemClickListener;
+        this.loggedUser = loggedUser;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -56,27 +52,38 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
 
     @Override
     public int getItemCount() {
-        return this.grupos.size();
+        return this.grupos != null ? this.grupos.size() : 0;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Grupo grupo = this.grupos.get(position);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Grupo grupo = this.grupos.get(position);
         holder.imageGrupoPrivado.setVisibility(grupo.getGrctipo().equals(ETipoGrupo.FECHADO) ? View.VISIBLE : View.GONE);
-        holder.imageAdmin.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), grupo.getAdmin().getUsnid() == this.usuario.getUsnid() ? R.mipmap.ic_king_100px_blue : R.mipmap.ic_king_100px_gray));
+        holder.imageAdmin.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), grupo.getAdmin().getUsnid() == this.loggedUser.getUsnid() ? R.mipmap.ic_king_100px_blue : R.mipmap.ic_king_100px_gray));
+        holder.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_group_80px));
         if (grupo.getGrcfoto() != null && !grupo.getGrcfoto().equals("null")) {
             Picasso.with(this.context).load(grupo.getGrcfoto()).into(holder.imageGRCFOTO);
-        } else {
-            holder.imageGRCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_group_80px));
         }
         holder.textGRCNOME.setText(grupo.getGrcnome().toString());
         holder.textAICDESC.setText(grupo.getAreaInteresse().getAicdesc().toString());
-        holder.textUSCLOGN.setText(grupo.getAdmin().getUsnid() == this.usuario.getUsnid() ? "Você" : grupo.getAdmin().getUsclogn().toString());
-        holder.buttonSairParticiparGrupo.setText(Collections.binarySearch(grupo.getUsuarios(), this.usuario, new UsuarioComparator()) == 1 ? context.getString(R.string.adapter_pesquisar_grupos_fragment_button_sair_text) : context.getString(R.string.adapter_pesquisar_grupos_fragment_button_participar_text));
+        holder.textUSCLOGN.setText(grupo.getAdmin().getUsnid() == this.loggedUser.getUsnid() ? "Você" : grupo.getAdmin().getUsclogn().toString());
+        // Verifica se o usuario logado EH um membro do grupo
+        if (Collections.binarySearch(grupo.getUsuarios(), this.loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+            holder.buttonSairParticiparGrupo.setText(context.getString(R.string.adapter_pesquisar_grupos_fragment_button_sair_text));
+            holder.buttonSairParticiparGrupo.setBackgroundColor(context.getResources().getColor(R.color.colorRedDark));
+        } else {
+            holder.buttonSairParticiparGrupo.setText(context.getString(R.string.adapter_pesquisar_grupos_fragment_button_participar_text));
+            holder.buttonSairParticiparGrupo.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+        }
         holder.buttonSairParticiparGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, ((Button) view).getText().toString(), Toast.LENGTH_SHORT).show();
+                // Verifica se o usuario logado EH um membro do grupo
+                if (Collections.binarySearch(grupo.getUsuarios(), loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+                    Toast.makeText(context, String.format("buttonSairParticiparGrupo.onClick (action: %s, position: %d)", "SAIR", position), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, String.format("buttonSairParticiparGrupo.onClick (action: %s, position: %d)", "PARTICIPAR", position), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -100,6 +107,7 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
             textGRCNOME = (TextView) view.findViewById(R.id.textGRCNOME);
             textAICDESC = (TextView) view.findViewById(R.id.textAICDESC);
             textUSCLOGN = (TextView) view.findViewById(R.id.textUSCLOGN);
+            buttonSairParticiparGrupo = (Button) view.findViewById(R.id.buttonSairParticiparGrupo);
         }
 
         @Override

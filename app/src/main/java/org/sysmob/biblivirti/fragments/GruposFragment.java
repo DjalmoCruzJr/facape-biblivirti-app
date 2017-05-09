@@ -113,17 +113,6 @@ public class GruposFragment extends Fragment {
         });
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        switch (item.getItemId()) {
-            case R.id.fragment_grupos_estudo_menu_pesquisar:
-                Toast.makeText(getActivity(), "Pesquisar grupos!", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        return true;
-    }*/
-
     @Override
     public void onResume() {
         super.onResume();

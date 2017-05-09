@@ -95,6 +95,10 @@
     <string name="activity_editar_senha_hint_senha">Senha</string>
     <string name="activity_editar_senha_hint_confirmar_senha">Confirmar Senha</string>
     <string name="activity_editar_senha_label">Editar Senha</string>
+    <string name="adapter_list_pesquisar_grupos_text_grcnome">Nome do Grupo</string>
+    <string name="adapter_list_pesquisar_grupos_text_aicdesc">Área de Interesse</string>
+    <string name="adapter_list_pesquisar_grupos_text_usclogn">Login do Adminstrador</string>
+    <string name="adapter_list_pesquisar_grupos_button_sair_participar_grupo">Sair do Grupo</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>
