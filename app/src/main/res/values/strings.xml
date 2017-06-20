@@ -1,7 +1,9 @@
 <resources>
-    <string name="application_name">Biblivirti</string>
+    <string name="application_name">Biblivirti AVAM</string>
+    <string name="application_version">Versão 1.6.17</string>
 
-    <string name="activity_splash_footer_text">© 2016 Sysmob - Todos os direitos reservados.</string>
+    <string name="activity_splash_footer_text">© 2016 - 2017 Sysmob, Inc. Todos os direitos reservados.</string>
+    <string name="activity_sobre_footer_text">© 2016 - 2017 Sysmob, Inc. \nTodos os direitos reservados.</string>
     <string name="activity_splsh_logo_description">Biblivirti Logo</string>
     <string name="activity_splash_label">Splash</string>
 

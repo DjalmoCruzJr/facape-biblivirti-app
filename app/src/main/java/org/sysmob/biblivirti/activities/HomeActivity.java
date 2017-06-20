@@ -131,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.drawer_menu_configuracoes:
                 break;
             case R.id.drawer_menu_sobre:
+                startActivity(new Intent(this, SobreActivity.class));
                 break;
             case R.id.drawer_menu_sair:
                 actionSair(null);

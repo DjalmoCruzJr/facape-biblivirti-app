@@ -18,9 +18,11 @@
         android:theme="@style/BiblivirtiTheme">
 
         <!-- META-DATAS -->
-        <meta-data
+        <!--
+            <meta-data
             android:name="android.app.default_searchable"
             android:value=".activities.PesquisarActivity" />
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_app_white_medium" />
@@ -121,15 +123,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/BiblivirtiTheme.HomeActivity" />
 
-        <!-- Pesquisar Activity -->
+        <!-- Pesquisar Grupo Activity -->
         <activity
-            android:name=".activities.PesquisarActivity"
+            android:name=".activities.PesquisarGruposActivity"
             android:label="@string/activity_pesquisar_label"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/BiblivirtiTheme.PesquisarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="org.sysmob.biblivirti.intent.category.PESQUISAR_GRUPO" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
@@ -154,6 +159,13 @@
             android:name=".activities.EditarSenhaActivity"
             android:label="@string/activity_editar_senha_label"
             android:screenOrientation="portrait" />
+
+        <!-- Editar Senha Activity -->
+        <activity
+            android:name=".activities.SobreActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.SobreActivity" />
     </application>
 
 </manifest>

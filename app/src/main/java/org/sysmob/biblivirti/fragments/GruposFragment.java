@@ -88,7 +88,7 @@ public class GruposFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_fragment_grupos_estudo, menu);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -99,9 +99,17 @@ public class GruposFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Toast.makeText(getActivity(), String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
-                Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
-                return false;
+                if (query == null || query.length() <= 0) {
+                    return false;
+                }
+                Log.i(String.format("%s: - ", getClass().getSimpleName().toString()), query);
+                Intent intent = new Intent(BiblivirtiConstants.INTENT_ACTION_PESQUISAR);
+                intent.addCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_GRUPO);
+                Bundle fields = new Bundle();
+                fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                intent.putExtras(fields);
+                startActivity(intent);
+                return true;
             }
 
             @Override

@@ -1,5 +1,8 @@
 package org.sysmob.biblivirti.utils;
 
+import android.app.SearchManager;
+import android.content.Intent;
+
 /**
  * @author djalmocruzjr
  * @version 1.0
@@ -17,6 +20,21 @@ public abstract class BiblivirtiConstants {
     public static final String ACTIVITY_MODE_KEY = "activity_mode";
     public static final int ACTIVITY_MODE_INSERTING = 0;
     public static final int ACTIVITY_MODE_EDITING = 1;
+
+    /**
+     * Outras constantes utilizadas no projeto
+     */
+    public static final String FIELD_SEARCH_REFERENCE = "reference";
+
+    /**
+     * Constantes relacionadas as activities de pesquisa
+     */
+    public static final String INTENT_ACTION_PESQUISAR = Intent.ACTION_SEARCH;
+    public static final String INTENT_CATEGORY_PESQUISAR_GRUPO = "org.sysmob.biblivirti.intent.category.PESQUISAR_GRUPO";
+    public static final String INTENT_CATEGORY_PESQUISAR_USUARIO = "org.sysmob.biblivirti.intent.category.PESQUISAR_USUARIO";
+    public static final String INTENT_CATEGORY_PESQUISAR_MATERIAL = "org.sysmob.biblivirti.intent.category.PESQUISAR_MATERIAL";
+    public static final String INTENT_CATEGORY_PESQUISAR_CONTEUDO = "org.sysmob.biblivirti.intent.category.PESQUISAR_CONTEUDO";
+    public static final String INTENT_CATEGORY_PESQUISAR_DUVIDA = "org.sysmob.biblivirti.intent.category.PESQUISAR_DUVIDA";
 
     /**
      * Constantes relacionadas a tela SplachActivity
@@ -177,8 +195,4 @@ public abstract class BiblivirtiConstants {
     public static final String PREFERENCE_PROPERTY_EMAIL = "org.sysmob.biblivirti.PREFERENCE_PROPERTY_EMAIL";
     public static final String PREFERENCE_PROPERTY_SENHA = "org.sysmob.biblivirti.PREFERENCE_PROPERTY_SENHA";
 
-    /**
-     * Outras constantes utilizadas no projeto
-     */
-    public static final String FIELD_SEARCH_REFERENCE = "reference";
 }

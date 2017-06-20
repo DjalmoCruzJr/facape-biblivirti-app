@@ -13,6 +13,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Sobre Activity Theme  -->
+    <style name="BiblivirtiTheme.SobreActivity" parent="BiblivirtiTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- Login Activity Theme  -->
     <style name="BiblivirtiTheme.LoginActivity" parent="BiblivirtiTheme">
         <item name="windowActionBar">false</item>

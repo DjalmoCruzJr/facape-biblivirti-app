@@ -34,7 +34,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
-public class PesquisarActivity extends AppCompatActivity {
+public class PesquisarGruposActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
@@ -74,14 +74,25 @@ public class PesquisarActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Toast.makeText(PesquisarActivity.this, String.format("onQueryTextSubmit: %s", query), Toast.LENGTH_SHORT).show();
+                if (query == null || query.length() <= 0) {
+                    return false;
+                }
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
-                return false;
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Bundle fields = new Bundle();
+                    fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                    actionPesquisar(fields);
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                //Toast.makeText(PesquisarActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PesquisarGruposActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
@@ -127,20 +138,22 @@ public class PesquisarActivity extends AppCompatActivity {
     }
 
     /********************************************************
-     * PUBLIC METHODS
+     * ACTION METHODS
      *******************************************************/
     public void handleSearch(Intent intent) {
-        if (Intent.ACTION_SEARCH.equalsIgnoreCase(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            getSupportActionBar().setTitle(query);
-            if (!BiblivirtiUtils.isNetworkConnected()) {
-                String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                finish();
-            } else {
-                Bundle fields = new Bundle();
-                fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
-                actionPesquisar(fields);
+        if (intent != null && intent.getExtras() != null) {
+            if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_GRUPO)) {
+                String query = intent.getExtras().getString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE);
+                getSupportActionBar().setTitle(query);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Bundle fields = new Bundle();
+                    fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                    actionPesquisar(fields);
+                }
             }
         }
     }
@@ -169,12 +182,12 @@ public class PesquisarActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(PesquisarActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        PesquisarActivity.this,
+                                        PesquisarGruposActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -187,7 +200,7 @@ public class PesquisarActivity extends AppCompatActivity {
                                 loadFields();
                             } else {
                                 grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(PesquisarActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PesquisarGruposActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 loadFields();
                             }
