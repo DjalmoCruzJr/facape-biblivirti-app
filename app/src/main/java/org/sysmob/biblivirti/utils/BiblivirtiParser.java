@@ -3,12 +3,23 @@ package org.sysmob.biblivirti.utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sysmob.biblivirti.enums.ENivelSimulado;
 import org.sysmob.biblivirti.enums.EStatusGrupo;
+import org.sysmob.biblivirti.enums.EStatusMaterial;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
+import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.enums.EUsuarioStatus;
+import org.sysmob.biblivirti.model.Apresentacao;
 import org.sysmob.biblivirti.model.AreaInteresse;
+import org.sysmob.biblivirti.model.Exercicio;
+import org.sysmob.biblivirti.model.Formula;
 import org.sysmob.biblivirti.model.Grupo;
+import org.sysmob.biblivirti.model.Jogo;
+import org.sysmob.biblivirti.model.Livro;
+import org.sysmob.biblivirti.model.Material;
+import org.sysmob.biblivirti.model.Simulado;
 import org.sysmob.biblivirti.model.Usuario;
+import org.sysmob.biblivirti.model.Video;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -109,4 +120,60 @@ public abstract class BiblivirtiParser {
             return grupos;
         return null;
     }
+
+    public static Material parseToMaterial(JSONObject json) throws JSONException {
+        Material material = null;
+        if (json != null) {
+            if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.APRESENTACAO.getValue()) {
+                material = new Apresentacao();
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.EXERCICIO.getValue()) {
+                material = new Exercicio();
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.FORMULA.getValue()) {
+                material = new Formula();
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.JOGO.getValue()) {
+                material = new Jogo();
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.LIVRO.getValue()) {
+                material = new Livro();
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.SIMULADO.getValue()) {
+                material = new Simulado();
+                if (json.getString(Material.FIELD_MACNIVL).charAt(0) == ENivelSimulado.BASICO.getValue()) {
+                    ((Simulado) material).setMacnivl(ENivelSimulado.BASICO);
+                } else if (json.getString(Material.FIELD_MACNIVL).charAt(0) == ENivelSimulado.INTERMEDIARIO.getValue()) {
+                    ((Simulado) material).setMacnivl(ENivelSimulado.INTERMEDIARIO);
+                } else if (json.getString(Material.FIELD_MACNIVL).charAt(0) == ENivelSimulado.AVANCADO.getValue()) {
+                    ((Simulado) material).setMacnivl(ENivelSimulado.AVANCADO);
+                } else if (json.getString(Material.FIELD_MACNIVL).charAt(0) == ENivelSimulado.PROFISSIONAL.getValue()) {
+                    ((Simulado) material).setMacnivl(ENivelSimulado.PROFISSIONAL);
+                }
+            } else if (json.getString(Material.FIELD_MACTIPO).charAt(0) == ETipoMaterial.VIDEO.getValue()) {
+                material = new Video();
+            }
+
+            material.setManid(json.getInt(Material.FIELD_MANID));
+            material.setMacdesc(json.getString(Material.FIELD_MACDESC));
+            material.setMacurl(json.getString(Material.FIELD_MACURL));
+            material.setMacstat(EStatusMaterial.ATIVO.getValue() == json.getString(Material.FIELD_MACSTAT).charAt(0) ? EStatusMaterial.ATIVO : EStatusMaterial.INATIVO);
+            material.setMadcadt(Timestamp.valueOf(json.getString(Material.FIELD_MADCADT)));
+            material.setMadaldt(Timestamp.valueOf(json.getString(Material.FIELD_MADALDT)));
+            material.setManqtdce(json.getInt(Material.FIELD_MANQTDCE));
+            material.setManqtdha(json.getInt(Material.FIELD_MANQTDHA));
+        }
+        return material;
+    }
+
+    public static List<Material> parseToMateriais(JSONArray json) throws JSONException {
+        List<Material> materiais = null;
+        if (json != null) {
+            materiais = new ArrayList<>();
+            for (int i = 0; i < json.length(); i++) {
+                Material material = null;
+                material = parseToMaterial(json.getJSONObject(i));
+                materiais.add(material);
+            }
+        }
+        if (materiais != null && materiais.size() > 0)
+            return materiais;
+        return null;
+    }
+
 }

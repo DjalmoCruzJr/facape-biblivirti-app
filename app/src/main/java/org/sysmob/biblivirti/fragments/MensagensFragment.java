@@ -23,7 +23,6 @@ public class MensagensFragment extends Fragment {
     private ProgressBar progressBar;
     private LinearLayout layoutEmpty;
     private RecyclerView recyclerMensagens;
-    private FloatingActionButton buttonNovaMensagem;
     private List<Mensagem> mensagens;
 
     @Override

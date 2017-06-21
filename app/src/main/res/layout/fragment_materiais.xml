@@ -29,6 +29,7 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:src="@mipmap/ic_plus_100px_white"
+            app:backgroundTint="@color/colorPrimary"
             app:elevation="4dp"
             app:fabSize="normal" />
     </android.support.design.widget.CoordinatorLayout>

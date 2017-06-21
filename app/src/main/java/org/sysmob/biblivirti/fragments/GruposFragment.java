@@ -152,8 +152,9 @@ public class GruposFragment extends Fragment {
                 public void onCLick(View view, int position) {
                     //Toast.makeText(getActivity(), String.format("recyclerGrupos.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
                     Bundle extras = new Bundle();
-                    extras.putInt(Grupo.FIELD_GRNID, grupos.get(position).getGrnid());
+                    extras.putSerializable(Grupo.KEY_GRUPO, grupos.get(position));
                     Intent intent = new Intent(GruposFragment.this.getContext(), GrupoActivity.class);
+                    intent.putExtras(extras);
                     startActivity(intent);
                 }
             });
@@ -212,14 +213,6 @@ public class GruposFragment extends Fragment {
                 }
             });
         }
-    }
-
-    /********************************************************
-     * PUBLIC METHODS
-     *******************************************************/
-    public void notifyNewGroupAdded() {
-        Toast.makeText(getActivity(), "Novo grupo adicionado!", Toast.LENGTH_SHORT).show();
-        // Implementar reconstrucao do fragment
     }
 
     /********************************************************

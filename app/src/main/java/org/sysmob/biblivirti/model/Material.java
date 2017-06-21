@@ -17,8 +17,9 @@ public abstract class Material implements Serializable {
 
     public static final String FIELD_MANID = "manid";
     public static final String FIELD_MACDESC = "macdesc";
-    public static final String FIELD_MACURL = "macurl";
     public static final String FIELD_MACTIPO = "mactipo";
+    public static final String FIELD_MACURL = "macurl";
+    public static final String FIELD_MACNIVL = "macnivl";
     public static final String FIELD_MACSTAT = "macstat";
     public static final String FIELD_MADCADT = "macdcadt";
     public static final String FIELD_MADALDT = "macdaldt";
