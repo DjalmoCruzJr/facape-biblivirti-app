@@ -163,9 +163,8 @@
         <!-- Editar Senha Activity -->
         <activity
             android:name=".activities.SobreActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/BiblivirtiTheme.SobreActivity" />
+            android:label="@string/activity_sobre_label"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

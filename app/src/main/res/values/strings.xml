@@ -1,5 +1,6 @@
 <resources>
-    <string name="application_name">Biblivirti AVAM</string>
+    <string name="application_name">Biblivirti</string>
+    <string name="application_name_full">Biblivirti AVAM</string>
     <string name="application_version">Versão 1.6.17</string>
 
     <string name="activity_splash_footer_text">© 2016 - 2017 Sysmob, Inc. Todos os direitos reservados.</string>
@@ -102,6 +103,7 @@
     <string name="adapter_list_pesquisar_grupos_text_aicdesc">Área de Interesse</string>
     <string name="adapter_list_pesquisar_grupos_text_usclogn">Login do Adminstrador</string>
     <string name="adapter_list_pesquisar_grupos_button_sair_participar_grupo">Sair do Grupo</string>
+    <string name="activity_sobre_label">Sobre o Biblivirti...</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>

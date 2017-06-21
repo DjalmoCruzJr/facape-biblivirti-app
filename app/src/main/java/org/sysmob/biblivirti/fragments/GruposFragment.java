@@ -25,6 +25,7 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.activities.HomeActivity;
 import org.sysmob.biblivirti.activities.InfoGrupoActivity;
 import org.sysmob.biblivirti.activities.NovoEditarGrupoActivity;
@@ -102,7 +103,7 @@ public class GruposFragment extends Fragment {
                 if (query == null || query.length() <= 0) {
                     return false;
                 }
-                Log.i(String.format("%s: - ", getClass().getSimpleName().toString()), query);
+                Log.i(String.format("%s: ", getClass().getSimpleName().toString()), query);
                 Intent intent = new Intent(BiblivirtiConstants.INTENT_ACTION_PESQUISAR);
                 intent.addCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_GRUPO);
                 Bundle fields = new Bundle();
@@ -149,7 +150,11 @@ public class GruposFragment extends Fragment {
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnItemClickListener(new GruposAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
-                    Toast.makeText(getActivity(), String.format("recyclerGrupos.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), String.format("recyclerGrupos.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
+                    Bundle extras = new Bundle();
+                    extras.putInt(Grupo.FIELD_GRNID, grupos.get(position).getGrnid());
+                    Intent intent = new Intent(GruposFragment.this.getContext(), GrupoActivity.class);
+                    startActivity(intent);
                 }
             });
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
