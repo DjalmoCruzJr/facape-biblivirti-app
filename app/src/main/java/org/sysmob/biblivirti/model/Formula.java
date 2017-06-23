@@ -13,6 +13,8 @@ import java.util.List;
 public class Formula extends Material {
 
     public Formula() {
+        super();
+        this.setMactipo(ETipoMaterial.FORMULA);
     }
 
     public Formula(int manid, String macdesc, String macurl, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {

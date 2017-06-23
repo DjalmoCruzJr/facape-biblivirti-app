@@ -150,7 +150,6 @@ public class GruposFragment extends Fragment {
             ((GruposAdapter) this.recyclerGrupos.getAdapter()).setOnItemClickListener(new GruposAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
-                    //Toast.makeText(getActivity(), String.format("recyclerGrupos.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
                     Bundle extras = new Bundle();
                     extras.putSerializable(Grupo.KEY_GRUPO, grupos.get(position));
                     Intent intent = new Intent(GruposFragment.this.getContext(), GrupoActivity.class);

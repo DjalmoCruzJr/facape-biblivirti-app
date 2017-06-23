@@ -13,6 +13,8 @@ import java.util.List;
 public class Video extends Material {
 
     public Video() {
+        super();
+        this.setMactipo(ETipoMaterial.VIDEO);
     }
 
     public Video(int manid, String macdesc, String macurl, ETipoMaterial mactipo, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {

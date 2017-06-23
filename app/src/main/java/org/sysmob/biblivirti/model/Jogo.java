@@ -13,6 +13,8 @@ import java.util.List;
 public class Jogo extends Material {
 
     public Jogo() {
+        super();
+        this.setMactipo(ETipoMaterial.JOGO);
     }
 
     public Jogo(int manid, String macdesc, String macurl, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {

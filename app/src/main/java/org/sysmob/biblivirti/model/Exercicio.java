@@ -14,6 +14,7 @@ public class Exercicio extends Material {
 
     public Exercicio() {
         super();
+        this.setMactipo(ETipoMaterial.EXERCICIO);
     }
 
     public Exercicio(int manid, String macdesc, String macurl, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {

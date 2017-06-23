@@ -18,6 +18,7 @@ public class Simulado extends Material {
 
     public Simulado() {
         super();
+        this.setMactipo(ETipoMaterial.SIMULADO);
     }
 
     public Simulado(int manid, String macdesc, String macurl, EStatusMaterial macstat, ENivelSimulado macnivl, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios, List<Questao> questaos) {

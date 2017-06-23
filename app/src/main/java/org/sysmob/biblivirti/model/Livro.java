@@ -13,6 +13,8 @@ import java.util.List;
 public class Livro extends Material {
 
     public Livro() {
+        super();
+        this.setMactipo(ETipoMaterial.LIVRO);
     }
 
     public Livro(int manid, String macdesc, String macurl, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {

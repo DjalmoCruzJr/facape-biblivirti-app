@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
+import org.sysmob.biblivirti.adapters.MateriaisAdapter;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -98,8 +99,8 @@ public class MateriaisFragment extends Fragment {
                 Bundle fields = new Bundle();
                 fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
                 intent.putExtras(fields);
-                startActivity(intent);
-                return true;
+                //startActivity(intent);
+                return false;
             }
 
             @Override
@@ -122,9 +123,20 @@ public class MateriaisFragment extends Fragment {
             this.recyclerMateriais = (RecyclerView) this.getView().findViewById(R.id.recyclerMateriais);
             this.recyclerMateriais.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerMateriais.setHasFixedSize(true);
-
-            // Falta terminar de implrementar
-
+            this.recyclerMateriais.setAdapter(new MateriaisAdapter(getContext(), materiais));
+            ((MateriaisAdapter) this.recyclerMateriais.getAdapter()).setOnItemClickListener(new MateriaisAdapter.OnItemClickListener() {
+                @Override
+                public void onCLick(View view, int position) {
+                    Toast.makeText(MateriaisFragment.this.getActivity(), String.format("recyclerMateriais.onCLick: %d", position), Toast.LENGTH_SHORT).show();
+                }
+            });
+            ((MateriaisAdapter) this.recyclerMateriais.getAdapter()).setOnLongClickListener(new MateriaisAdapter.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view, int position) {
+                    Toast.makeText(MateriaisFragment.this.getActivity(), String.format("recyclerMateriais.onLongClick: %d", position), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
 
     }

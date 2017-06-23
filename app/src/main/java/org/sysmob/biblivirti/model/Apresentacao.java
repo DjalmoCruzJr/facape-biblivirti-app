@@ -14,6 +14,7 @@ public class Apresentacao extends Material {
 
     public Apresentacao() {
         super();
+        this.setMactipo(ETipoMaterial.APRESENTACAO);
     }
 
     public Apresentacao(int manid, String macdesc, String macurl, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {
