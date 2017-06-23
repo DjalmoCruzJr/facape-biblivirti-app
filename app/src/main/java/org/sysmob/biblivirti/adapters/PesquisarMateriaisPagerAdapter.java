@@ -24,6 +24,9 @@ public class PesquisarMateriaisPagerAdapter extends FragmentStatePagerAdapter {
     private static final int FRAGMENTS_LIVRO = 4;
     private static final int FRAGMENTS_SIMULADO = 5;
     private static final int FRAGMENTS_VIDEO = 6;
+    private static final int FRAGMENTS_TODOS = 7;
+
+    private static final String FRAGMENTS_TODOS_TITLE = "TODOS";
 
     private List<Material> apresentacoes;
     private List<Material> exercicios;
@@ -51,6 +54,9 @@ public class PesquisarMateriaisPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         PesquisarMateriaisFragment fragment = new PesquisarMateriaisFragment();
         switch (position) {
+            case FRAGMENTS_TODOS:
+                fragment.setMateriais(this.todosMateriais);
+                break;
             case FRAGMENTS_APRESENTACAO:
                 fragment.setMateriais(this.apresentacoes);
                 break;
@@ -80,6 +86,9 @@ public class PesquisarMateriaisPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         String pageTitle = "";
         switch (position) {
+            case FRAGMENTS_TODOS:
+                pageTitle = FRAGMENTS_TODOS_TITLE;
+                break;
             case FRAGMENTS_APRESENTACAO:
                 pageTitle = ETipoMaterial.APRESENTACAO.name().toString();
                 break;
