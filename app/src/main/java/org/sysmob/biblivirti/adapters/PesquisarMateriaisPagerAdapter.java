@@ -16,15 +16,15 @@ import java.util.List;
  */
 public class PesquisarMateriaisPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final int FRAGMENTS_COUNT = ETipoMaterial.values().length;
-    private static final int FRAGMENTS_APRESENTACAO = 0;
-    private static final int FRAGMENTS_EXERCICIO = 1;
-    private static final int FRAGMENTS_FORMULA = 2;
-    private static final int FRAGMENTS_JOGO = 3;
-    private static final int FRAGMENTS_LIVRO = 4;
-    private static final int FRAGMENTS_SIMULADO = 5;
-    private static final int FRAGMENTS_VIDEO = 6;
-    private static final int FRAGMENTS_TODOS = 7;
+    private static final int FRAGMENTS_COUNT = ETipoMaterial.values().length + 1;
+    private static final int FRAGMENTS_TODOS = 0;
+    private static final int FRAGMENTS_APRESENTACAO = 1;
+    private static final int FRAGMENTS_EXERCICIO = 2;
+    private static final int FRAGMENTS_FORMULA = 3;
+    private static final int FRAGMENTS_JOGO = 4;
+    private static final int FRAGMENTS_LIVRO = 5;
+    private static final int FRAGMENTS_SIMULADO = 6;
+    private static final int FRAGMENTS_VIDEO = 7;
 
     private static final String FRAGMENTS_TODOS_TITLE = "TODOS";
 
