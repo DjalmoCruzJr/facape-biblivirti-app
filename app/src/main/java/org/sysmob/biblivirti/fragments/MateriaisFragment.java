@@ -99,8 +99,8 @@ public class MateriaisFragment extends Fragment {
                 Bundle fields = new Bundle();
                 fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
                 intent.putExtras(fields);
-                //startActivity(intent);
-                return false;
+                startActivity(intent);
+                return true;
             }
 
             @Override

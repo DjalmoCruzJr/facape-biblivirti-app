@@ -22,8 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.adapters.PesquisarGruposPagerAdapter;
+import org.sysmob.biblivirti.adapters.PesquisarMateriaisPagerAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
-import org.sysmob.biblivirti.model.Grupo;
+import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
@@ -34,18 +35,18 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
-public class PesquisarGruposActivity extends AppCompatActivity {
+public class PesquisarMateriaisActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private ProgressBar progressBar;
     private ViewPager viewPager;
-    private List<Grupo> grupos;
+    private List<Material> materiais;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pesquisar_grupos);
+        setContentView(R.layout.activity_pesquisar_materiais);
 
         // Carrega os widgets da tela
         loadWidgets();
@@ -80,7 +81,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                    Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PesquisarMateriaisActivity.this, message, Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     Bundle fields = new Bundle();
@@ -118,7 +119,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
-        this.viewPager.setAdapter(new PesquisarGruposPagerAdapter(getSupportFragmentManager(), this.grupos));
+        this.viewPager.setAdapter(new PesquisarMateriaisPagerAdapter(getSupportFragmentManager(), this.materiais));
     }
 
     private void loadWidgets() {
@@ -142,7 +143,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
      *******************************************************/
     public void handleSearch(Intent intent) {
         if (intent != null && intent.getExtras() != null) {
-            if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_GRUPO)) {
+            if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_MATERIAL)) {
                 String query = intent.getExtras().getString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE);
                 getSupportActionBar().setTitle(query);
                 if (!BiblivirtiUtils.isNetworkConnected()) {
@@ -151,7 +152,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Bundle fields = new Bundle();
-                    fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                    fields.putString(Material.FIELD_MACDESC, query);
                     actionPesquisar(fields);
                 }
             }
@@ -164,11 +165,11 @@ public class PesquisarGruposActivity extends AppCompatActivity {
     private void actionPesquisar(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
-            params.put(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, fields.getString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE));
+            params.put(Material.FIELD_MACDESC, fields.getString(Material.FIELD_MACDESC));
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
-                    BiblivirtiConstants.API_GROUP_SEARCH,
+                    BiblivirtiConstants.API_MATERIAL_SEARCH,
                     params
             );
             new NetworkConnection(this).execute(requestData, new ITransaction() {
@@ -182,12 +183,12 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(PesquisarMateriaisActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        PesquisarGruposActivity.this,
+                                        PesquisarMateriaisActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -196,11 +197,11 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                                         ),
                                         "Ok"
                                 );
-                                grupos = null;
+                                materiais = null;
                                 loadFields();
                             } else {
-                                grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(PesquisarGruposActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                materiais = BiblivirtiParser.parseToMateriais(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
+                                Toast.makeText(PesquisarMateriaisActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 loadFields();
                             }
