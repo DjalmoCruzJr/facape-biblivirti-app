@@ -21,7 +21,6 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.adapters.PesquisarGruposPagerAdapter;
 import org.sysmob.biblivirti.adapters.PesquisarMateriaisPagerAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.model.Material;
@@ -54,6 +53,7 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
         // Carrega os listeners do widgets
         loadListeners();
 
+        // Processa a requisicao de pesquisa
         handleSearch(getIntent());
     }
 
@@ -82,10 +82,9 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                     Toast.makeText(PesquisarMateriaisActivity.this, message, Toast.LENGTH_LONG).show();
-                    finish();
                 } else {
                     Bundle fields = new Bundle();
-                    fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                    fields.putString(Material.FIELD_MACDESC, query);
                     actionPesquisar(fields);
                 }
                 return true;
@@ -93,7 +92,6 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                //Toast.makeText(PesquisarGruposActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }

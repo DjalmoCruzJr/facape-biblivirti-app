@@ -27,6 +27,9 @@ import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.adapters.MateriaisAdapter;
+import org.sysmob.biblivirti.adapters.TiposMateriaisDialogAdapter;
+import org.sysmob.biblivirti.dialogs.TiposMateriaisDialog;
+import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -35,6 +38,7 @@ import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
@@ -47,6 +51,7 @@ public class MateriaisFragment extends Fragment {
     private RecyclerView recyclerMateriais;
     private FloatingActionButton buttonNovoMaterial;
     private List<Material> materiais;
+    private Grupo grupo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,14 +72,18 @@ public class MateriaisFragment extends Fragment {
         this.buttonNovoMaterial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionNovoMaterial(null);
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                } else {
+                    actionNovoMaterial(null);
+                }
             }
         });
 
         Bundle fields = new Bundle();
         fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
         actionCarregarMateriais(fields);
-
         return view;
     }
 
@@ -105,7 +114,6 @@ public class MateriaisFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                //Toast.makeText(getActivity(), String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
@@ -204,7 +212,16 @@ public class MateriaisFragment extends Fragment {
     }
 
     private void actionNovoMaterial(Bundle fields) {
-        Toast.makeText(getActivity(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        final TiposMateriaisDialog dialog = new TiposMateriaisDialog();
+        dialog.setOnOptionsClickListener(new TiposMateriaisDialogAdapter.OnItemClickListener() {
+            @Override
+            public void onCLick(View view, int position) {
+                String tipoMaterial = ETipoMaterial.values()[position].name();
+                Toast.makeText(getActivity(), String.format("Tipo Material Selecionado: %s", tipoMaterial), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show(this.getFragmentManager(), TiposMateriaisDialog.class.getSimpleName());
     }
 
 }

@@ -53,6 +53,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
         // Carrega os listeners do widgets
         loadListeners();
 
+        // Processa a requsicao de pesquisa
         handleSearch(getIntent());
     }
 
@@ -81,7 +82,6 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                     Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
-                    finish();
                 } else {
                     Bundle fields = new Bundle();
                     fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
@@ -92,7 +92,6 @@ public class PesquisarGruposActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                //Toast.makeText(PesquisarGruposActivity.this, String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 return false;
             }
