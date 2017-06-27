@@ -11,6 +11,7 @@ import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.enums.EUsuarioStatus;
 import org.sysmob.biblivirti.model.Apresentacao;
 import org.sysmob.biblivirti.model.AreaInteresse;
+import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Exercicio;
 import org.sysmob.biblivirti.model.Formula;
 import org.sysmob.biblivirti.model.Grupo;
@@ -176,4 +177,31 @@ public abstract class BiblivirtiParser {
         return null;
     }
 
+    public static Conteudo parseToConteudo(JSONObject json) throws JSONException {
+        Conteudo conteudo = null;
+        if (json != null) {
+            conteudo = new Conteudo();
+            conteudo.setConid(json.getInt(Conteudo.FIELD_CONID));
+            conteudo.setCocdesc(json.getString(Conteudo.FIELD_COCDESC));
+            conteudo.setCodcadt(Timestamp.valueOf(json.getString(Conteudo.FIELD_CODCADT)));
+            conteudo.setCodaldt(Timestamp.valueOf(json.getString(Conteudo.FIELD_CODALDT)));
+            conteudo.setGrupo(json.opt(Conteudo.FIELD_GROUP) != null ? parseToGrupo(json.getJSONObject(Conteudo.FIELD_GROUP)) : null);
+        }
+        return conteudo;
+    }
+
+    public static List<Conteudo> parseToConteudos(JSONArray json) throws JSONException {
+        List<Conteudo> conteudos = null;
+        if (json != null) {
+            conteudos = new ArrayList<>();
+            for (int i = 0; i < json.length(); i++) {
+                Conteudo conteudo = null;
+                conteudo = parseToConteudo(json.getJSONObject(i));
+                conteudos.add(conteudo);
+            }
+        }
+        if (conteudos != null && conteudos.size() > 0)
+            return conteudos;
+        return null;
+    }
 }

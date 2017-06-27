@@ -1,6 +1,5 @@
 package org.sysmob.biblivirti.utils;
 
-import android.app.SearchManager;
 import android.content.Intent;
 
 /**
@@ -18,8 +17,12 @@ public abstract class BiblivirtiConstants {
      */
     public static final String ACTIVITY_TITLE = "activity_title";
     public static final String ACTIVITY_MODE_KEY = "activity_mode";
+
     public static final int ACTIVITY_MODE_INSERTING = 0;
     public static final int ACTIVITY_MODE_EDITING = 1;
+
+    public static final int DIALOG_MODE_INSERTING = 0;
+    public static final int DIALOG_MODE_EDITING = 1;
 
     /**
      * Outras constantes utilizadas no projeto

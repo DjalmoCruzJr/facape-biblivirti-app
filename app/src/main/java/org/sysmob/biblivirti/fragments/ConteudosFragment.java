@@ -26,7 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
-import org.sysmob.biblivirti.adapters.MateriaisAdapter;
+import org.sysmob.biblivirti.adapters.ConteudosAdapter;
+import org.sysmob.biblivirti.dialogs.NovoEditarConteudoDialog;
 import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -78,8 +79,8 @@ public class ConteudosFragment extends Fragment {
                 Bundle fields = new Bundle();
                 fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
                 intent.putExtras(fields);
-                startActivity(intent);
-                return true;
+                /*startActivity(intent);*/
+                return false;
             }
 
             @Override
@@ -96,8 +97,8 @@ public class ConteudosFragment extends Fragment {
 
         this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         this.layoutEmpty = (LinearLayout) view.findViewById(R.id.layoutEmpty);
-        this.recyclerConteudos = (RecyclerView) view.findViewById(R.id.recyclerMateriais);
-        this.buttonNovoConteudo = (FloatingActionButton) view.findViewById(R.id.buttonNovoMaterial);
+        this.recyclerConteudos = (RecyclerView) view.findViewById(R.id.recyclerConteudos);
+        this.buttonNovoConteudo = (FloatingActionButton) view.findViewById(R.id.buttonNovoConteudo);
         this.buttonNovoConteudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,25 +117,37 @@ public class ConteudosFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (ConteudosFragment.hasDataChanged) {
+            ConteudosFragment.hasDataChanged = false;
+            this.conteudos = null;
+            Bundle fields = new Bundle();
+            fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
+            actionCarregarConteudos(fields);
+        }
+    }
+
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
     private void loadFields() {
         if (conteudos == null) {
             layoutEmpty.setVisibility(View.VISIBLE);
-            Toast.makeText(getActivity(), "Nenhum material encontrado!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Nenhum contúdo encontrado!", Toast.LENGTH_SHORT).show();
         } else {
-            this.recyclerConteudos = (RecyclerView) this.getView().findViewById(R.id.recyclerMateriais);
+            this.recyclerConteudos = (RecyclerView) this.getView().findViewById(R.id.recyclerConteudos);
             this.recyclerConteudos.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerConteudos.setHasFixedSize(true);
             this.recyclerConteudos.setAdapter(new ConteudosAdapter(getContext(), conteudos));
-            ((MateriaisAdapter) this.recyclerConteudos.getAdapter()).setOnItemClickListener(new ConteudosAdapter.OnItemClickListener() {
+            ((ConteudosAdapter) this.recyclerConteudos.getAdapter()).setOnItemClickListener(new ConteudosAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
                     Toast.makeText(ConteudosFragment.this.getActivity(), String.format("recyclerConteudos.onCLick: %d", position), Toast.LENGTH_SHORT).show();
                 }
             });
-            ((MateriaisAdapter) this.recyclerConteudos.getAdapter()).setOnLongClickListener(new ConteudosAdapter.OnLongClickListener() {
+            ((ConteudosAdapter) this.recyclerConteudos.getAdapter()).setOnLongClickListener(new ConteudosAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
                     Toast.makeText(ConteudosFragment.this.getActivity(), String.format("recyclerConteudos.onLongClick: %d", position), Toast.LENGTH_SHORT).show();
@@ -144,12 +157,16 @@ public class ConteudosFragment extends Fragment {
         }
 
     }
-    
+
     /********************************************************
      * ACTION METHODS
      *******************************************************/
     public void actionNovoConteudo(Bundle fields) {
-        Toast.makeText(getActivity(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        NovoEditarConteudoDialog dialog = new NovoEditarConteudoDialog();
+        dialog.setGrupo(((GrupoActivity) getActivity()).getGrupo());
+        dialog.setDialogMode(BiblivirtiConstants.DIALOG_MODE_INSERTING);
+        dialog.setCancelable(false);
+        dialog.show(getFragmentManager(), NovoEditarConteudoDialog.class.getSimpleName());
     }
 
     public void actionCarregarConteudos(Bundle fields) {

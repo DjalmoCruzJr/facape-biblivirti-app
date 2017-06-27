@@ -92,6 +92,11 @@
     <string name="adapter_list_pesquisar_grupos_button_sair_participar_grupo">Sair do Grupo</string>
     <string name="activity_sobre_label">Sobre o Biblivirti...</string>
     <string name="menu_fragment_materiais_pesquisar">Pesquisar...</string>
+    <string name="dialog_novo_editar_conteudo_edit_cocdesc_hint">Descrição (Ex: 01 - Funções do 1º Grau)</string>
+    <string name="dialog_novo_editar_conteudo_button_cancelar_text">Cancelar</string>
+    <string name="dialog_novo_editar_conteudo_button_salvar_text">Salvar</string>
+    <string name="dialog_novo_editar_conteudo_text_descricao_tela_novo">Novo Conteúdo</string>
+    <string name="dialog_novo_editar_conteudo_text_descricao_tela_editar">Editar Conteúdo</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>
