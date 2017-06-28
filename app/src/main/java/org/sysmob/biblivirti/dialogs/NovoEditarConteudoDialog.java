@@ -75,7 +75,7 @@ public class NovoEditarConteudoDialog extends DialogFragment {
                         try {
                             if (new ContentBO(NovoEditarConteudoDialog.this.getView()).validateAdd()) {
                                 Bundle fields = new Bundle();
-                                fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                                fields.putInt(Conteudo.FIELD_CONIDGR, grupo.getGrnid());
                                 fields.putString(Conteudo.FIELD_COCDESC, editCOCDESC.getText().toString().trim());
                                 actionNovoConteudo(fields);
                             }
@@ -86,12 +86,13 @@ public class NovoEditarConteudoDialog extends DialogFragment {
                         try {
                             if (new ContentBO(NovoEditarConteudoDialog.this.getView()).validateEdit()) {
                                 Bundle fields = new Bundle();
-                                fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                                fields.putInt(Conteudo.FIELD_CONIDGR, grupo.getGrnid());
                                 fields.putInt(Conteudo.FIELD_CONID, conteudo.getConid());
                                 fields.putString(Conteudo.FIELD_COCDESC, editCOCDESC.getText().toString().trim());
                                 actionEditarConteudo(fields);
                             }
                         } catch (ValidationException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -122,7 +123,12 @@ public class NovoEditarConteudoDialog extends DialogFragment {
      * PRIVATE METHODS
      *******************************************************/
     private void loadErrors(JSONObject errors) {
-
+        try {
+            this.editCOCDESC.setError(errors.opt(Conteudo.FIELD_COCDESC) != null ? errors.getString(Conteudo.FIELD_COCDESC) : null);
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void enableWidgets(boolean status) {
@@ -148,7 +154,8 @@ public class NovoEditarConteudoDialog extends DialogFragment {
     public void actionNovoConteudo(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
-            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Conteudo.FIELD_CONIDGR, fields.getInt(Conteudo.FIELD_CONIDGR));
+            params.put(Conteudo.FIELD_COCDESC, fields.getString(Conteudo.FIELD_COCDESC));
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
@@ -179,8 +186,9 @@ public class NovoEditarConteudoDialog extends DialogFragment {
                                         ),
                                         "Ok"
                                 );
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                             } else {
-                                Toast.makeText(NovoEditarConteudoDialog.this.getContext(), response.getString(BiblivirtiConstants.RESPONSE_DATA), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(NovoEditarConteudoDialog.this.getContext(), "Conteúdo cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
                                 ConteudosFragment.hasDataChanged = true;
                                 dismiss();
                             }
