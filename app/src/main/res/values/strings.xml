@@ -97,6 +97,11 @@
     <string name="dialog_novo_editar_conteudo_button_salvar_text">Salvar</string>
     <string name="dialog_novo_editar_conteudo_text_descricao_tela_novo">Novo Conteúdo</string>
     <string name="dialog_novo_editar_conteudo_text_descricao_tela_editar">Editar Conteúdo</string>
+    <string name="dialog_anexar_linkar_material_text_link">Link</string>
+    <string name="dialog_anexar_linkar_material_text_anexo">Anexo</string>
+    <string name="dialog_anexar_linkar_material_edit_macurl_hint">Link (Ex: https://www.youtube.com/34AE)</string>
+    <string name="dialog_anexar_linkar_material_button_cancelar_text">Cancelar</string>
+    <string name="dialog_anexar_linkar_material_button_ok_text">Ok</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>
