@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/ic_attachment_100px_blue" />
+                android:src="@mipmap/ic_attachment_100px_gray" />
 
             <TextView
                 android:id="@+id/textAnexo"

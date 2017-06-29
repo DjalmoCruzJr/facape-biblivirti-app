@@ -26,12 +26,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
+import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
 import org.sysmob.biblivirti.adapters.MateriaisAdapter;
 import org.sysmob.biblivirti.adapters.TiposMateriaisDialogAdapter;
+import org.sysmob.biblivirti.dialogs.AnexarLinkarMaterialDialog;
 import org.sysmob.biblivirti.dialogs.TiposMateriaisDialog;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
+import org.sysmob.biblivirti.model.Simulado;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
@@ -51,6 +54,7 @@ public class MateriaisFragment extends Fragment {
     private RecyclerView recyclerMateriais;
     private FloatingActionButton buttonNovoMaterial;
     private List<Material> materiais;
+    private Material material;
     private Grupo grupo;
 
     @Override
@@ -212,16 +216,30 @@ public class MateriaisFragment extends Fragment {
     }
 
     private void actionNovoMaterial(Bundle fields) {
-        final TiposMateriaisDialog dialog = new TiposMateriaisDialog();
-        dialog.setOnOptionsClickListener(new TiposMateriaisDialogAdapter.OnItemClickListener() {
+        final TiposMateriaisDialog tiposMateriaisDialog = new TiposMateriaisDialog();
+        tiposMateriaisDialog.setOnOptionsClickListener(new TiposMateriaisDialogAdapter.OnItemClickListener() {
             @Override
             public void onCLick(View view, int position) {
-                String tipoMaterial = ETipoMaterial.values()[position].name();
-                Toast.makeText(getActivity(), String.format("Tipo Material Selecionado: %s", tipoMaterial), Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                if (ETipoMaterial.values()[position] == ETipoMaterial.SIMULADO) {
+                    Bundle extras = new Bundle();
+                    extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
+                    extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
+                    extras.putSerializable(Grupo.KEY_GRUPO, grupo);
+                    extras.putSerializable(Material.KEY_MATERIAL, new Simulado());
+                    Intent intent = new Intent(MateriaisFragment.this.getContext(), NovoEditarMaterialActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                } else {
+                    AnexarLinkarMaterialDialog anexarLinkarMaterialDialog = new AnexarLinkarMaterialDialog();
+                    anexarLinkarMaterialDialog.setGrupo(grupo);
+                    anexarLinkarMaterialDialog.setTipoMaterial(ETipoMaterial.values()[position]);
+                    anexarLinkarMaterialDialog.show(getFragmentManager(), AnexarLinkarMaterialDialog.class.getSimpleName());
+                }
+
+                tiposMateriaisDialog.dismiss();
             }
         });
-        dialog.show(this.getFragmentManager(), TiposMateriaisDialog.class.getSimpleName());
+        tiposMateriaisDialog.show(this.getFragmentManager(), TiposMateriaisDialog.class.getSimpleName());
     }
 
 }

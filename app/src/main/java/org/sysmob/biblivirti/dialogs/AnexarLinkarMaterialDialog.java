@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.dialogs;
 
 import android.app.Dialog;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -104,7 +105,24 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
      * PRIVATE METHODS
      *******************************************************/
     private void loadFields() {
+        if (this.tipoMaterial == ETipoMaterial.APRESENTACAO || this.tipoMaterial == ETipoMaterial.EXERCICIO ||
+                this.tipoMaterial == ETipoMaterial.FORMULA || this.tipoMaterial == ETipoMaterial.LIVRO) {
+            this.viewAnexo.setEnabled(true);
+            this.imageAnexo.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_attachment_100px_blue));
 
+            this.viewLink.setEnabled(false);
+            this.editMACURL.setEnabled(false);
+            this.imageLink.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_link_100px_gray));
+        } else if (this.tipoMaterial == ETipoMaterial.JOGO || this.tipoMaterial == ETipoMaterial.VIDEO) {
+            this.viewAnexo.setEnabled(false);
+            this.imageAnexo.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_attachment_100px_gray));
+
+            this.viewLink.setEnabled(true);
+            this.editMACURL.setEnabled(true);
+            this.imageLink.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_link_100px_blue));
+        } else if (this.tipoMaterial == ETipoMaterial.SIMULADO) {
+            // Ocorreu erro pq nao chamou direto a tela de cadastro de simulado do dialogo de tipos de materiais
+        }
     }
 
     /********************************************************
@@ -120,5 +138,13 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
 
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
+    }
+
+    public ETipoMaterial getTipoMaterial() {
+        return tipoMaterial;
+    }
+
+    public void setTipoMaterial(ETipoMaterial tipoMaterial) {
+        this.tipoMaterial = tipoMaterial;
     }
 }

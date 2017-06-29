@@ -102,6 +102,8 @@
     <string name="dialog_anexar_linkar_material_edit_macurl_hint">Link (Ex: https://www.youtube.com/34AE)</string>
     <string name="dialog_anexar_linkar_material_button_cancelar_text">Cancelar</string>
     <string name="dialog_anexar_linkar_material_button_ok_text">Ok</string>
+    <string name="activity_novo_editar_material_label_insert">Novo Material</string>
+    <string name="activity_novo_editar_material_label_edit">Editar Material</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>
