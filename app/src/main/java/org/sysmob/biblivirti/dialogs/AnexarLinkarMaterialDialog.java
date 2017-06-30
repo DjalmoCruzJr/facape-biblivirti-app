@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.dialogs;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,11 +15,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
+import org.sysmob.biblivirti.business.MaterialBO;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
+import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
+import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 /**
  * Created by micro99 on 07/02/2017.
@@ -49,7 +56,10 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_anexar_linkar_material, container, false);
 
+        this.setCancelable(false);
+
         if (getArguments() != null) {
+            this.grupo = (Grupo) getArguments().getSerializable(Grupo.KEY_GRUPO);
             this.tipoMaterial = (ETipoMaterial) getArguments().getSerializable(Material.FIELD_MACTIPO);
         }
 
@@ -78,7 +88,25 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Falta implementar
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        if (new MaterialBO(getView()).validateAdd()) {
+                            Bundle extras = new Bundle();
+                            extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
+                            extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
+                            extras.putSerializable(Grupo.KEY_GRUPO, grupo);
+                            extras.putSerializable(Material.KEY_MATERIAL, BiblivirtiUtils.createMaterialByTipo(tipoMaterial));
+                            Intent intent = new Intent(getContext(), NovoEditarMaterialActivity.class);
+                            intent.putExtras(extras);
+                            startActivity(intent);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
         this.buttonCancelar.setOnClickListener(new View.OnClickListener() {

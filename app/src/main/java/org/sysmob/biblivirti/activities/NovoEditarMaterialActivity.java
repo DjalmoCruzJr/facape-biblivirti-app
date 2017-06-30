@@ -16,8 +16,6 @@ import android.widget.Toast;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
-import org.sysmob.biblivirti.business.MaterialBO;
-import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
@@ -102,20 +100,13 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                         String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                         Toast.makeText(NovoEditarMaterialActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
-                        try {
-                            if (new MaterialBO(NovoEditarMaterialActivity.this).validateAdd()) {
-                                // Falta implementar essa acao
-                            }
-                        } catch (ValidationException e) {
-                            e.printStackTrace();
-                        }
+                        // Falta implementar essa acao
                     }
                 }
                 break;
         }
         return true;
     }
-
 
     /*****************************************************
      * PRIVATE METHODS

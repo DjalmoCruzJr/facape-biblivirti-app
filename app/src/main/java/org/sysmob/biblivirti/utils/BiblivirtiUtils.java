@@ -9,6 +9,15 @@ import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
+import org.sysmob.biblivirti.enums.ETipoMaterial;
+import org.sysmob.biblivirti.model.Apresentacao;
+import org.sysmob.biblivirti.model.Exercicio;
+import org.sysmob.biblivirti.model.Formula;
+import org.sysmob.biblivirti.model.Jogo;
+import org.sysmob.biblivirti.model.Livro;
+import org.sysmob.biblivirti.model.Material;
+import org.sysmob.biblivirti.model.Simulado;
+import org.sysmob.biblivirti.model.Video;
 
 import java.io.ByteArrayOutputStream;
 
@@ -46,5 +55,28 @@ public abstract class BiblivirtiUtils {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT) + "." + getMimeType(mimeType);
+    }
+
+    public static Material createMaterialByTipo(ETipoMaterial tipoMaterial) {
+        Material material = null;
+
+        if (tipoMaterial == ETipoMaterial.APRESENTACAO) {
+
+            material = new Apresentacao();
+        } else if (tipoMaterial == ETipoMaterial.EXERCICIO) {
+            material = new Exercicio();
+        } else if (tipoMaterial == ETipoMaterial.FORMULA) {
+            material = new Formula();
+        } else if (tipoMaterial == ETipoMaterial.JOGO) {
+            material = new Jogo();
+        } else if (tipoMaterial == ETipoMaterial.LIVRO) {
+            material = new Livro();
+        } else if (tipoMaterial == ETipoMaterial.SIMULADO) {
+            material = new Simulado();
+        } else if (tipoMaterial == ETipoMaterial.VIDEO) {
+            material = new Video();
+        }
+
+        return material;
     }
 }

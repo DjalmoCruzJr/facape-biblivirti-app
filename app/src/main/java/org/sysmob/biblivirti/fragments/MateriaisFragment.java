@@ -55,7 +55,6 @@ public class MateriaisFragment extends Fragment {
     private FloatingActionButton buttonNovoMaterial;
     private List<Material> materiais;
     private Material material;
-    private Grupo grupo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -224,14 +223,14 @@ public class MateriaisFragment extends Fragment {
                     Bundle extras = new Bundle();
                     extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                     extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
-                    extras.putSerializable(Grupo.KEY_GRUPO, grupo);
+                    extras.putSerializable(Grupo.KEY_GRUPO, ((GrupoActivity) getActivity()).getGrupo());
                     extras.putSerializable(Material.KEY_MATERIAL, new Simulado());
                     Intent intent = new Intent(MateriaisFragment.this.getContext(), NovoEditarMaterialActivity.class);
                     intent.putExtras(extras);
                     startActivity(intent);
                 } else {
                     AnexarLinkarMaterialDialog anexarLinkarMaterialDialog = new AnexarLinkarMaterialDialog();
-                    anexarLinkarMaterialDialog.setGrupo(grupo);
+                    anexarLinkarMaterialDialog.setGrupo(((GrupoActivity) getActivity()).getGrupo());
                     anexarLinkarMaterialDialog.setTipoMaterial(ETipoMaterial.values()[position]);
                     anexarLinkarMaterialDialog.show(getFragmentManager(), AnexarLinkarMaterialDialog.class.getSimpleName());
                 }

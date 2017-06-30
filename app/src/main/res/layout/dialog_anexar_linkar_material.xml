@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:padding="5dp">
 
     <LinearLayout
+        android:id="@+id/viewAnexoLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/viewLink"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -27,16 +30,17 @@
                 android:src="@mipmap/ic_link_100px_blue" />
 
             <TextView
+                android:id="@+id/textLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_anexar_linkar_material_text_link"
                 android:textColor="@color/colorBlack"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textLink"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -49,7 +53,7 @@
 
         <LinearLayout
             android:id="@+id/viewAnexo"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -69,19 +73,24 @@
                 android:layout_gravity="center_horizontal"
                 android:text="@string/dialog_anexar_linkar_material_text_anexo"
                 android:textColor="@color/colorBlack"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
     </LinearLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/viewEdiText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewAnexoLink"
+        android:layout_marginTop="5dp">
 
         <EditText
             android:id="@+id/editMACURL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="@string/dialog_anexar_linkar_material_edit_macurl_hint"
             android:inputType="textUri"
             android:textColor="@color/colorBlack" />
@@ -91,6 +100,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/viewEdiText"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
         <Button
@@ -114,5 +125,5 @@
             android:textColor="@color/colorWhite" />
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
 
