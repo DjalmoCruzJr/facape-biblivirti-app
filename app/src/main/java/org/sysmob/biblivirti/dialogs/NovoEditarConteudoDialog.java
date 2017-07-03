@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.dialogs;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +48,7 @@ public class NovoEditarConteudoDialog extends DialogFragment {
     private Button buttonSalvar;
     private Conteudo conteudo;
     private Grupo grupo;
+    private DialogInterface.OnDismissListener onDismissListener;
 
     public NovoEditarConteudoDialog() {
         this.grupo = null;
@@ -117,6 +119,14 @@ public class NovoEditarConteudoDialog extends DialogFragment {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (this.onDismissListener != null) {
+            onDismissListener.onDismiss(this.getDialog());
+        }
     }
 
     /********************************************************
@@ -231,5 +241,13 @@ public class NovoEditarConteudoDialog extends DialogFragment {
 
     public void setDialogMode(int dialogMode) {
         this.dialogMode = dialogMode;
+    }
+
+    public DialogInterface.OnDismissListener getOnDismissListener() {
+        return onDismissListener;
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 }
