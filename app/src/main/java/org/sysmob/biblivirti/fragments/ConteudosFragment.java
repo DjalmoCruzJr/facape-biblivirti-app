@@ -28,7 +28,10 @@ import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.adapters.ConteudosAdapter;
+import org.sysmob.biblivirti.adapters.OpcoesConteudosAdapter;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.dialogs.NovoEditarConteudoDialog;
+import org.sysmob.biblivirti.dialogs.OpcoesConteudosDialog;
 import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -145,14 +148,38 @@ public class ConteudosFragment extends Fragment {
             ((ConteudosAdapter) this.recyclerConteudos.getAdapter()).setOnItemClickListener(new ConteudosAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
-                    Toast.makeText(ConteudosFragment.this.getActivity(), String.format("recyclerConteudos.onCLick: %d", position), Toast.LENGTH_SHORT).show();
+                    // Verifica se o usuario logado EH ADMIN do grupo
+                    if (BiblivirtiApplication.getInstance().getLoggedUser().getUsnid() == ((GrupoActivity) getActivity()).getGrupo().getAdmin().getUsnid()) {
+                        Toast.makeText(ConteudosFragment.this.getActivity(), String.format("recyclerConteudos.onCLick: %d", position), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             ((ConteudosAdapter) this.recyclerConteudos.getAdapter()).setOnLongClickListener(new ConteudosAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
-                    Toast.makeText(ConteudosFragment.this.getActivity(), String.format("recyclerConteudos.onLongClick: %d", position), Toast.LENGTH_SHORT).show();
-                    return false;
+                    // Verifica se o usuario logado EH ADMIN do grupo
+                    if (BiblivirtiApplication.getInstance().getLoggedUser().getUsnid() == ((GrupoActivity) getActivity()).getGrupo().getAdmin().getUsnid()) {
+                        final OpcoesConteudosDialog dialog = new OpcoesConteudosDialog();
+                        dialog.setOnOptionsClickListener(new OpcoesConteudosAdapter.OnItemClickListener() {
+                            @Override
+                            public void onCLick(View view, int position) {
+                                Toast.makeText(getContext(), String.format("OpcoesConteudosDialog.onLongClick: %d", position), Toast.LENGTH_SHORT).show();
+                                switch (position) {
+                                    case 0: // EDITAR
+                                        // FALTA IMPLEMENTAR ESSE PROCESSAMENTO
+                                        break;
+                                    case 1: // EXCLUIR
+                                        // FALTA IMPLEMENTAR ESSE PROCESSAMENTO
+                                        break;
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show(getFragmentManager(), OpcoesConteudosDialog.class.getClass().getSimpleName());
+                        return false;
+                    } else {
+                        return false;
+                    }
                 }
             });
         }

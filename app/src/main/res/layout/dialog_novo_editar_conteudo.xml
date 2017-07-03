@@ -5,8 +5,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
@@ -23,9 +23,11 @@
 
             <TextView
                 android:id="@+id/textDescricaoTela"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
                 android:text="@string/dialog_novo_editar_conteudo_text_descricao_tela_novo"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
