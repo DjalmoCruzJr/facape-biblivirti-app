@@ -16,7 +16,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
-            android:id="@+id/imageGRCFOTO"
+            android:id="@+id/imageIconeMaterial"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -75,6 +75,10 @@
             android:scrollbars="vertical" />
 
     </LinearLayout>
+
+    <include
+        layout="@layout/layout_empty"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBar"

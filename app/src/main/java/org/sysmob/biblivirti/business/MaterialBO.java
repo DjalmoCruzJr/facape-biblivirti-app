@@ -1,17 +1,15 @@
 package org.sysmob.biblivirti.business;
 
-import android.view.View;
-import android.widget.EditText;
+import android.app.Activity;
 
-import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.business.interfaces.IMaterialBO;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 
 public class MaterialBO implements IMaterialBO {
 
-    private View activity;
+    private Activity activity;
 
-    public MaterialBO(View activity) {
+    public MaterialBO(Activity activity) {
         this.activity = activity;
     }
 
@@ -29,10 +27,7 @@ public class MaterialBO implements IMaterialBO {
     public boolean validateAdd() throws ValidationException {
         boolean status = true;
 
-        if (((EditText) activity.findViewById(R.id.editMACURL)).getText().toString().trim().equals("")) {
-            status = false;
-            ((EditText) activity.findViewById(R.id.editMACURL)).setError("A URL do material deve ser informada!");
-        }
+        // Falta implementar as regras de validacao
 
         return status;
     }

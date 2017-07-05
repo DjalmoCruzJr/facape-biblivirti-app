@@ -25,6 +25,7 @@ public abstract class Material implements Serializable {
     public static final String FIELD_MADALDT = "madaldt";
     public static final String FIELD_MANQTDCE = "manqtdce";
     public static final String FIELD_MANQTDHA = "manqtdha";
+    public static final String FIELD_CONTENTS = "contents";
 
     private int manid;
     private String macdesc;

@@ -3,10 +3,8 @@ package org.sysmob.biblivirti.activities;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -171,13 +169,11 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE:
-                    imageGRCFOTO.setImageURI(data.getData());
-                    imageMimeType = getContentResolver().getType(data.getData());
-                    textImageInfo.setText(getResources().getString(R.string.activity_novo_grupo_text_image_info_unset));
-                    Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
-                    break;
+            if (requestCode == REQUEST_LOAD_IMAGE_FROM_EXTERNAL_STORAGE) {
+                imageGRCFOTO.setImageURI(data.getData());
+                imageMimeType = getContentResolver().getType(data.getData());
+                textImageInfo.setText(getResources().getString(R.string.activity_novo_grupo_text_image_info_unset));
+                Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_SHORT).show();
             }
         }
     }

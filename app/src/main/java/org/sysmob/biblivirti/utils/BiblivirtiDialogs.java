@@ -26,6 +26,15 @@ public abstract class BiblivirtiDialogs {
         dialog.show();
     }
 
+    public static void showMessageDialog(Context context, String title, String message, String buttonTitle, DialogInterface.OnClickListener positiveButtonOnClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.BiblivirtiTheme_AlertDialog);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(buttonTitle, positiveButtonOnClickListener);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public static void showConfirmationDialog(Context context, String title, String message, String positiveButtonTitle, String negativeButtonTitle, DialogInterface.OnClickListener positiveButtonOnClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.BiblivirtiTheme_AlertDialog);
         builder.setTitle(title);

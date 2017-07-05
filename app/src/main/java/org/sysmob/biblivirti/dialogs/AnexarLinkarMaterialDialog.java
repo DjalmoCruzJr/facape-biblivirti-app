@@ -1,5 +1,6 @@
 package org.sysmob.biblivirti.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -19,12 +20,12 @@ import android.widget.Toast;
 
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
-import org.sysmob.biblivirti.business.MaterialBO;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 /**
@@ -32,6 +33,10 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
  */
 
 public class AnexarLinkarMaterialDialog extends DialogFragment {
+
+    private static final String REGEX_URL_VALIDATION = "";
+
+    private static final int REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE = 1;
 
     private View viewLink;
     private View viewAnexo;
@@ -43,11 +48,14 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
     private Button buttonCancelar;
     private Button buttonOk;
     private Grupo grupo;
+    private Material material;
     private ETipoMaterial tipoMaterial;
+    private String fileMimeType;
 
     public AnexarLinkarMaterialDialog() {
         this.grupo = null;
         this.tipoMaterial = null;
+        this.fileMimeType = null;
     }
 
     @Nullable
@@ -82,7 +90,7 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         this.viewAnexo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Falta implementar
+                actionCarregarAnexo(null);
             }
         });
         this.buttonOk.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +101,7 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
                     Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                 } else {
                     try {
-                        if (new MaterialBO(getView()).validateAdd()) {
+                        if (validateAdd()) {
                             Bundle extras = new Bundle();
                             extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                             extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
@@ -102,6 +110,7 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
                             Intent intent = new Intent(getContext(), NovoEditarMaterialActivity.class);
                             intent.putExtras(extras);
                             startActivity(intent);
+                            dismiss();
                         }
                     } catch (ValidationException e) {
                         e.printStackTrace();
@@ -129,9 +138,44 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE) {
+                Material material = BiblivirtiUtils.createMaterialByTipo(this.tipoMaterial);
+                material.setMacurl(data.getData().toString());
+                Bundle extras = new Bundle();
+                extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
+                extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
+                extras.putSerializable(Grupo.KEY_GRUPO, this.grupo);
+                extras.putSerializable(Material.KEY_MATERIAL, material);
+                Intent intent = new Intent(this.getContext(), NovoEditarMaterialActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
+                dismiss();
+            }
+        }
+    }
+
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
+    private boolean validateAdd() throws ValidationException {
+        boolean status = true;
+
+        if (this.editMACURL.getText().toString().trim().equals("")) {
+            status = false;
+            this.editMACURL.setError("A URL do material deve ser informada!");
+        }
+        /*else if (!Pattern.matches(REGEX_URL_VALIDATION, this.editMACURL.getText().toString().trim())) {
+            status = false;
+            this.editMACURL.setError("Informe uma URL válida!");
+        }*/
+
+        return status;
+    }
+
     private void loadFields() {
         if (this.tipoMaterial == ETipoMaterial.APRESENTACAO || this.tipoMaterial == ETipoMaterial.EXERCICIO ||
                 this.tipoMaterial == ETipoMaterial.FORMULA || this.tipoMaterial == ETipoMaterial.LIVRO) {
@@ -140,6 +184,7 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
 
             this.viewLink.setEnabled(false);
             this.editMACURL.setEnabled(false);
+            this.buttonOk.setEnabled(false);
             this.imageLink.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_link_100px_gray));
         } else if (this.tipoMaterial == ETipoMaterial.JOGO || this.tipoMaterial == ETipoMaterial.VIDEO) {
             this.viewAnexo.setEnabled(false);
@@ -150,12 +195,22 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
             this.imageLink.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_link_100px_blue));
         } else if (this.tipoMaterial == ETipoMaterial.SIMULADO) {
             // Ocorreu erro pq nao chamou direto a tela de cadastro de simulado do dialogo de tipos de materiais
+            String message = "Ocorreu um erro durante o carregamento da interface. Por favor, tente novamente mais tarde!\n" +
+                    "Se o erro persistir entre em contato com a equipe de suporte do Biblivirti AVAM.";
+            BiblivirtiDialogs.showMessageDialog(getContext(), "Atenção!", message, "Ok");
+            throw new RuntimeException(message);
         }
     }
 
     /********************************************************
      * ACTION METHODS
      *******************************************************/
+    public void actionCarregarAnexo(Bundle fields) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType(BiblivirtiConstants.MIME_TYPE_FILE_PDF);
+        startActivityForResult(intent, REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE);
+    }
 
     /********************************************************
      * PUBLIC METHODS

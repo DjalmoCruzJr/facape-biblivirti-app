@@ -11,6 +11,7 @@ import android.util.Base64;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.model.Apresentacao;
+import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Exercicio;
 import org.sysmob.biblivirti.model.Formula;
 import org.sysmob.biblivirti.model.Jogo;
@@ -20,6 +21,9 @@ import org.sysmob.biblivirti.model.Simulado;
 import org.sysmob.biblivirti.model.Video;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by djalmocruzjr on 24/01/2017.
@@ -79,4 +83,5 @@ public abstract class BiblivirtiUtils {
 
         return material;
     }
+
 }

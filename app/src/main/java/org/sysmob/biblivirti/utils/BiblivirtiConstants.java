@@ -24,6 +24,15 @@ public abstract class BiblivirtiConstants {
     public static final int DIALOG_MODE_INSERTING = 0;
     public static final int DIALOG_MODE_EDITING = 1;
 
+    public static final String MIME_TYPE_FILE_PDF = "application/pdf";
+    public static final String MIME_TYPE_IMAGE_PNG = "image/png";
+    public static final String MIME_TYPE_IMAGE_JPEG = "image/jpeg";
+    public static final String MIME_TYPE_IMAGE_GIF = "image/gif";
+    public static final String MIME_TYPE_IMAGE_ALL = "image/*";
+    public static final String MIME_TYPE_VIDEO_MP4 = "video/mp4";
+    public static final String MIME_TYPE_VIDEO_ALL = "video/*";
+
+
     /**
      * Outras constantes utilizadas no projeto
      */
