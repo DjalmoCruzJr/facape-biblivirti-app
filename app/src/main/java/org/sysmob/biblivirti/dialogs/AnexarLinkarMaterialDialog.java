@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,8 @@ import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
+
+import java.io.File;
 
 /**
  * Created by micro99 on 07/02/2017.
@@ -144,7 +147,7 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         if (resultCode == Activity.RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE) {
                 Material material = BiblivirtiUtils.createMaterialByTipo(this.tipoMaterial);
-                material.setMacurl(data.getData().toString());
+                material.setMacurl(BiblivirtiUtils.encondFile(Uri.fromFile(data.getData()), data.getType()) );
                 Bundle extras = new Bundle();
                 extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                 extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));

@@ -32,7 +32,6 @@ public abstract class BiblivirtiConstants {
     public static final String MIME_TYPE_VIDEO_MP4 = "video/mp4";
     public static final String MIME_TYPE_VIDEO_ALL = "video/*";
 
-
     /**
      * Outras constantes utilizadas no projeto
      */

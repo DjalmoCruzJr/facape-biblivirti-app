@@ -1,6 +1,7 @@
 package org.sysmob.biblivirti.activities;
 
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import org.sysmob.biblivirti.adapters.ConteudosRelacionadosAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.business.MaterialBO;
 import org.sysmob.biblivirti.comparators.ConteudoComparatorByUsnid;
+import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Grupo;
@@ -127,10 +129,12 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
-                                fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
+                                fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
                                 actionNovoMaterial(fields);
                             }
                         } catch (ValidationException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -155,7 +159,10 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
     private void loadWidgets() {
         this.layoutEmpty = this.findViewById(R.id.layoutEmpty);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+
         this.viewNovoMaterial = this.findViewById(R.id.viewNovoMaterial);
+        this.viewNovoMaterial.setVisibility(View.INVISIBLE);
+
         this.imageIconeMaterial = (ImageView) this.findViewById(R.id.imageIconeMaterial);
         this.textMensagem = (TextView) this.findViewById(R.id.textMensagem);
         this.editMACDESC = (EditText) this.findViewById(R.id.editMACDESC);
@@ -185,6 +192,24 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                     }
             );
         } else {
+            // Verifica o tipo de material a ser cadastrado para configurar a imagem correspondente no ImangeView
+            if (this.material.getMactipo() == ETipoMaterial.APRESENTACAO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_power_point_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.EXERCICIO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_pdf_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.FORMULA) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_sigma_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.JOGO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_game_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.LIVRO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_video_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.SIMULADO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_simulate_100px_blue));
+            } else if (this.material.getMactipo() == ETipoMaterial.VIDEO) {
+                this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_video_100px_blue));
+            }
+            this.viewNovoMaterial.setVisibility(View.VISIBLE);
+
             this.conteudosSelecionados = new ArrayList<>();
             this.recyclerConteudosRelacionados = (RecyclerView) this.findViewById(R.id.recyclerConteudosRelacionados);
             this.recyclerConteudosRelacionados.setLayoutManager(new LinearLayoutManager(this));
