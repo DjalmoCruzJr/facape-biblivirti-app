@@ -1,10 +1,14 @@
 package org.sysmob.biblivirti.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
@@ -128,4 +132,21 @@ public abstract class BiblivirtiUtils {
         }
         return result;
     }
+
+    public static String getRealPathFromURI(Context context, Uri uri) {
+        Cursor cursor = null;
+        String result = null;
+        try {
+            cursor = context.getContentResolver().query(uri, null, null, null, null);
+            cursor.moveToFirst();
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            result = path + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+        }
+        return result;
+    }
+
 }

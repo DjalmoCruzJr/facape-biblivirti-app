@@ -129,6 +129,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
+                                fields.putString(Material.FIELD_MACURL, this.material.getMacurl());
                                 fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
                                 actionNovoMaterial(fields);
                             }
