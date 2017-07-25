@@ -1,9 +1,13 @@
 package org.sysmob.biblivirti.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.sysmob.biblivirti.enums.EStatusGrupo;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -134,4 +138,5 @@ public class Grupo implements Serializable {
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
+
 }

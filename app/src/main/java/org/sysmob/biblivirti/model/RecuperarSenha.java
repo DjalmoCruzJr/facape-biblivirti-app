@@ -1,5 +1,8 @@
 package org.sysmob.biblivirti.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.sysmob.biblivirti.enums.ERecuperarSenhaStatus;
 
 import java.io.Serializable;
@@ -86,4 +89,5 @@ public class RecuperarSenha implements Serializable {
     public void setRsdaldt(Date rsdaldt) {
         this.rsdaldt = rsdaldt;
     }
+
 }

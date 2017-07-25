@@ -2,6 +2,7 @@ package org.sysmob.biblivirti.activities;
 
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -129,7 +130,11 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
-                                fields.putString(Material.FIELD_MACURL, this.material.getMacurl());
+                                if (material.getMacurl() != null) {
+                                    Uri fileUri = Uri.parse(this.material.getMacurl());
+                                    String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
+                                    fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
+                                }
                                 fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
                                 actionNovoMaterial(fields);
                             }

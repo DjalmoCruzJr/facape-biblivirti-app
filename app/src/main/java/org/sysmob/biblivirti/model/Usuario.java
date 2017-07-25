@@ -128,4 +128,5 @@ public class Usuario implements Serializable {
     public void setUsdaldt(Date usdaldt) {
         this.usdaldt = usdaldt;
     }
+
 }

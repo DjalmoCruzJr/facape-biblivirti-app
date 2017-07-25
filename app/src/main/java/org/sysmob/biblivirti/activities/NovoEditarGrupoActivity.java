@@ -1,5 +1,6 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -105,8 +106,20 @@ public class NovoEditarGrupoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
-                finish();
+                BiblivirtiDialogs.showConfirmationDialog(
+                        this,
+                        "Confirmação!",
+                        "Deseja realmente cancelar a operação atual ?",
+                        "Sim",
+                        "Não",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                BiblivirtiApplication.getInstance().cancelPendingRequests(this.getClass().getSimpleName());
+                                NovoEditarGrupoActivity.this.finish();
+                            }
+                        }
+                );
                 break;
             case R.id.activity_novo_grupo_menu_salvar:
                 if (!BiblivirtiUtils.isNetworkConnected()) {

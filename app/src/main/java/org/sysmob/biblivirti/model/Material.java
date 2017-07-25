@@ -1,16 +1,20 @@
 package org.sysmob.biblivirti.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.sysmob.biblivirti.enums.EStatusMaterial;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by micro99 on 23/02/2017.
  */
-public abstract class Material implements Serializable {
+public class Material implements Serializable {
 
     public static final String KEY_MATERIAL = "material";
     public static final String KEY_MATERIAIS = "materiais";
@@ -27,17 +31,17 @@ public abstract class Material implements Serializable {
     public static final String FIELD_MANQTDHA = "manqtdha";
     public static final String FIELD_CONTENTS = "contents";
 
-    private int manid;
-    private String macdesc;
-    private String macurl;
-    private ETipoMaterial mactipo;
-    private EStatusMaterial macstat;
-    private Date madcadt;
-    private Date madaldt;
-    private int manqtdce;
-    private int manqtdha;
-    private List<Conteudo> conteudos;
-    private List<Comentario> comentarios;
+    protected int manid;
+    protected String macdesc;
+    protected String macurl;
+    protected ETipoMaterial mactipo;
+    protected EStatusMaterial macstat;
+    protected Date madcadt;
+    protected Date madaldt;
+    protected int manqtdce;
+    protected int manqtdha;
+    protected List<Conteudo> conteudos;
+    protected List<Comentario> comentarios;
 
     public Material() {
     }
@@ -143,4 +147,5 @@ public abstract class Material implements Serializable {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
+
 }

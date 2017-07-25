@@ -1,9 +1,12 @@
 package org.sysmob.biblivirti.model;
 
+import android.os.Parcel;
+
 import org.sysmob.biblivirti.enums.ENivelSimulado;
 import org.sysmob.biblivirti.enums.EStatusMaterial;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,4 +45,5 @@ public class Simulado extends Material {
     public void setQuestaos(List<Questao> questaos) {
         this.questaos = questaos;
     }
+
 }

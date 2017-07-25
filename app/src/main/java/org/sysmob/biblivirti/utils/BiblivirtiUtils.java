@@ -1,14 +1,11 @@
 package org.sysmob.biblivirti.utils;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
@@ -28,7 +25,9 @@ import org.sysmob.biblivirti.model.Simulado;
 import org.sysmob.biblivirti.model.Video;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
@@ -75,9 +74,16 @@ public abstract class BiblivirtiUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     public static String encondImage(Bitmap bitmap, String mimeType) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT) + "." + getMimeType(mimeType);
+        String result = null;
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            result = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT) + "." + getMimeType(mimeType);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static Material createMaterialByTipo(ETipoMaterial tipoMaterial) {
@@ -115,14 +121,23 @@ public abstract class BiblivirtiUtils {
         return jsonContents != null ? jsonContents.toString() : null;
     }
 
-    public static String encondFile(File file, String mimeType) {
+    public static String encondFile(Context context, Uri uri, String mimeType) {
         String result = null;
-        // Falta implementar a conversao dos bytes do arquivo para Base64
-        //result = Base64.encodeToString(bytes, Base64.DEFAULT) + "." + getMimeType(mimeType);
+        try {
+            InputStream stream = context.getContentResolver().openInputStream(uri);
+            byte[] bytes = new byte[stream.available()];
+            stream.read(bytes);
+            result = Base64.encodeToString(bytes, Base64.DEFAULT) + "." + getMimeType(mimeType);
+            stream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
-    public static File getFileFromURI(Context context, Uri uri) {
+    /*public static File getFileFromURI(Context context, Uri uri) {
         Cursor cursor = null;
         File result = null;
         try {
@@ -136,6 +151,6 @@ public abstract class BiblivirtiUtils {
             cursor.close();
         }
         return result;
-    }
+    }*/
 
 }

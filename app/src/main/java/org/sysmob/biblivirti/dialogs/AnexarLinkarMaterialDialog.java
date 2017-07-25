@@ -28,8 +28,6 @@ import org.sysmob.biblivirti.utils.BiblivirtiConstants;
 import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
-import java.io.File;
-
 /**
  * Created by micro99 on 07/02/2017.
  */
@@ -145,10 +143,8 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE) {
-                File file = BiblivirtiUtils.getFileFromURI(getContext(), data.getData());
-                String mimeType = getContext().getContentResolver().getType(data.getData());
                 Material material = BiblivirtiUtils.createMaterialByTipo(this.tipoMaterial);
-                material.setMacurl(BiblivirtiUtils.encondFile(file, mimeType));
+                material.setMacurl(data.getData().toString());
                 Bundle extras = new Bundle();
                 extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                 extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));

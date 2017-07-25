@@ -20,4 +20,5 @@ public class Video extends Material {
     public Video(int manid, String macdesc, String macurl, ETipoMaterial mactipo, EStatusMaterial macstat, Date madcadt, Date madaldt, int manqtdce, int manqtdha, List<Conteudo> conteudos, List<Comentario> comentarios) {
         super(manid, macdesc, macurl, ETipoMaterial.VIDEO, macstat, madcadt, madaldt, manqtdce, manqtdha, conteudos, comentarios);
     }
+
 }
