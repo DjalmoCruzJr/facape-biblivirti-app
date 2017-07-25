@@ -29,9 +29,6 @@ import org.sysmob.biblivirti.model.Video;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.List;
 
@@ -120,27 +117,19 @@ public abstract class BiblivirtiUtils {
 
     public static String encondFile(File file, String mimeType) {
         String result = null;
-        try {
-            RandomAccessFile binaryFile = new RandomAccessFile(file, "r");
-            byte[] bytes = new byte[(int) binaryFile.length()];
-            binaryFile.readFully(bytes);
-            result = Base64.encodeToString(bytes, Base64.DEFAULT) + "." + getMimeType(mimeType);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Falta implementar a conversao dos bytes do arquivo para Base64
+        //result = Base64.encodeToString(bytes, Base64.DEFAULT) + "." + getMimeType(mimeType);
         return result;
     }
 
-    public static String getRealPathFromURI(Context context, Uri uri) {
+    public static File getFileFromURI(Context context, Uri uri) {
         Cursor cursor = null;
-        String result = null;
+        File result = null;
         try {
             cursor = context.getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-            result = path + cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
+            String fileName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
+            result = new File(Environment.getExternalStorageDirectory(), fileName);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

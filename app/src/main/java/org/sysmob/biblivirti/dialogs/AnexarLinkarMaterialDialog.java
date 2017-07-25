@@ -145,10 +145,10 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_FILE_FROM_EXTERNAL_STORAGE) {
-                String filePath = BiblivirtiUtils.getRealPathFromURI(getContext(), data.getData());
+                File file = BiblivirtiUtils.getFileFromURI(getContext(), data.getData());
                 String mimeType = getContext().getContentResolver().getType(data.getData());
                 Material material = BiblivirtiUtils.createMaterialByTipo(this.tipoMaterial);
-                material.setMacurl(BiblivirtiUtils.encondFile(new File(filePath), mimeType));
+                material.setMacurl(BiblivirtiUtils.encondFile(file, mimeType));
                 Bundle extras = new Bundle();
                 extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                 extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
