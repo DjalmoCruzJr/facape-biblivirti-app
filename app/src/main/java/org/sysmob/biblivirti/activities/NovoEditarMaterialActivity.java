@@ -28,6 +28,7 @@ import org.sysmob.biblivirti.business.MaterialBO;
 import org.sysmob.biblivirti.comparators.ConteudoComparatorByUsnid;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.exceptions.ValidationException;
+import org.sysmob.biblivirti.fragments.MateriaisFragment;
 import org.sysmob.biblivirti.model.Conteudo;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
@@ -40,7 +41,6 @@ import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -124,18 +124,17 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                     } else {
                         try {
                             if (new MaterialBO(this).validateAdd()) {
-                                Toast.makeText(this, String.format("Esta funcionalida ainda não foi implementada!"), Toast.LENGTH_SHORT).show();
                                 Bundle fields = new Bundle();
                                 fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
+                                fields.putString(Material.FIELD_CONTENTS, BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
                                 if (material.getMacurl() != null) {
                                     Uri fileUri = Uri.parse(this.material.getMacurl());
                                     String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
                                     fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
                                 }
-                                fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
                                 actionNovoMaterial(fields);
                             }
                         } catch (ValidationException e) {
@@ -311,6 +310,66 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
     }
 
     public void actionNovoMaterial(Bundle fields) {
-        Toast.makeText(this, "Esta funcionalida ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Material.FIELD_MACDESC, fields.getString(Material.FIELD_MACDESC));
+            params.put(Material.FIELD_MACTIPO, fields.getString(Material.FIELD_MACTIPO));
+            params.put(Material.FIELD_CONTENTS, fields.getString(Material.FIELD_CONTENTS));
+            if (fields.getString(Material.FIELD_MACURL) != null) {
+                params.put(Material.FIELD_MACURL, fields.getString(Material.FIELD_MACURL));
+            }
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_MATERIAL_ADD,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(NovoEditarMaterialActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoEditarMaterialActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                Toast.makeText(NovoEditarMaterialActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                MateriaisFragment.hasDataChanged = true;
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

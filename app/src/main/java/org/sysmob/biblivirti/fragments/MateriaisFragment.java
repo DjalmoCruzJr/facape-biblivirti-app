@@ -65,6 +65,17 @@ public class MateriaisFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (MateriaisFragment.hasDataChanged) {
+            MateriaisFragment.hasDataChanged = false;
+            Bundle fields = new Bundle();
+            fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
+            actionCarregarMateriais(fields);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_materiais, container, false);
 
