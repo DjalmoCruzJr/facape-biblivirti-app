@@ -29,6 +29,7 @@ import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
 import org.sysmob.biblivirti.adapters.MateriaisAdapter;
 import org.sysmob.biblivirti.adapters.TiposMateriaisDialogAdapter;
+import org.sysmob.biblivirti.comparators.MaterialComparatorByMacaldt;
 import org.sysmob.biblivirti.dialogs.AnexarLinkarMaterialDialog;
 import org.sysmob.biblivirti.dialogs.TiposMateriaisDialog;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
@@ -43,6 +44,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MateriaisFragment extends Fragment {
@@ -142,10 +144,12 @@ public class MateriaisFragment extends Fragment {
             layoutEmpty.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Nenhum material encontrado!", Toast.LENGTH_SHORT).show();
         } else {
+            Collections.sort(this.materiais, new MaterialComparatorByMacaldt()); // Ordena decrescente por data de alteracao
+
             this.recyclerMateriais = (RecyclerView) this.getView().findViewById(R.id.recyclerMateriais);
             this.recyclerMateriais.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerMateriais.setHasFixedSize(true);
-            this.recyclerMateriais.setAdapter(new MateriaisAdapter(getContext(), materiais));
+            this.recyclerMateriais.setAdapter(new MateriaisAdapter(getContext(), this.materiais));
             ((MateriaisAdapter) this.recyclerMateriais.getAdapter()).setOnItemClickListener(new MateriaisAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {

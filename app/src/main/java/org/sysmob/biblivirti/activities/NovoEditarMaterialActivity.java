@@ -41,6 +41,7 @@ import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +53,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
     private View viewNovoMaterial;
     private ProgressBar progressBar;
     private ImageView imageIconeMaterial;
+    private TextView textConteudos;
     private TextView textMensagem;
     private EditText editMACDESC;
     private RecyclerView recyclerConteudosRelacionados;
@@ -129,7 +131,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
                                 fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
-                                fields.putString(Material.FIELD_CONTENTS, BiblivirtiUtils.createContentsJson(this.conteudosSelecionados));
+                                fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
                                 if (material.getMacurl() != null) {
                                     Uri fileUri = Uri.parse(this.material.getMacurl());
                                     String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
@@ -138,8 +140,6 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 actionNovoMaterial(fields);
                             }
                         } catch (ValidationException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -169,6 +169,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
         this.viewNovoMaterial.setVisibility(View.INVISIBLE);
 
         this.imageIconeMaterial = (ImageView) this.findViewById(R.id.imageIconeMaterial);
+        this.textConteudos = (TextView) this.findViewById(R.id.textConteudos);
         this.textMensagem = (TextView) this.findViewById(R.id.textMensagem);
         this.editMACDESC = (EditText) this.findViewById(R.id.editMACDESC);
         this.recyclerConteudosRelacionados = (RecyclerView) this.findViewById(R.id.recyclerConteudosRelacionados);
@@ -223,6 +224,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
             ((ConteudosRelacionadosAdapter) this.recyclerConteudosRelacionados.getAdapter()).setOnItemClickListener(new ConteudosRelacionadosAdapter.OnItemClickListener() {
                 @Override
                 public void onCLick(View view, int position) {
+                    NovoEditarMaterialActivity.this.textConteudos.setError(null);
                     // Verifica se o conteudo selecionado JA esta na lista de conteudos associados com o material
                     if (Collections.binarySearch(conteudosSelecionados, conteudosRelacionados.get(position), new ConteudoComparatorByUsnid()) >= 0) {
                         // Retira o conteudo da lista de conteudos associados
@@ -237,7 +239,13 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
     }
 
     private void loadErrors(JSONObject errors) {
-        // Falta implementar
+        try {
+            this.editMACDESC.setError(errors.opt(Material.FIELD_MACDESC) != null ? errors.getString(Material.FIELD_MACDESC) : null);
+            this.textConteudos.setError(errors.opt(Material.FIELD_CONTENTS) != null ? errors.getString(Material.FIELD_CONTENTS) : null);
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /*****************************************************
@@ -316,7 +324,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
             params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
             params.put(Material.FIELD_MACDESC, fields.getString(Material.FIELD_MACDESC));
             params.put(Material.FIELD_MACTIPO, fields.getString(Material.FIELD_MACTIPO));
-            params.put(Material.FIELD_CONTENTS, fields.getString(Material.FIELD_CONTENTS));
+            params.put(Material.FIELD_CONTENTS, BiblivirtiUtils.createContentsJson((List<Conteudo>) fields.getSerializable(Material.FIELD_CONTENTS)));
             if (fields.getString(Material.FIELD_MACURL) != null) {
                 params.put(Material.FIELD_MACURL, fields.getString(Material.FIELD_MACURL));
             }
@@ -344,12 +352,14 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                         NovoEditarMaterialActivity.this,
                                         "Mensagem",
                                         String.format(
-                                                "Código: %d\n%s",
+                                                "Código: %d\n%s\n%s",
                                                 response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.opt(BiblivirtiConstants.RESPONSE_ERRORS) != null ? response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS) : null)
                                         ),
                                         "Ok"
                                 );
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                             } else {
                                 Toast.makeText(NovoEditarMaterialActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 MateriaisFragment.hasDataChanged = true;
@@ -372,4 +382,5 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }

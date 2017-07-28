@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
@@ -28,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -107,7 +109,8 @@ public abstract class BiblivirtiUtils {
         return material;
     }
 
-    public static String createContentsJson(List<Conteudo> conteudosSelecionados) throws JSONException {
+    @Nullable
+    public static JSONArray createContentsJson(List<Conteudo> conteudosSelecionados) throws JSONException {
         JSONArray jsonContents = null;
         if (conteudosSelecionados != null && conteudosSelecionados.size() > 0) {
             jsonContents = new JSONArray();
@@ -117,7 +120,7 @@ public abstract class BiblivirtiUtils {
                 jsonContents.put(jsonObject);
             }
         }
-        return jsonContents != null ? jsonContents.toString() : null;
+        return jsonContents != null ? jsonContents : null;
     }
 
     public static String encondFile(Context context, Uri uri, String mimeType) {
@@ -136,20 +139,20 @@ public abstract class BiblivirtiUtils {
         return result;
     }
 
-    /*public static File getFileFromURI(Context context, Uri uri) {
-        Cursor cursor = null;
-        File result = null;
-        try {
-            cursor = context.getContentResolver().query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            String fileName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME));
-            result = new File(Environment.getExternalStorageDirectory(), fileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
+    public static final String createStringErrors(JSONObject errors) {
+        String result = "";
+        if (errors != null) {
+            Iterator<String> keys = errors.keys();
+            while (keys.hasNext()) {
+                try {
+                    String key = keys.next();
+                    result += errors.opt(key) != null ? "\n*) " + errors.getString(key) + "\n" : "";
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return result;
-    }*/
+    }
 
 }
