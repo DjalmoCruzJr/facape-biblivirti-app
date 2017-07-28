@@ -158,9 +158,10 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                             RecuperarSenhaActivity.this,
                                             "Mensagem",
                                             String.format(
-                                                    "Código: %d\n%s",
+                                                    "Código: %d\n%s\n%s",
                                                     response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                    response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                                    response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                    BiblivirtiUtils.createStringErrors(response.opt(BiblivirtiConstants.RESPONSE_ERRORS) != null ? response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS) : null)
                                             ),
                                             "Ok"
                                     );
