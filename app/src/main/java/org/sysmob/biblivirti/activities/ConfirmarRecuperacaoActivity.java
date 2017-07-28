@@ -115,7 +115,12 @@ public class ConfirmarRecuperacaoActivity extends AppCompatActivity {
     }
 
     private void loadErrors(JSONObject errors) {
-        Toast.makeText(this, "Esta funcionalidade ainda não foi implementada (loadErrors)!", Toast.LENGTH_SHORT).show();
+        try {
+            this.editRSCTOKN.setError(errors.opt(RecuperarSenha.FIELD_RSCTOKN) != null ? errors.getString(RecuperarSenha.FIELD_RSCTOKN) : null);
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /********************************************************
@@ -127,7 +132,7 @@ public class ConfirmarRecuperacaoActivity extends AppCompatActivity {
         RequestData requestData = new RequestData(
                 this.getClass().getSimpleName(),
                 Request.Method.GET,
-                BiblivirtiConstants.API_ACCOUNT_PASSWORD_EDIT,
+                BiblivirtiConstants.API_ACCOUNT_PASSWORD_RESET,
                 params
         );
         new NetworkConnection(this).execute(requestData, new ITransaction() {
@@ -154,16 +159,17 @@ public class ConfirmarRecuperacaoActivity extends AppCompatActivity {
                                     ConfirmarRecuperacaoActivity.this,
                                     "Mensagem",
                                     String.format(
-                                            "Código: %d\n%s",
+                                            "Código: %d\n%s\n%s",
                                             json.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                            json.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                            json.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                            BiblivirtiUtils.createStringErrors(json.opt(BiblivirtiConstants.RESPONSE_ERRORS) != null ? json.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS) : null)
                                     ),
                                     "Ok"
                             );
                             // Carrega as mensagens de erros nos widgets
                             loadErrors(json.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                         } else {
-                            Usuario usuario = BiblivirtiParser.parseToUsuario(json.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
+                            Usuario usuario = BiblivirtiParser.parseToUsuario(json.getJSONObject(BiblivirtiConstants.RESPONSE_DATA).getJSONObject(Usuario.KEY_USER));
                             Toast.makeText(ConfirmarRecuperacaoActivity.this, json.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                             Log.i(String.format("%s:", getClass().getSimpleName().toString()), json.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                             Bundle bundle = new Bundle();

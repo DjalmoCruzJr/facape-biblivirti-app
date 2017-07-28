@@ -1,5 +1,6 @@
 package org.sysmob.biblivirti.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -169,15 +170,36 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
                                     loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
                                 }
                             } else {
-                                Usuario usuario = BiblivirtiParser.parseToUsuario(response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(RecuperarSenhaActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_LONG).show();
-                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
-                                Intent intent = new Intent(RecuperarSenhaActivity.this, ConfirmarRecuperacaoActivity.class);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
+                                final String responseMessage = response.getString(BiblivirtiConstants.RESPONSE_MESSAGE);
+                                final JSONObject responseData = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA);
+                                BiblivirtiDialogs.showMessageDialog(
+                                        RecuperarSenhaActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                try {
+                                                    Toast.makeText(RecuperarSenhaActivity.this, responseMessage, Toast.LENGTH_LONG).show();
+                                                    Log.i(String.format("%s:", RecuperarSenhaActivity.class.getSimpleName().toString()), responseMessage);
+                                                    Usuario usuario = BiblivirtiParser.parseToUsuario(responseData);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable(Usuario.KEY_USUARIO, usuario);
+                                                    Intent intent = new Intent(RecuperarSenhaActivity.this, ConfirmarRecuperacaoActivity.class);
+                                                    intent.putExtras(bundle);
+                                                    startActivity(intent);
+                                                    finish();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                );
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

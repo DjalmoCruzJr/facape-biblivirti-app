@@ -6,7 +6,7 @@
     tools:context="org.sysmob.biblivirti.activities.EditarSenhaActivity">
 
     <LinearLayout
-        android:id="@+id/activity_editar_senha"
+        android:id="@+id/viewEditarSenha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

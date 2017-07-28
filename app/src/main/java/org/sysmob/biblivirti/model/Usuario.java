@@ -8,6 +8,7 @@ import java.util.Date;
 public class Usuario implements Serializable {
 
     public static final String KEY_USUARIO = "usuario";
+    public static final String KEY_USER = "user";
 
     public static final String FIELD_USNID = "usnid";
     public static final String FIELD_USNID2 = "usnid2";
