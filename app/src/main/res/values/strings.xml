@@ -150,4 +150,25 @@
         <item>@mipmap/ic_delete_100px_blue</item>
     </array>
 
+    <string-array name="dialog_opcoes_materiais_texts">
+        <item>Compartilhar</item>
+        <item>Enviar por e-mail</item>
+        <item>Editar</item>
+        <item>Excluir</item>
+    </string-array>
+
+    <array name="dialog_opcoes_materiais_images_ativo">
+        <item>@mipmap/ic_share_100px_blue</item>
+        <item>@mipmap/ic_message_100px_blue</item>
+        <item>@mipmap/ic_edit_100px_blue</item>
+        <item>@mipmap/ic_delete_100px_blue</item>
+    </array>
+
+    <array name="dialog_opcoes_materiais_images_inativo">
+        <item>@mipmap/ic_share_100px_gray</item>
+        <item>@mipmap/ic_message_100px_gray</item>
+        <item>@mipmap/ic_edit_100px_gray</item>
+        <item>@mipmap/ic_delete_100px_gray</item>
+    </array>
+
 </resources>
