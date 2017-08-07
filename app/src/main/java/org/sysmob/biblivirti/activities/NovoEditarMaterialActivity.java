@@ -50,7 +50,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
 
     private int activityMode;
     View layoutEmpty;
-    private View viewNovoMaterial;
+    private View viewNovoEditarMaterial;
     private ProgressBar progressBar;
     private ImageView imageIconeMaterial;
     private TextView textConteudos;
@@ -160,7 +160,7 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
      * PRIVATE METHODS
      *****************************************************/
     private void enableWidgets(boolean status) {
-        this.viewNovoMaterial.setEnabled(status);
+        this.viewNovoEditarMaterial.setEnabled(status);
         this.progressBar.setEnabled(status);
         this.imageIconeMaterial.setEnabled(status);
         this.textMensagem.setEnabled(status);
@@ -172,8 +172,8 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
         this.layoutEmpty = this.findViewById(R.id.layoutEmpty);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
 
-        this.viewNovoMaterial = this.findViewById(R.id.viewNovoMaterial);
-        this.viewNovoMaterial.setVisibility(View.INVISIBLE);
+        this.viewNovoEditarMaterial = this.findViewById(R.id.viewNovoEditarMaterial);
+        this.viewNovoEditarMaterial.setVisibility(View.INVISIBLE);
 
         this.imageIconeMaterial = (ImageView) this.findViewById(R.id.imageIconeMaterial);
         this.textConteudos = (TextView) this.findViewById(R.id.textConteudos);
@@ -221,7 +221,6 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
             } else if (this.material.getMactipo() == ETipoMaterial.VIDEO) {
                 this.imageIconeMaterial.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_video_100px_blue));
             }
-            this.viewNovoMaterial.setVisibility(View.VISIBLE);
 
             this.conteudosSelecionados = new ArrayList<>();
             this.recyclerConteudosRelacionados = (RecyclerView) this.findViewById(R.id.recyclerConteudosRelacionados);
@@ -242,6 +241,20 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            if (activityMode == BiblivirtiConstants.ACTIVITY_MODE_EDITING) {
+                this.editMACDESC.setText(this.material.getMacdesc().trim());
+                this.conteudosSelecionados = this.material.getConteudos();
+
+                // Seta os conteudos selecionado como checkeds no array de conteudos relacionados
+                for (int i = 0; i < this.conteudosRelacionados.size(); i++) {
+                    if (this.conteudosRelacionados.get(i).getConid() == this.conteudosSelecionados.get(i).getConid()) {
+                        this.conteudosRelacionados.get(i).setSelected(true);
+                    }
+                }
+            }
+
+            this.viewNovoEditarMaterial.setVisibility(View.VISIBLE);
         }
     }
 

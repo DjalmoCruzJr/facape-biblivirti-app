@@ -23,6 +23,10 @@ import org.sysmob.biblivirti.model.Grupo;
 
 public class OpcoesGruposDialog extends DialogFragment {
 
+    public static final int OPTION_INFO_GRUPO = 0;
+    public static final int OPTION_EDITAR = 1;
+    public static final int OPTION_EXCLUIR = 2;
+
     private RecyclerView recyclerOpcoes;
     private OpcoesGruposAdapter.OnItemClickListener onOptionsClickListener;
     private String[] textOpcoes;

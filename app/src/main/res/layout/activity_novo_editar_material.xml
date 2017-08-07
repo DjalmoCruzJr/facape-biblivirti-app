@@ -6,7 +6,7 @@
     tools:context="org.sysmob.biblivirti.activities.NovoEditarMaterialActivity">
 
     <LinearLayout
-        android:id="@+id/viewNovoMaterial"
+        android:id="@+id/viewNovoEditarMaterial"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

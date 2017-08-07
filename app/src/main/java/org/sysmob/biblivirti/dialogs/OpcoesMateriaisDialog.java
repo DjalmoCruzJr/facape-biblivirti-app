@@ -24,6 +24,11 @@ import org.sysmob.biblivirti.model.Material;
 
 public class OpcoesMateriaisDialog extends DialogFragment {
 
+    public static final int OPTION_COMPARTILHAR = 0;
+    public static final int OPTION_ENVIAR_EMAIL = 1;
+    public static final int OPTION_EDITAR = 2;
+    public static final int OPTION_EXCLUIR = 3;
+
     private RecyclerView recyclerOpcoes;
     private OpcoesMateriaisAdapter.OnItemClickListener onOptionsClickListener;
     private String[] textOpcoes;

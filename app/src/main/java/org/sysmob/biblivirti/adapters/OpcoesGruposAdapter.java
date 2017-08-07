@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
+import org.sysmob.biblivirti.dialogs.OpcoesGruposDialog;
 import org.sysmob.biblivirti.model.Grupo;
 
 /**
@@ -60,10 +61,13 @@ public class OpcoesGruposAdapter extends RecyclerView.Adapter<OpcoesGruposAdapte
         holder.image.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), this.imageOpcoesAtivas.getResourceId(position, 0)));
 
         // Verifica se o usuario logado NAO eh administrador do grupo
-        if (this.grupo.getAdmin().getUsnid() != BiblivirtiApplication.getInstance().getLoggedUser().getUsnid() && position > 0) {
-            holder.text.setTextColor(this.context.getResources().getColor(R.color.colorGrayDark));
-            holder.image.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), this.imageOpcoesInativas.getResourceId(position, 0)));
-            holder.itemView.setEnabled(false);
+        if (this.grupo.getAdmin().getUsnid() != BiblivirtiApplication.getInstance().getLoggedUser().getUsnid()) {
+            // Desabilita as opcoes de EDITAR e EXCLUIR
+            if (position == OpcoesGruposDialog.OPTION_EDITAR || position == OpcoesGruposDialog.OPTION_EXCLUIR) {
+                holder.text.setTextColor(this.context.getResources().getColor(R.color.colorGrayDark));
+                holder.image.setImageBitmap(BitmapFactory.decodeResource(this.context.getResources(), this.imageOpcoesInativas.getResourceId(position, 0)));
+                holder.itemView.setEnabled(false);
+            }
         }
     }
 

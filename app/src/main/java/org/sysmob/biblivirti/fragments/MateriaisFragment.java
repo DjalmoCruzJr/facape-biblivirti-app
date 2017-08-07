@@ -28,9 +28,11 @@ import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
 import org.sysmob.biblivirti.adapters.MateriaisAdapter;
+import org.sysmob.biblivirti.adapters.OpcoesMateriaisAdapter;
 import org.sysmob.biblivirti.adapters.TiposMateriaisDialogAdapter;
 import org.sysmob.biblivirti.comparators.MaterialComparatorByMacaldt;
 import org.sysmob.biblivirti.dialogs.AnexarLinkarMaterialDialog;
+import org.sysmob.biblivirti.dialogs.OpcoesMateriaisDialog;
 import org.sysmob.biblivirti.dialogs.TiposMateriaisDialog;
 import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.model.Grupo;
@@ -158,8 +160,47 @@ public class MateriaisFragment extends Fragment {
             ((MateriaisAdapter) this.recyclerMateriais.getAdapter()).setOnLongClickListener(new MateriaisAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
-                    Toast.makeText(MateriaisFragment.this.getActivity(), String.format("recyclerMateriais.onLongClick: %d", position), Toast.LENGTH_SHORT).show();
-                    return false;
+                    final OpcoesMateriaisDialog dialog = new OpcoesMateriaisDialog();
+                    dialog.setMaterial(materiais.get(position));
+                    dialog.setOnOptionsClickListener(new OpcoesMateriaisAdapter.OnItemClickListener() {
+                        @Override
+                        public void onCLick(View view, int position) {
+                            Intent intent;
+                            Bundle extras;
+                            if (!BiblivirtiUtils.isNetworkConnected()) {
+                                String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            } else {
+                                switch (position) {
+                                    case OpcoesMateriaisDialog.OPTION_COMPARTILHAR:
+                                        Toast.makeText(getContext(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        break;
+                                    case OpcoesMateriaisDialog.OPTION_ENVIAR_EMAIL:
+                                        Toast.makeText(getContext(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        break;
+                                    case OpcoesMateriaisDialog.OPTION_EDITAR:
+                                        extras = new Bundle();
+                                        extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
+                                        extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_edit));
+                                        extras.putSerializable(Grupo.KEY_GRUPO, ((GrupoActivity) getActivity()).getGrupo());
+                                        extras.putSerializable(Material.KEY_MATERIAL, dialog.getMaterial());
+                                        intent = new Intent(MateriaisFragment.this.getActivity(), NovoEditarMaterialActivity.class);
+                                        intent.putExtras(extras);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                        break;
+                                    case OpcoesMateriaisDialog.OPTION_EXCLUIR:
+                                        Toast.makeText(getContext(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        }
+                    });
+                    dialog.show(getFragmentManager(), OpcoesMateriaisDialog.class.getSimpleName());
+                    return true;
                 }
             });
         }

@@ -18,6 +18,8 @@ public class Conteudo implements Serializable {
     public static final String FIELD_CONIDGR = "conidgr";
     public static final String FIELD_GROUP = "group";
 
+    private boolean isSelected;
+
     private int conid;
     private String cocdesc;
     private Date codcadt;
@@ -33,6 +35,8 @@ public class Conteudo implements Serializable {
         this.codcadt = codcadt;
         this.codaldt = codaldt;
         this.grupo = grupo;
+
+        this.isSelected = false;
     }
 
     public int getConid() {
@@ -73,5 +77,13 @@ public class Conteudo implements Serializable {
 
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
