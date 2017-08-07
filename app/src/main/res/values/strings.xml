@@ -83,7 +83,7 @@
     <string name="acitivity_confirmar_recuperacao_text_informativo2">Pressione o botão abaixo para reenviar o token de recuperação para seu e-mail.</string>
     <string name="activity_confirmar_recuperacao_button_reenviar_token">Reenviar Token de Recuperação</string>
     <string name="activity_confirmar_recuperacao_label">Confirmar Recuperação</string>
-    <string name="activity_editar_senha_hint_senha">Senha</string>
+    <string name="activity_editar_nova_senha_hint_senha">Nova Senha</string>
     <string name="activity_editar_senha_hint_confirmar_senha">Confirmar Senha</string>
     <string name="activity_editar_senha_label">Editar Senha</string>
     <string name="adapter_list_pesquisar_grupos_text_grcnome">Nome do Grupo</string>

@@ -307,7 +307,13 @@ public class GruposFragment extends Fragment {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 layoutEmpty.setVisibility(View.VISIBLE);
-                                BiblivirtiDialogs.showMessageDialog(
+                                String message = String.format(
+                                        "Código: %d\n%s",
+                                        response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                        response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                );
+                                Toast.makeText(GruposFragment.this.getContext(), message, Toast.LENGTH_SHORT).show();
+                                /*BiblivirtiDialogs.showMessageDialog(
                                         getActivity(),
                                         "Mensagem",
                                         String.format(
@@ -316,7 +322,7 @@ public class GruposFragment extends Fragment {
                                                 response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
                                         ),
                                         "Ok"
-                                );
+                                );*/
                             } else {
                                 layoutEmpty.setVisibility(View.GONE);
                                 grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));

@@ -38,6 +38,7 @@ public class EditarSenhaActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText editSenha;
     private EditText editConfirmarSenha;
+    private Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,10 @@ public class EditarSenhaActivity extends AppCompatActivity {
 
         // Carrega os widgets da tela
         loadWidgets();
+
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            this.usuario = (Usuario) getIntent().getExtras().getSerializable(Usuario.KEY_USUARIO);
+        }
     }
 
     @Override
@@ -78,10 +83,13 @@ public class EditarSenhaActivity extends AppCompatActivity {
                 break;
             case R.id.activity_editar_senha_menu_salvar:
                 if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(EditarSenhaActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
                     try {
                         if (new AccountBO(EditarSenhaActivity.this).validatePasswordEdit()) {
                             Bundle fields = new Bundle();
-                            fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                            fields.putInt(Usuario.FIELD_USNID, this.usuario.getUsnid());
                             fields.putString(Usuario.FIELD_USCSENH, editSenha.getText().toString().trim());
                             fields.putString(Usuario.FIELD_USCSENH2, editConfirmarSenha.getText().toString().trim());
                             actionEditarSenha(fields);
@@ -89,10 +97,6 @@ public class EditarSenhaActivity extends AppCompatActivity {
                     } catch (ValidationException e) {
                         e.printStackTrace();
                     }
-                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                    Toast.makeText(EditarSenhaActivity.this, message, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(EditarSenhaActivity.this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -104,6 +108,7 @@ public class EditarSenhaActivity extends AppCompatActivity {
      * PIRVATE METHODS
      *******************************************************/
     private void loadWidgets() {
+        this.viewEditarSenha = this.findViewById(R.id.viewEditarSenha);
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         this.editSenha = (EditText) this.findViewById(R.id.editSenha);
         this.editConfirmarSenha = (EditText) this.findViewById(R.id.editConfirmarSenha);

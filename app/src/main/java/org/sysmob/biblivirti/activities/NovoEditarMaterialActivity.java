@@ -133,9 +133,16 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                 fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
                                 fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
                                 if (material.getMacurl() != null) {
-                                    Uri fileUri = Uri.parse(this.material.getMacurl());
-                                    String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
-                                    fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
+                                    if (material.getMactipo() == ETipoMaterial.APRESENTACAO || material.getMactipo() == ETipoMaterial.EXERCICIO ||
+                                            material.getMactipo() == ETipoMaterial.FORMULA || material.getMactipo() == ETipoMaterial.LIVRO) {
+                                        Uri fileUri = Uri.parse(this.material.getMacurl());
+                                        String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
+                                        fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
+                                    } else if (material.getMactipo() == ETipoMaterial.JOGO || material.getMactipo() == ETipoMaterial.VIDEO) {
+                                        fields.putString(Material.FIELD_MACURL, material.getMacurl());
+                                    } else if (material.getMactipo() == ETipoMaterial.SIMULADO) {
+                                        // Falta implementar
+                                    }
                                 }
                                 actionNovoMaterial(fields);
                             }
@@ -281,9 +288,10 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                                         NovoEditarMaterialActivity.this,
                                         "Mensagem",
                                         String.format(
-                                                "Código: %d\n%s",
+                                                "Código: %d\n%s\n%s",
                                                 response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                "Adicione os conteúdos no grupo antes de adicionar os materiais!"
                                         ),
                                         "Ok",
                                         new DialogInterface.OnClickListener() {

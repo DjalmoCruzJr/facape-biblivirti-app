@@ -56,7 +56,7 @@ public class TiposMateriaisDialogAdapter extends RecyclerView.Adapter<TiposMater
         } else if (this.tiposMateriais.get(position) == ETipoMaterial.JOGO) {
             holder.image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_game_50px_blue));
         } else if (this.tiposMateriais.get(position) == ETipoMaterial.LIVRO) {
-            holder.image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_video_50px_blue));
+            holder.image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_book_50px_blue));
         } else if (this.tiposMateriais.get(position) == ETipoMaterial.SIMULADO) {
             holder.image.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_simulate_50px_blue));
         } else if (this.tiposMateriais.get(position) == ETipoMaterial.VIDEO) {

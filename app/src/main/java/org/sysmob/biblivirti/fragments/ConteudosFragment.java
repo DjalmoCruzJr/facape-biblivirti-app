@@ -38,7 +38,6 @@ import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
-import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
@@ -235,7 +234,13 @@ public class ConteudosFragment extends Fragment {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 layoutEmpty.setVisibility(View.VISIBLE);
-                                BiblivirtiDialogs.showMessageDialog(
+                                String message = String.format(
+                                        "Código: %d\n%s",
+                                        response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                        response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                );
+                                Toast.makeText(ConteudosFragment.this.getContext(), message, Toast.LENGTH_SHORT).show();
+                                /*BiblivirtiDialogs.showMessageDialog(
                                         getActivity(),
                                         "Mensagem",
                                         String.format(
@@ -244,7 +249,7 @@ public class ConteudosFragment extends Fragment {
                                                 response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
                                         ),
                                         "Ok"
-                                );
+                                );*/
                             } else {
                                 layoutEmpty.setVisibility(View.GONE);
                                 conteudos = BiblivirtiParser.parseToConteudos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));

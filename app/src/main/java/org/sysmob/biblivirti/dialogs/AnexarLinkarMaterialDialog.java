@@ -102,11 +102,13 @@ public class AnexarLinkarMaterialDialog extends DialogFragment {
                 } else {
                     try {
                         if (validateAdd()) {
+                            Material material = BiblivirtiUtils.createMaterialByTipo(tipoMaterial);
+                            material.setMacurl(editMACURL.getText().toString().trim());
                             Bundle extras = new Bundle();
                             extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_INSERTING);
                             extras.putString(BiblivirtiConstants.ACTIVITY_TITLE, getResources().getString(R.string.activity_novo_editar_material_label_insert));
                             extras.putSerializable(Grupo.KEY_GRUPO, grupo);
-                            extras.putSerializable(Material.KEY_MATERIAL, BiblivirtiUtils.createMaterialByTipo(tipoMaterial));
+                            extras.putSerializable(Material.KEY_MATERIAL, material);
                             Intent intent = new Intent(getContext(), NovoEditarMaterialActivity.class);
                             intent.putExtras(extras);
                             startActivity(intent);

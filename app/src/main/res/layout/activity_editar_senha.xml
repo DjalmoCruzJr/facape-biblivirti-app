@@ -32,7 +32,7 @@
                 android:id="@+id/editSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_editar_senha_hint_senha"
+                android:hint="@string/activity_editar_nova_senha_hint_senha"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
