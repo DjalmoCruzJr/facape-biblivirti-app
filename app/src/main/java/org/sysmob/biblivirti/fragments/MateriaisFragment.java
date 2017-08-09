@@ -123,6 +123,7 @@ public class MateriaisFragment extends Fragment {
                 Intent intent = new Intent(BiblivirtiConstants.INTENT_ACTION_PESQUISAR);
                 intent.addCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_MATERIAL);
                 Bundle fields = new Bundle();
+                fields.putInt(Material.FIELD_MANIDGR, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
                 fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
                 intent.putExtras(fields);
                 startActivity(intent);

@@ -142,6 +142,7 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
     public void handleSearch(Intent intent) {
         if (intent != null && intent.getExtras() != null) {
             if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_MATERIAL)) {
+                int manidgr = intent.getExtras().getInt(Material.FIELD_MANIDGR);
                 String query = intent.getExtras().getString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE);
                 getSupportActionBar().setTitle(query);
                 if (!BiblivirtiUtils.isNetworkConnected()) {
@@ -150,6 +151,7 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Bundle fields = new Bundle();
+                    fields.putInt(Material.FIELD_MANIDGR, manidgr);
                     fields.putString(Material.FIELD_MACDESC, query);
                     actionPesquisar(fields);
                 }
@@ -163,6 +165,7 @@ public class PesquisarMateriaisActivity extends AppCompatActivity {
     private void actionPesquisar(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
+            params.put(Material.FIELD_MANIDGR, fields.getInt(Material.FIELD_MANIDGR));
             params.put(Material.FIELD_MACDESC, fields.getString(Material.FIELD_MACDESC));
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),

@@ -20,6 +20,7 @@ public class Material implements Serializable {
     public static final String KEY_MATERIAIS = "materiais";
 
     public static final String FIELD_MANID = "manid";
+    public static final String FIELD_MANIDGR = "manidgr";
     public static final String FIELD_MACDESC = "macdesc";
     public static final String FIELD_MACTIPO = "mactipo";
     public static final String FIELD_MACURL = "macurl";
@@ -30,6 +31,7 @@ public class Material implements Serializable {
     public static final String FIELD_MANQTDCE = "manqtdce";
     public static final String FIELD_MANQTDHA = "manqtdha";
     public static final String FIELD_CONTENTS = "contents";
+
 
     protected int manid;
     protected String macdesc;
