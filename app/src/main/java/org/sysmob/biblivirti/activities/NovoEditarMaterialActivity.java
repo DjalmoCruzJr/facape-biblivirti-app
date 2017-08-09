@@ -124,30 +124,46 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                         String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                         Toast.makeText(NovoEditarMaterialActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
-                        try {
-                            if (new MaterialBO(this).validateAdd()) {
-                                Bundle fields = new Bundle();
-                                fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
-                                fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
-                                fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
-                                fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
-                                fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
-                                if (material.getMacurl() != null) {
-                                    if (material.getMactipo() == ETipoMaterial.APRESENTACAO || material.getMactipo() == ETipoMaterial.EXERCICIO ||
-                                            material.getMactipo() == ETipoMaterial.FORMULA || material.getMactipo() == ETipoMaterial.LIVRO) {
-                                        Uri fileUri = Uri.parse(this.material.getMacurl());
-                                        String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
-                                        fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
-                                    } else if (material.getMactipo() == ETipoMaterial.JOGO || material.getMactipo() == ETipoMaterial.VIDEO) {
-                                        fields.putString(Material.FIELD_MACURL, material.getMacurl());
-                                    } else if (material.getMactipo() == ETipoMaterial.SIMULADO) {
-                                        // Falta implementar
+                        if (this.activityMode == BiblivirtiConstants.ACTIVITY_MODE_INSERTING) {
+                            try {
+                                if (new MaterialBO(this).validateAdd()) {
+                                    Bundle fields = new Bundle();
+                                    fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                    fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
+                                    fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
+                                    fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
+                                    fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
+                                    if (material.getMacurl() != null) {
+                                        if (material.getMactipo() == ETipoMaterial.APRESENTACAO || material.getMactipo() == ETipoMaterial.EXERCICIO ||
+                                                material.getMactipo() == ETipoMaterial.FORMULA || material.getMactipo() == ETipoMaterial.LIVRO) {
+                                            Uri fileUri = Uri.parse(this.material.getMacurl());
+                                            String fileType = getContentResolver().getType(Uri.parse(this.material.getMacurl()));
+                                            fields.putString(Material.FIELD_MACURL, BiblivirtiUtils.encondFile(this, fileUri, fileType));
+                                        } else if (material.getMactipo() == ETipoMaterial.JOGO || material.getMactipo() == ETipoMaterial.VIDEO) {
+                                            fields.putString(Material.FIELD_MACURL, material.getMacurl());
+                                        } else if (material.getMactipo() == ETipoMaterial.SIMULADO) {
+                                            // Falta implementar
+                                        }
                                     }
+                                    actionNovoMaterial(fields);
                                 }
-                                actionNovoMaterial(fields);
+                            } catch (ValidationException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ValidationException e) {
-                            e.printStackTrace();
+                        } else {
+                            try {
+                                if (new MaterialBO(this).validateEdit()) {
+                                    Bundle fields = new Bundle();
+                                    fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                    fields.putInt(Material.FIELD_MANID, this.material.getManid());
+                                    fields.putString(Material.FIELD_MACDESC, this.editMACDESC.getText().toString());
+                                    fields.putString(Material.FIELD_MACTIPO, String.valueOf(this.material.getMactipo().getValue()));
+                                    fields.putSerializable(Material.FIELD_CONTENTS, (Serializable) this.conteudosSelecionados);
+                                    actionEditarMaterial(fields);
+                                }
+                            } catch (ValidationException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -184,6 +200,35 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
 
     private void loadListeners() {
         // Falta implementar
+    }
+
+    private void loadConteudosMaterial() {
+        // Seta os conteudos selecionado como checkeds no array de conteudos relacionados
+        for (int i = 0; i < this.conteudosRelacionados.size(); i++) {
+            for (int j = 0; j < this.conteudosSelecionados.size(); j++) {
+                // Verifica se o conteudos em questao eh igual em ambos os arrays
+                if (this.conteudosRelacionados.get(i).getConid() == this.conteudosSelecionados.get(j).getConid()) {
+                    this.conteudosRelacionados.get(i).setSelected(true);
+                }
+            }
+        }
+
+        ((ConteudosRelacionadosAdapter) this.recyclerConteudosRelacionados.getAdapter()).notifyDataSetChanged();
+        /*this.recyclerConteudosRelacionados.setAdapter(new ConteudosRelacionadosAdapter(this, this.conteudosRelacionados));
+        ((ConteudosRelacionadosAdapter) this.recyclerConteudosRelacionados.getAdapter()).setOnItemClickListener(new ConteudosRelacionadosAdapter.OnItemClickListener() {
+            @Override
+            public void onCLick(View view, int position) {
+                NovoEditarMaterialActivity.this.textConteudos.setError(null);
+                // Verifica se o conteudo selecionado JA esta na lista de conteudos associados com o material
+                if (Collections.binarySearch(conteudosSelecionados, conteudosRelacionados.get(position), new ConteudoComparatorByUsnid()) >= 0) {
+                    // Retira o conteudo da lista de conteudos associados
+                    conteudosSelecionados.remove(conteudosRelacionados.get(position));
+                } else {
+                    // Adiciona o conteudo na lista de conteudos associados
+                    conteudosSelecionados.add(conteudosRelacionados.get(position));
+                }
+            }
+        });*/
     }
 
     private void loadFields() {
@@ -246,17 +291,17 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                 this.editMACDESC.setText(this.material.getMacdesc().trim());
                 this.conteudosSelecionados = this.material.getConteudos();
 
-                // Seta os conteudos selecionado como checkeds no array de conteudos relacionados
-                for (int i = 0; i < this.conteudosRelacionados.size(); i++) {
-                    if (this.conteudosRelacionados.get(i).getConid() == this.conteudosSelecionados.get(i).getConid()) {
-                        this.conteudosRelacionados.get(i).setSelected(true);
-                    }
+                if (this.conteudosSelecionados == null) {
+                    Bundle fields = new Bundle();
+                    fields.putInt(Material.FIELD_MANID, this.material.getManid());
+                    actionCarregarConteudosMaterial(fields);
                 }
             }
 
             this.viewNovoEditarMaterial.setVisibility(View.VISIBLE);
         }
     }
+
 
     private void loadErrors(JSONObject errors) {
         try {
@@ -271,6 +316,73 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
     /*****************************************************
      * ACTION METHODS
      *****************************************************/
+    private void actionCarregarConteudosMaterial(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Material.FIELD_MANID, fields.getInt(Material.FIELD_MANID));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_CONTENT_MATERIAL_LIST,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        layoutEmpty.setVisibility(View.VISIBLE);
+                        Toast.makeText(NovoEditarMaterialActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                layoutEmpty.setVisibility(View.VISIBLE);
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoEditarMaterialActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS))
+                                        ),
+                                        "Ok",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                BiblivirtiApplication.getInstance().cancelPendingRequests(NovoEditarMaterialActivity.class.getName());
+                                                NovoEditarMaterialActivity.this.finish();
+                                            }
+                                        }
+                                );
+                            } else {
+                                layoutEmpty.setVisibility(View.GONE);
+                                conteudosSelecionados = BiblivirtiParser.parseToConteudos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
+                                loadConteudosMaterial();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void actionCarregarConteudosRelacionados(Bundle fields) {
         try {
             JSONObject params = new JSONObject();
@@ -353,6 +465,69 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
                     BiblivirtiConstants.API_MATERIAL_ADD,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(NovoEditarMaterialActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        NovoEditarMaterialActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.opt(BiblivirtiConstants.RESPONSE_ERRORS) != null ? response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS) : null)
+                                        ),
+                                        "Ok"
+                                );
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                            } else {
+                                Toast.makeText(NovoEditarMaterialActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                MateriaisFragment.hasDataChanged = true;
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void actionEditarMaterial(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Material.FIELD_MANID, fields.getInt(Material.FIELD_MANID));
+            params.put(Material.FIELD_MACDESC, fields.getString(Material.FIELD_MACDESC));
+            params.put(Material.FIELD_MACTIPO, fields.getString(Material.FIELD_MACTIPO));
+            params.put(Material.FIELD_CONTENTS, BiblivirtiUtils.createContentsJson((List<Conteudo>) fields.getSerializable(Material.FIELD_CONTENTS)));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_MATERIAL_EDIT,
                     params
             );
             new NetworkConnection(this).execute(requestData, new ITransaction() {

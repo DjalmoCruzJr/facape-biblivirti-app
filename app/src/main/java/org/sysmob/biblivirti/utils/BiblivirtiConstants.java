@@ -97,6 +97,7 @@ public abstract class BiblivirtiConstants {
     public static final String API_CONTENT_LIST = SERVER_API + "/content/list";
     public static final String API_CONTENT_ADD = SERVER_API + "/content/add";
     public static final String API_CONTENT_EDIT = SERVER_API + "/content/edit";
+    public static final String API_CONTENT_MATERIAL_LIST = SERVER_API + "/content/material/list";
 
     /**
      * Constantes que definem as URL's dos servicos de GROUP da API
