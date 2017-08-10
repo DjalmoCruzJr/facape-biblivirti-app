@@ -2,6 +2,7 @@ package org.sysmob.biblivirti.fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import org.sysmob.biblivirti.activities.NovoEditarMaterialActivity;
 import org.sysmob.biblivirti.adapters.MateriaisAdapter;
 import org.sysmob.biblivirti.adapters.OpcoesMateriaisAdapter;
 import org.sysmob.biblivirti.adapters.TiposMateriaisDialogAdapter;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.comparators.MaterialComparatorByMacaldt;
 import org.sysmob.biblivirti.dialogs.AnexarLinkarMaterialDialog;
 import org.sysmob.biblivirti.dialogs.OpcoesMateriaisDialog;
@@ -38,10 +40,12 @@ import org.sysmob.biblivirti.enums.ETipoMaterial;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Material;
 import org.sysmob.biblivirti.model.Simulado;
+import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
@@ -193,7 +197,23 @@ public class MateriaisFragment extends Fragment {
                                         dialog.dismiss();
                                         break;
                                     case OpcoesMateriaisDialog.OPTION_EXCLUIR:
-                                        Toast.makeText(getContext(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+                                        BiblivirtiDialogs.showConfirmationDialog(
+                                                getContext(),
+                                                "Confirmação",
+                                                "Deseja realmente excluir este material ?",
+                                                "Sim",
+                                                "Não",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface confirmationDialog, int i) {
+                                                        Bundle fields = new Bundle();
+                                                        fields.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                                        fields.putInt(Material.FIELD_MANID, dialog.getMaterial().getManid());
+                                                        actionExcluirMaterial(fields);
+                                                        confirmationDialog.dismiss();
+                                                    }
+                                                }
+                                        );
                                         dialog.dismiss();
                                         break;
                                 }
@@ -207,6 +227,7 @@ public class MateriaisFragment extends Fragment {
         }
 
     }
+
 
     /********************************************************
      * ACTION METHODS
@@ -243,16 +264,6 @@ public class MateriaisFragment extends Fragment {
                                         response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
                                 );
                                 Toast.makeText(MateriaisFragment.this.getContext(), message, Toast.LENGTH_SHORT).show();
-                                /*BiblivirtiDialogs.showMessageDialog(
-                                        getActivity(),
-                                        "Mensagem",
-                                        String.format(
-                                                "Código: %d\n%s",
-                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
-                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
-                                        ),
-                                        "Ok"
-                                );*/
                             } else {
                                 layoutEmpty.setVisibility(View.GONE);
                                 materiais = BiblivirtiParser.parseToMateriais(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
@@ -301,6 +312,66 @@ public class MateriaisFragment extends Fragment {
             }
         });
         tiposMateriaisDialog.show(this.getFragmentManager(), TiposMateriaisDialog.class.getSimpleName());
+    }
+
+    private void actionExcluirMaterial(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Material.FIELD_MANID, fields.getInt(Material.FIELD_MANID));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_MATERIAL_DELETE,
+                    params
+            );
+            new NetworkConnection(getActivity()).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        getContext(),
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS))
+                                        ),
+                                        "Ok"
+                                );
+                            } else {
+                                layoutEmpty.setVisibility(View.GONE);
+                                Toast.makeText(getContext(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                MateriaisFragment.this.hasDataChanged = true;
+                                MateriaisFragment.this.onResume();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

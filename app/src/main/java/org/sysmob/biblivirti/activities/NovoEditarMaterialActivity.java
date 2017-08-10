@@ -214,21 +214,6 @@ public class NovoEditarMaterialActivity extends AppCompatActivity {
         }
 
         ((ConteudosRelacionadosAdapter) this.recyclerConteudosRelacionados.getAdapter()).notifyDataSetChanged();
-        /*this.recyclerConteudosRelacionados.setAdapter(new ConteudosRelacionadosAdapter(this, this.conteudosRelacionados));
-        ((ConteudosRelacionadosAdapter) this.recyclerConteudosRelacionados.getAdapter()).setOnItemClickListener(new ConteudosRelacionadosAdapter.OnItemClickListener() {
-            @Override
-            public void onCLick(View view, int position) {
-                NovoEditarMaterialActivity.this.textConteudos.setError(null);
-                // Verifica se o conteudo selecionado JA esta na lista de conteudos associados com o material
-                if (Collections.binarySearch(conteudosSelecionados, conteudosRelacionados.get(position), new ConteudoComparatorByUsnid()) >= 0) {
-                    // Retira o conteudo da lista de conteudos associados
-                    conteudosSelecionados.remove(conteudosRelacionados.get(position));
-                } else {
-                    // Adiciona o conteudo na lista de conteudos associados
-                    conteudosSelecionados.add(conteudosRelacionados.get(position));
-                }
-            }
-        });*/
     }
 
     private void loadFields() {

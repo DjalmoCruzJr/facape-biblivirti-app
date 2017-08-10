@@ -53,7 +53,7 @@ public class ConteudosRelacionadosAdapter extends RecyclerView.Adapter<Conteudos
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.textCOCDESC.setText(this.conteudos.get(position).getCocdesc().toString());
-        holder.checkSelecionado.setSelected(this.conteudos.get(position).isSelected());
+        holder.checkSelecionado.setSelected(!this.conteudos.get(position).isSelected());
         holder.checkSelecionado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
