@@ -32,7 +32,7 @@
     <string name="activity_novo_material_label">Novo Matetial</string>
     <string name="activity_novo_material_text_conteudos_relacionados">Conteúdos Relacionados</string>
     <string name="activity_novo_material_hint_descricao">Descrição (Ex: Exercício 01)</string>
-    <string name="activity_novo_material_text_mensagem">Material Carergado com sucesso!</string>
+    <string name="activity_novo_material_text_mensagem">Material Carregado com sucesso!</string>
     <string name="activity_perfil_text_info_usuario">Informações do Usuário</string>
     <string name="activity_perfil_text_cadastrado_em">Cadastrado em:</string>
     <string name="activity_perfil_text_email">E-mail do Usuário</string>

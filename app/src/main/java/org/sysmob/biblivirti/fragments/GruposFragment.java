@@ -2,6 +2,7 @@ package org.sysmob.biblivirti.fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -172,7 +173,7 @@ public class GruposFragment extends Fragment {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                             } else {
                                 switch (position) {
-                                    case 0:
+                                    case OpcoesGruposDialog.OPTION_INFO_GRUPO:
                                         extras = new Bundle();
                                         extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
                                         intent = new Intent(GruposFragment.this.getActivity(), InfoGrupoActivity.class);
@@ -180,7 +181,7 @@ public class GruposFragment extends Fragment {
                                         startActivity(intent);
                                         dialog.dismiss();
                                         break;
-                                    case 1:
+                                    case OpcoesGruposDialog.OPTION_EDITAR:
                                         extras = new Bundle();
                                         extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
                                         extras.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
@@ -190,13 +191,27 @@ public class GruposFragment extends Fragment {
                                         startActivity(intent);
                                         dialog.dismiss();
                                         break;
-                                    case 2:
+                                    case OpcoesGruposDialog.OPTION_EXCLUIR:
                                         try {
                                             if (new GroupBO(getActivity()).validateDelete()) {
-                                                extras = new Bundle();
-                                                extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
-                                                extras.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
-                                                actionExcluirGrupo(extras);
+                                                BiblivirtiDialogs.showConfirmationDialog(
+                                                        getContext(),
+                                                        "Confirmaçao",
+                                                        "Deseja realmete excluir este grupo ?",
+                                                        "Sim,",
+                                                        "Não",
+                                                        new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface confirmationDialog, int which) {
+                                                                Bundle extras = new Bundle();
+                                                                extras.putInt(Grupo.FIELD_GRNID, dialog.getGrupo().getGrnid());
+                                                                extras.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                                                                actionExcluirGrupo(extras);
+                                                                confirmationDialog.dismiss();
+                                                            }
+                                                        }
+                                                );
+
                                             }
                                         } catch (ValidationException e) {
                                             e.printStackTrace();
