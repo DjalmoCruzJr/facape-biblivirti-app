@@ -171,4 +171,22 @@
         <item>@mipmap/ic_delete_100px_gray</item>
     </array>
 
+    <string-array name="dialog_opcoes_membros_texts">
+        <item>Ver Perfil</item>
+        <item>Enviar E-mail</item>
+        <item>Remover do Grupo</item>
+    </string-array>
+
+    <array name="dialog_opcoes_membros_images_ativo">
+        <item>@mipmap/ic_user_100px_blue</item>
+        <item>@mipmap/ic_message_100px_blue</item>
+        <item>@mipmap/ic_delete_100px_blue</item>
+    </array>
+
+    <array name="dialog_opcoes_membros_images_inativo">
+        <item>@mipmap/ic_user_100px_gray</item>
+        <item>@mipmap/ic_message_100px_gray</item>
+        <item>@mipmap/ic_delete_100px_gray</item>
+    </array>
+
 </resources>

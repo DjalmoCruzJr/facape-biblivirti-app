@@ -21,9 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
-import org.sysmob.biblivirti.activities.HomeActivity;
-import org.sysmob.biblivirti.adapters.GruposAdapter;
-import org.sysmob.biblivirti.dialogs.OpcoesGruposDialog;
+import org.sysmob.biblivirti.adapters.MembrosAdapter;
+import org.sysmob.biblivirti.adapters.OpcoesMembrosAdapter;
+import org.sysmob.biblivirti.dialogs.OpcoesMembrosDialog;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
@@ -62,7 +62,7 @@ public class MembrosFragment extends Fragment {
         this.buttonNovoMembro = (FloatingActionButton) view.findViewById(R.id.buttonNovoMembro);
 
         Bundle fields = new Bundle();
-        fields.putInt(Usuario.FIELD_USNID, ((HomeActivity) getActivity()).getUsuario().getUsnid());
+        fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
         actionCarregarMembros(fields);
 
         return view;
@@ -72,30 +72,21 @@ public class MembrosFragment extends Fragment {
      * PRIVATE METHODS
      *******************************************************/
     private void loadFields() {
+        // Verifica se nenhum membro foi encontrado
         if (membros == null) {
-            // Nenhum membro encontrado
             layoutEmpty.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Nenhum membro encontrado!", Toast.LENGTH_SHORT).show();
         } else {
-            this.recyclerMembros = (RecyclerView) this.getView().findViewById(R.id.recyclerGrupos);
+            this.recyclerMembros = (RecyclerView) this.getView().findViewById(R.id.recyclerMembros);
             this.recyclerMembros.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerMembros.setHasFixedSize(true);
-            this.recyclerMembros.setAdapter(new MembrosAdapter(getActivity(), membros, ((HomeActivity) getActivity()).getUsuario()));
-            ((GruposAdapter) this.recyclerMembros.getAdapter()).setOnItemClickListener(new GruposAdapter.OnItemClickListener() {
-                @Override
-                public void onCLick(View view, int position) {
-                    Bundle extras = new Bundle();
-                    extras.putSerializable(Grupo.KEY_GRUPO, membros.get(position));
-                    Intent intent = new Intent(MembrosFragment.this.getContext(), GrupoActivity.class);
-                    intent.putExtras(extras);
-                    startActivity(intent);
-                }
-            });
-            ((GruposAdapter) this.recyclerMembros.getAdapter()).setOnLongClickListener(new GruposAdapter.OnLongClickListener() {
+            this.recyclerMembros.setAdapter(new MembrosAdapter(getActivity(), membros, ((GrupoActivity) getActivity()).getGrupo()));
+            ((MembrosAdapter) this.recyclerMembros.getAdapter()).setOnLongClickListener(new MembrosAdapter.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view, int position) {
                     final OpcoesMembrosDialog dialog = new OpcoesMembrosDialog();
                     dialog.setMembro(membros.get(position));
+                    dialog.setGrupo(((GrupoActivity) getActivity()).getGrupo());
                     dialog.setOnOptionsClickListener(new OpcoesMembrosAdapter.OnItemClickListener() {
                         @Override
                         public void onCLick(View view, int position) {
@@ -106,11 +97,14 @@ public class MembrosFragment extends Fragment {
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                             } else {
                                 switch (position) {
-                                    case OpcoesMembrosDialog.OPTION_INFO_GRUPO:
+                                    case OpcoesMembrosDialog.OPTION_VER_PERFIL:
+                                        dialog.dismiss();
                                         break;
-                                    case OpcoesMembrosDialog.OPTION_EDITAR:
+                                    case OpcoesMembrosDialog.OPTION_ENVIAR_EMAIL:
+                                        dialog.dismiss();
                                         break;
-                                    case OpcoesMembrosDialog.OPTION_EXCLUIR:
+                                    case OpcoesMembrosDialog.OPTION_REMOVER_DO_GRUPO:
+                                        dialog.dismiss();
                                         break;
                                 }
                             }
