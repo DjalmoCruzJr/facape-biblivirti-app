@@ -1,5 +1,7 @@
 package org.sysmob.biblivirti.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,8 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -21,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
 import org.sysmob.biblivirti.activities.GrupoActivity;
+import org.sysmob.biblivirti.activities.PerfilActivity;
 import org.sysmob.biblivirti.adapters.MembrosAdapter;
 import org.sysmob.biblivirti.adapters.OpcoesMembrosAdapter;
 import org.sysmob.biblivirti.dialogs.OpcoesMembrosDialog;
@@ -68,6 +74,53 @@ public class MembrosFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_membros, menu);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.fragment_membros_menu_pesquisar).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setQueryHint(getResources().getString(R.string.activity_pesquisar_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query == null || query.length() <= 0) {
+                    return false;
+                }
+                Log.i(String.format("%s: ", getClass().getSimpleName().toString()), query);
+                Intent intent = new Intent(BiblivirtiConstants.INTENT_ACTION_PESQUISAR);
+                intent.addCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_USUARIO);
+                Bundle fields = new Bundle();
+                fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
+                fields.putSerializable(Grupo.KEY_GRUPO, ((GrupoActivity) getActivity()).getGrupo());
+                intent.putExtras(fields);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //Toast.makeText(getActivity(), String.format("onQueryTextChange: %s", query), Toast.LENGTH_SHORT).show();
+                Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MembrosFragment.hasDataChanged) {
+            MembrosFragment.hasDataChanged = false;
+            this.membros = null;
+            Bundle fields = new Bundle();
+            fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
+            actionCarregarMembros(fields);
+        }
+    }
+
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
@@ -98,6 +151,11 @@ public class MembrosFragment extends Fragment {
                             } else {
                                 switch (position) {
                                     case OpcoesMembrosDialog.OPTION_VER_PERFIL:
+                                        extras = new Bundle();
+                                        extras.putInt(Usuario.FIELD_USNID, dialog.getMembro().getUsnid());
+                                        intent = new Intent(getActivity(), PerfilActivity.class);
+                                        intent.putExtras(extras);
+                                        startActivity(intent);
                                         dialog.dismiss();
                                         break;
                                     case OpcoesMembrosDialog.OPTION_ENVIAR_EMAIL:

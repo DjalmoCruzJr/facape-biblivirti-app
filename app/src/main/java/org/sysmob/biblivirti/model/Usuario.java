@@ -4,6 +4,7 @@ import org.sysmob.biblivirti.enums.EUsuarioStatus;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Usuario implements Serializable {
 
@@ -22,6 +23,7 @@ public class Usuario implements Serializable {
     public static final String FIELD_USCSTAT = "uscstat";
     public static final String FIELD_USDCADT = "usdcadt";
     public static final String FIELD_USDALDT = "usdaldt";
+    public static final String FIELD_USGROUPS = "groups";
 
     private int usnid;
     private String uscfbid;
@@ -33,11 +35,12 @@ public class Usuario implements Serializable {
     private EUsuarioStatus uscstat;
     private Date usdcadt;
     private Date usdaldt;
+    private List<Grupo> grupos;
 
     public Usuario() {
     }
 
-    public Usuario(int usnid, String uscfbid, String uscnome, String uscmail, String usclogn, String uscfoto, String uscsenh, EUsuarioStatus uscstat, Date usdcadt, Date usdaldt) {
+    public Usuario(int usnid, String uscfbid, String uscnome, String uscmail, String usclogn, String uscfoto, String uscsenh, EUsuarioStatus uscstat, Date usdcadt, Date usdaldt, List<Grupo> grupos) {
         this.usnid = usnid;
         this.uscfbid = uscfbid;
         this.uscnome = uscnome;
@@ -48,6 +51,7 @@ public class Usuario implements Serializable {
         this.uscstat = uscstat;
         this.usdcadt = usdcadt;
         this.usdaldt = usdaldt;
+        this.grupos = grupos;
     }
 
     public int getUsnid() {
@@ -130,4 +134,11 @@ public class Usuario implements Serializable {
         this.usdaldt = usdaldt;
     }
 
+    public List<Grupo> getGrupos() {
+        return grupos;
+    }
+
+    public void setGrupos(List<Grupo> grupos) {
+        this.grupos = grupos;
+    }
 }

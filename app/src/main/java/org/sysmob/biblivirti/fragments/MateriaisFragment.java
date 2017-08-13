@@ -152,7 +152,7 @@ public class MateriaisFragment extends Fragment {
         } else {
             Collections.sort(this.materiais, new MaterialComparatorByMacaldt()); // Ordena decrescente por data de alteracao
 
-            this.recyclerMateriais = (RecyclerView) this.getView().findViewById(R.id.recyclerMateriais);
+            //this.recyclerMateriais = (RecyclerView) this.getView().findViewById(R.id.recyclerMateriais);
             this.recyclerMateriais.setLayoutManager(new LinearLayoutManager(getActivity()));
             this.recyclerMateriais.setHasFixedSize(true);
             this.recyclerMateriais.setAdapter(new MateriaisAdapter(getContext(), this.materiais));

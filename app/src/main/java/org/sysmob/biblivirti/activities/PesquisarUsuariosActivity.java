@@ -21,9 +21,10 @@ import com.android.volley.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.adapters.PesquisarGruposPagerAdapter;
+import org.sysmob.biblivirti.adapters.PesquisarUsuariosPagerAdapter;
 import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.model.Grupo;
+import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
@@ -34,18 +35,19 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
 import java.util.List;
 
-public class PesquisarGruposActivity extends AppCompatActivity {
+public class PesquisarUsuariosActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
     private ProgressBar progressBar;
     private ViewPager viewPager;
-    private List<Grupo> grupos;
+    private List<Usuario> usuarios;
+    private Grupo grupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pesquisar_grupos);
+        setContentView(R.layout.activity_pesquisar_usuarios);
 
         // Carrega os widgets da tela
         loadWidgets();
@@ -81,7 +83,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), query);
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
-                    Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PesquisarUsuariosActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     Bundle fields = new Bundle();
                     fields.putString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE, query);
@@ -116,6 +118,16 @@ public class PesquisarGruposActivity extends AppCompatActivity {
     private void enableWidgets(boolean status) {
     }
 
+    private void loadFields() {
+        if (this.grupo.getUsuarios() == null) {
+            Bundle fields = new Bundle();
+            fields.putInt(Grupo.FIELD_GRNID, this.grupo.getGrnid());
+            actionCarregarMembrosDoGrupo(fields);
+        } else {
+            this.viewPager.setAdapter(new PesquisarUsuariosPagerAdapter(getSupportFragmentManager(), this.usuarios, this.grupo));
+        }
+    }
+
     private void loadWidgets() {
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -133,16 +145,13 @@ public class PesquisarGruposActivity extends AppCompatActivity {
     }
 
     /********************************************************
-     * PUBLLC METHODS
+     * PUBLIC METHODS
      *******************************************************/
-    public void loadFields() {
-        this.viewPager.setAdapter(new PesquisarGruposPagerAdapter(getSupportFragmentManager(), this.grupos));
-    }
-
     public void handleSearch(Intent intent) {
         if (intent != null && intent.getExtras() != null) {
-            if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_GRUPO)) {
+            if (intent.getAction().equalsIgnoreCase(BiblivirtiConstants.INTENT_ACTION_PESQUISAR) && intent.hasCategory(BiblivirtiConstants.INTENT_CATEGORY_PESQUISAR_USUARIO)) {
                 String query = intent.getExtras().getString(BiblivirtiConstants.FIELD_SEARCH_REFERENCE);
+                this.grupo = (Grupo) intent.getExtras().getSerializable(Grupo.KEY_GRUPO);
                 getSupportActionBar().setTitle(query);
                 if (!BiblivirtiUtils.isNetworkConnected()) {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
@@ -167,7 +176,7 @@ public class PesquisarGruposActivity extends AppCompatActivity {
             RequestData requestData = new RequestData(
                     this.getClass().getSimpleName(),
                     Request.Method.POST,
-                    BiblivirtiConstants.API_GROUP_SEARCH,
+                    BiblivirtiConstants.API_ACCOUNT_SEARCH,
                     params
             );
             new NetworkConnection(this).execute(requestData, new ITransaction() {
@@ -181,12 +190,12 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                 public void onAfterRequest(JSONObject response) {
                     if (response == null) {
                         String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
-                        Toast.makeText(PesquisarGruposActivity.this, message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(PesquisarUsuariosActivity.this, message, Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
                                 BiblivirtiDialogs.showMessageDialog(
-                                        PesquisarGruposActivity.this,
+                                        PesquisarUsuariosActivity.this,
                                         "Mensagem",
                                         String.format(
                                                 "Código: %d\n%s",
@@ -195,11 +204,11 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                                         ),
                                         "Ok"
                                 );
-                                grupos = null;
+                                usuarios = null;
                                 loadFields();
                             } else {
-                                grupos = BiblivirtiParser.parseToGrupos(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
-                                Toast.makeText(PesquisarGruposActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                usuarios = BiblivirtiParser.parseToUsuarios(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA));
+                                Toast.makeText(PesquisarUsuariosActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
                                 loadFields();
                             }
@@ -210,6 +219,58 @@ public class PesquisarGruposActivity extends AppCompatActivity {
                     }
                     progressBar.setVisibility(View.GONE);
                     enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void actionCarregarMembrosDoGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_ACCOUNT_GROUP_MEMBERS_LIST,
+                    params
+            );
+            new NetworkConnection(PesquisarUsuariosActivity.this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(PesquisarUsuariosActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                String message = String.format(
+                                        "Código: %d\n%s",
+                                        response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                        response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                );
+                                Toast.makeText(PesquisarUsuariosActivity.this, message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                grupo.setUsuarios(BiblivirtiParser.parseToUsuarios(response.getJSONArray(BiblivirtiConstants.RESPONSE_DATA)));
+                                loadFields();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/activity_perfil_menu_editar"
+        android:icon="@mipmap/ic_edit_100px_white"
+        android:title="@string/menu_activity_perfil_editar"
+        app:showAsAction="always" />
+
+</menu>

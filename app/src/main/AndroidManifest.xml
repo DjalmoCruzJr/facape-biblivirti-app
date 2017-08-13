@@ -161,6 +161,25 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <!-- Pesquisar Materiais Activity -->
+        <activity
+            android:name=".activities.PesquisarUsuariosActivity"
+            android:label="@string/activity_pesquisar_label"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/BiblivirtiTheme.PesquisarActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="org.sysmob.biblivirti.intent.category.PESQUISAR_USUARIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
         <!-- Grupo Activity -->
         <activity
             android:name=".activities.GrupoActivity"

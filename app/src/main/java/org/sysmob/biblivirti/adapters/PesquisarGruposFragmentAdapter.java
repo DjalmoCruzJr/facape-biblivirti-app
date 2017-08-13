@@ -2,9 +2,7 @@ package org.sysmob.biblivirti.adapters;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,27 +10,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.activities.InfoGrupoActivity;
 import org.sysmob.biblivirti.comparators.UsuarioComparatorByUsnid;
 import org.sysmob.biblivirti.enums.ETipoGrupo;
-import org.sysmob.biblivirti.fragments.GruposFragment;
-import org.sysmob.biblivirti.fragments.PesquisarGruposFragment;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
-import org.sysmob.biblivirti.network.ITransaction;
-import org.sysmob.biblivirti.network.NetworkConnection;
-import org.sysmob.biblivirti.network.RequestData;
-import org.sysmob.biblivirti.utils.BiblivirtiConstants;
-import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
-import org.sysmob.biblivirti.utils.BiblivirtiParser;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,14 +26,14 @@ import java.util.List;
  * Created by djalmocruzjr on 30/01/2017.
  */
 
-public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<PesquisaGruposFragmentAdapter.ViewHolder> {
+public class PesquisarGruposFragmentAdapter extends RecyclerView.Adapter<PesquisarGruposFragmentAdapter.ViewHolder> {
 
     private Context context;
     private OnItemClickListener onItemClickListener;
     private List<Grupo> grupos;
     private Usuario loggedUser;
 
-    public PesquisaGruposFragmentAdapter(Context context, List<Grupo> grupos, Usuario loggedUser) {
+    public PesquisarGruposFragmentAdapter(Context context, List<Grupo> grupos, Usuario loggedUser) {
         this.context = context;
         this.grupos = grupos;
         this.loggedUser = loggedUser;
@@ -86,19 +71,16 @@ public class PesquisaGruposFragmentAdapter extends RecyclerView.Adapter<Pesquisa
         if (Collections.binarySearch(grupo.getUsuarios(), this.loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
             holder.buttonSairParticiparGrupo.setText(context.getString(R.string.adapter_pesquisar_grupos_fragment_button_sair_text));
             holder.buttonSairParticiparGrupo.setBackgroundColor(context.getResources().getColor(R.color.colorRedDark));
+            holder.buttonSairParticiparGrupo.setVisibility(this.loggedUser.getUsnid() != grupo.getAdmin().getUsnid() ? View.VISIBLE : View.GONE);
         } else {
             holder.buttonSairParticiparGrupo.setText(context.getString(R.string.adapter_pesquisar_grupos_fragment_button_participar_text));
             holder.buttonSairParticiparGrupo.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            holder.buttonSairParticiparGrupo.setVisibility(grupo.getGrctipo() == ETipoGrupo.ABERTO ? View.VISIBLE : View.GONE);
         }
         holder.buttonSairParticiparGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Verifica se o usuario logado EH um membro do grupo
-                if (Collections.binarySearch(grupo.getUsuarios(), loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
-                    Toast.makeText(context, String.format("buttonSairParticiparGrupo.onClick (action: %s, position: %d)", "SAIR", position), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, String.format("buttonSairParticiparGrupo.onClick (action: %s, position: %d)", "PARTICIPAR", position), Toast.LENGTH_SHORT).show();
-                }
+                onItemClickListener.onCLick(view, position);
             }
         });
     }

@@ -326,9 +326,9 @@ public class InfoGrupoActivity extends AppCompatActivity {
                                         "Ok"
                                 );
                             } else {
+                                buttonSairParticiparGrupo.setVisibility(View.GONE);
                                 Toast.makeText(InfoGrupoActivity.this, response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), String.format("%s (ID %d)", response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), grupo.getGrnid()));
-                                buttonSairParticiparGrupo.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

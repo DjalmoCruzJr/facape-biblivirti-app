@@ -21,14 +21,14 @@ import java.util.List;
  * Created by djalmocruzjr on 30/01/2017.
  */
 
-public class PesquisaMateriaisFragmentAdapter extends RecyclerView.Adapter<PesquisaMateriaisFragmentAdapter.ViewHolder> {
+public class PesquisarMateriaisFragmentAdapter extends RecyclerView.Adapter<PesquisarMateriaisFragmentAdapter.ViewHolder> {
 
     private Context context;
     private OnItemClickListener onItemClickListener;
     private List<Material> materiais;
     private SimpleDateFormat dateFormat;
 
-    public PesquisaMateriaisFragmentAdapter(Context context, List<Material> materiais) {
+    public PesquisarMateriaisFragmentAdapter(Context context, List<Material> materiais) {
         this.context = context;
         this.materiais = materiais;
         this.dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");

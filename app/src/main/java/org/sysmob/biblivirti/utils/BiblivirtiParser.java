@@ -42,6 +42,7 @@ public abstract class BiblivirtiParser {
             usuario.setUscstat(EUsuarioStatus.ATIVO.getValue() == json.getString(Usuario.FIELD_USCSTAT).charAt(0) ? EUsuarioStatus.ATIVO : EUsuarioStatus.INATIVO);
             usuario.setUsdcadt(Timestamp.valueOf(json.getString(Usuario.FIELD_USDCADT)));
             usuario.setUsdaldt(Timestamp.valueOf(json.getString(Usuario.FIELD_USDALDT)));
+            usuario.setGrupos(json.opt(Usuario.FIELD_USGROUPS) != null ? parseToGrupos(json.getJSONArray(Usuario.FIELD_USGROUPS)) : null);
         }
         return usuario;
     }

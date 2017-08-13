@@ -71,7 +71,9 @@
     <string name="activity_perfil_label">Perfil</string>
     <string name="menu_activity_novo_grupo_salvar">Salvar</string>
     <string name="menu_activity_info_grupo_editar">Editar</string>
+    <string name="menu_activity_perfil_editar">Editar</string>
     <string name="menu_fragment_grupos_estudo_pesquisar">@string/menu_activity_pesquisar_pesquisar</string>
+    <string name="menu_fragment_membros_pesquisar">@string/menu_activity_pesquisar_pesquisar</string>
     <string name="menu_activity_pesquisar_pesquisar">Pesquisar...</string>
     <string name="activity_pesquisar_hint">Pesquisar...</string>
     <string name="activity_pesquisar_label">Pesquisar...</string>
@@ -105,6 +107,10 @@
     <string name="activity_novo_editar_material_label_insert">Novo Material</string>
     <string name="activity_novo_editar_material_label_edit">Editar Material</string>
     <string name="menu_activity_editar_senha_salvar">Salvar</string>
+    <string name="adapter_list_pesquisar_usuarios_button_adicionar_remover_usuario_adicionar">Adicionar ao Grupo</string>
+    <string name="adapter_list_pesquisar_usuarios_button_adicionar_remover_usuario_remover">Remover do Grupo</string>
+    <string name="adapter_list_perfil_grupos_button_sair_participar_sair">Sair do Grupo</string>
+    <string name="adapter_list_perfil_grupos_button_sair_participar_participar">Participar do Grupo</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>

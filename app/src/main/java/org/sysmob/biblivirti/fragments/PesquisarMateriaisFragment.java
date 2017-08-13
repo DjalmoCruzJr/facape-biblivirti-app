@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.sysmob.biblivirti.R;
-import org.sysmob.biblivirti.adapters.PesquisaMateriaisFragmentAdapter;
+import org.sysmob.biblivirti.adapters.PesquisarMateriaisFragmentAdapter;
 import org.sysmob.biblivirti.model.Material;
 
 import java.util.List;
@@ -38,8 +38,8 @@ public class PesquisarMateriaisFragment extends Fragment {
         this.recyclerMateriais = (RecyclerView) view.findViewById(R.id.recyclerGrupos);
         this.recyclerMateriais.setLayoutManager(new LinearLayoutManager(getActivity()));
         this.recyclerMateriais.setHasFixedSize(true);
-        this.recyclerMateriais.setAdapter(new PesquisaMateriaisFragmentAdapter(getContext(), this.materiais));
-        ((PesquisaMateriaisFragmentAdapter) this.recyclerMateriais.getAdapter()).setOnItemClickListener(new PesquisaMateriaisFragmentAdapter.OnItemClickListener() {
+        this.recyclerMateriais.setAdapter(new PesquisarMateriaisFragmentAdapter(getContext(), this.materiais));
+        ((PesquisarMateriaisFragmentAdapter) this.recyclerMateriais.getAdapter()).setOnItemClickListener(new PesquisarMateriaisFragmentAdapter.OnItemClickListener() {
             @Override
             public void onCLick(View view, int position) {
                 Toast.makeText(getContext(), String.format("recyclerMateriais.onCLick(): %d", position), Toast.LENGTH_SHORT).show();
