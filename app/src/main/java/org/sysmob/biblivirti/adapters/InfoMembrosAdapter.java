@@ -54,7 +54,7 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Usuario usuario = this.usuarios.get(position);
         holder.imageAdmin.setVisibility(this.admin.getUsnid() == usuario.getUsnid() ? View.VISIBLE : View.GONE);
         holder.imageUSCFOTO.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_app_user_80px));
@@ -64,7 +64,14 @@ public class InfoMembrosAdapter extends RecyclerView.Adapter<InfoMembrosAdapter.
         holder.editUSCNOME.setText((usuario.getUscnome() != null && !usuario.getUscnome().equals("null")) ? usuario.getUscnome().toString() : usuario.getUsclogn().toString());
         holder.editUSCMAIL.setText(usuario.getUscmail().toString());
         holder.editGRDCADT.setText(new SimpleDateFormat("dd/MM/yyy HH:mm").format(usuario.getUsdcadt()));
-        holder.buttonRemoverDoGrupo.setVisibility(this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
+        holder.buttonRemoverDoGrupo.setVisibility(this.admin.getUsnid() != usuario.getUsnid() && this.admin.getUsnid() == this.loggedUser.getUsnid() ? View.VISIBLE : View.GONE);
+        holder.buttonRemoverDoGrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.onCLick(view, position);
+            }
+        });
+
     }
 
     @Override

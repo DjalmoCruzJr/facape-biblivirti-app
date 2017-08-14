@@ -57,7 +57,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
     private TextView textQtdMembros;
     private Button buttonSairParticiparGrupo;
     private Grupo grupo;
-    private Usuario loggedUser;
+    private Usuario usuarioLogado;
     private boolean showMenuOptions;
 
     @Override
@@ -135,7 +135,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
     }
 
     private void loadWidgets() {
-        this.loggedUser = BiblivirtiApplication.getInstance().getLoggedUser();
+        this.usuarioLogado = BiblivirtiApplication.getInstance().getLoggedUser();
         this.activityLayout = (LinearLayout) findViewById(R.id.activityLayout);
         this.activityLayout.setVisibility(View.GONE);
 
@@ -162,13 +162,13 @@ public class InfoGrupoActivity extends AppCompatActivity {
                     Toast.makeText(InfoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
                     // Verifica se o usuario logado EH membro do grupo em questao
-                    if (Collections.binarySearch(grupo.getUsuarios(), loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+                    if (Collections.binarySearch(grupo.getUsuarios(), usuarioLogado, new UsuarioComparatorByUsnid()) >= 0) {
                         try {
                             if (new GroupBO(InfoGrupoActivity.this).validateUnsubscribe()) {
                                 Bundle fields = new Bundle();
                                 fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
                                 fields.putInt(Usuario.FIELD_USNID, grupo.getAdmin().getUsnid());
-                                fields.putInt(Usuario.FIELD_USNID2, loggedUser.getUsnid());
+                                fields.putInt(Usuario.FIELD_USNID2, usuarioLogado.getUsnid());
                                 actionSairGrupo(fields);
                             }
                         } catch (ValidationException e) {
@@ -179,7 +179,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
                             if (new GroupBO(InfoGrupoActivity.this).validateSubscribe()) {
                                 Bundle fields = new Bundle();
                                 fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
-                                fields.putInt(Usuario.FIELD_USNID, loggedUser.getUsnid());
+                                fields.putInt(Usuario.FIELD_USNID, usuarioLogado.getUsnid());
                                 actionParticiparGrupo(fields);
                             }
                         } catch (ValidationException e) {
@@ -193,7 +193,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
     }
 
     private void loadFields() {
-        if (this.loggedUser.getUsnid() == this.grupo.getAdmin().getUsnid()) {
+        if (this.usuarioLogado.getUsnid() == this.grupo.getAdmin().getUsnid()) {
             this.showMenuOptions = true;
             this.invalidateOptionsMenu();
         }
@@ -209,7 +209,7 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.textGRDCADT.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(this.grupo.getGrdcadt()));
         this.textQtdMembros.setText(this.textQtdMembros.getText().toString().replace("xx", String.valueOf(this.grupo.getUsuarios().size())));
 
-        if (Collections.binarySearch(grupo.getUsuarios(), this.loggedUser, new UsuarioComparatorByUsnid()) >= 0) {
+        if (Collections.binarySearch(grupo.getUsuarios(), this.usuarioLogado, new UsuarioComparatorByUsnid()) >= 0) {
             this.buttonSairParticiparGrupo.setText(getResources().getString(R.string.activity_info_grupo_button_sairparticipar_sair));
             this.buttonSairParticiparGrupo.setBackgroundColor(this.getResources().getColor(R.color.colorRedDark));
         } else {
@@ -220,6 +220,28 @@ public class InfoGrupoActivity extends AppCompatActivity {
         this.recyclerMembros.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerMembros.setHasFixedSize(true);
         this.recyclerMembros.setAdapter(new InfoMembrosAdapter(this, grupo.getUsuarios(), grupo.getAdmin()));
+        ((InfoMembrosAdapter) this.recyclerMembros.getAdapter()).setOnItemClickListener(new InfoMembrosAdapter.OnItemClickListener() {
+            @Override
+            public void onCLick(View view, int position) {
+                if (!BiblivirtiUtils.isNetworkConnected()) {
+                    String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
+                    Toast.makeText(InfoGrupoActivity.this, message, Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        if (new GroupBO(InfoGrupoActivity.this).validateUnsubscribe()) {
+                            Bundle fields = new Bundle();
+                            fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                            fields.putInt(Usuario.FIELD_USNID, grupo.getAdmin().getUsnid());
+                            fields.putInt(Usuario.FIELD_USNID2, grupo.getUsuarios().get(position).getUsnid());
+                            actionSairGrupo(fields);
+                        }
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
 
         this.activityLayout.setVisibility(View.VISIBLE);
     }

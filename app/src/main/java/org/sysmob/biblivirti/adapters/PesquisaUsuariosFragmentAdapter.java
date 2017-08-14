@@ -54,7 +54,7 @@ public class PesquisaUsuariosFragmentAdapter extends RecyclerView.Adapter<Pesqui
 
     @Override
     public int getItemCount() {
-        return this.usuarioLogado != null ? this.usuarios.size() : 0;
+        return this.usuarios != null ? this.usuarios.size() : 0;
     }
 
     @Override

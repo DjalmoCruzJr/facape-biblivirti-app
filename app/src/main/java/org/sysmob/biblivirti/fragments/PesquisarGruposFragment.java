@@ -50,8 +50,11 @@ public class PesquisarGruposFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.usuarioLogado = BiblivirtiApplication.getInstance().getLoggedUser();
+
         View view = inflater.inflate(R.layout.fragment_pesquisar_grupos, container, false);
 
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         this.layoutEmpty = (LinearLayout) view.findViewById(R.id.layoutEmpty);
         this.layoutEmpty.setVisibility(this.grupos == null ? View.VISIBLE : View.GONE);
         this.recyclerGrupos = (RecyclerView) view.findViewById(R.id.recyclerGrupos);
@@ -159,7 +162,8 @@ public class PesquisarGruposFragment extends Fragment {
                             } else {
                                 Toast.makeText(PesquisarGruposFragment.this.getContext(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
-                                ((PesquisarGruposActivity) getActivity()).loadFields();
+                                GruposFragment.hasDataChanged = true;
+                                ((PesquisarGruposActivity) getActivity()).finish();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
@@ -221,7 +225,8 @@ public class PesquisarGruposFragment extends Fragment {
                             } else {
                                 Toast.makeText(PesquisarGruposFragment.this.getContext(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
                                 Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
-                                ((PesquisarGruposActivity) getActivity()).loadFields();
+                                GruposFragment.hasDataChanged = true;
+                                ((PesquisarGruposActivity) getActivity()).finish();
                             }
                         } catch (JSONException e) {
                             Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());

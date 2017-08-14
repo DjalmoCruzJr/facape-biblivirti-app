@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,13 +29,17 @@ import org.sysmob.biblivirti.activities.GrupoActivity;
 import org.sysmob.biblivirti.activities.PerfilActivity;
 import org.sysmob.biblivirti.adapters.MembrosAdapter;
 import org.sysmob.biblivirti.adapters.OpcoesMembrosAdapter;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
+import org.sysmob.biblivirti.business.GroupBO;
 import org.sysmob.biblivirti.dialogs.OpcoesMembrosDialog;
+import org.sysmob.biblivirti.exceptions.ValidationException;
 import org.sysmob.biblivirti.model.Grupo;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.network.ITransaction;
 import org.sysmob.biblivirti.network.NetworkConnection;
 import org.sysmob.biblivirti.network.RequestData;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
+import org.sysmob.biblivirti.utils.BiblivirtiDialogs;
 import org.sysmob.biblivirti.utils.BiblivirtiParser;
 import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 
@@ -48,8 +52,10 @@ public class MembrosFragment extends Fragment {
     private ProgressBar progressBar;
     private LinearLayout layoutEmpty;
     private RecyclerView recyclerMembros;
-    private FloatingActionButton buttonNovoMembro;
+    private Button buttonSairGrupo;
     private List<Usuario> membros;
+    private Usuario usuarioLogado;
+    private Grupo grupo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,14 +67,41 @@ public class MembrosFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.grupo = ((GrupoActivity) getActivity()).getGrupo();
+        this.usuarioLogado = BiblivirtiApplication.getInstance().getLoggedUser();
+
         View view = inflater.inflate(R.layout.fragment_membros, container, false);
 
         this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         this.layoutEmpty = (LinearLayout) view.findViewById(R.id.layoutEmpty);
-        this.buttonNovoMembro = (FloatingActionButton) view.findViewById(R.id.buttonNovoMembro);
+        this.buttonSairGrupo = (Button) view.findViewById(R.id.buttonSairGrupo);
+        this.buttonSairGrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (new GroupBO(getActivity()).validateUnsubscribe()) {
+                        Bundle fields = new Bundle();
+                        fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                        fields.putInt(Usuario.FIELD_USNID, grupo.getAdmin().getUsnid());
+                        fields.putInt(Usuario.FIELD_USNID2, usuarioLogado.getUsnid());
+                        actionSairGrupo(fields);
+                    }
+                } catch (ValidationException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         Bundle fields = new Bundle();
-        fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity) getActivity()).getGrupo().getGrnid());
+        fields.putInt(Grupo.FIELD_GRNID, ((GrupoActivity)
+
+                getActivity()).
+
+                getGrupo().
+
+                getGrnid());
+
         actionCarregarMembros(fields);
 
         return view;
@@ -124,6 +157,14 @@ public class MembrosFragment extends Fragment {
     /********************************************************
      * PRIVATE METHODS
      *******************************************************/
+
+    private void enableWidgets(boolean status) {
+        this.progressBar.setEnabled(status);
+        this.layoutEmpty.setEnabled(status);
+        this.recyclerMembros.setEnabled(status);
+        this.buttonSairGrupo.setEnabled(status);
+    }
+
     private void loadFields() {
         // Verifica se nenhum membro foi encontrado
         if (membros == null) {
@@ -159,12 +200,25 @@ public class MembrosFragment extends Fragment {
                                         dialog.dismiss();
                                         break;
                                     case OpcoesMembrosDialog.OPTION_ENVIAR_EMAIL:
+                                        Toast.makeText(getActivity(), "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                         break;
                                     case OpcoesMembrosDialog.OPTION_REMOVER_DO_GRUPO:
+                                        try {
+                                            if (new GroupBO(getActivity()).validateUnsubscribe()) {
+                                                Bundle fields = new Bundle();
+                                                fields.putInt(Grupo.FIELD_GRNID, grupo.getGrnid());
+                                                fields.putInt(Usuario.FIELD_USNID, grupo.getAdmin().getUsnid());
+                                                fields.putInt(Usuario.FIELD_USNID2, dialog.getMembro().getUsnid());
+                                                actionSairGrupo(fields);
+                                            }
+                                        } catch (ValidationException e) {
+                                            e.printStackTrace();
+                                        }
                                         dialog.dismiss();
                                         break;
                                 }
+
                             }
                         }
                     });
@@ -173,11 +227,8 @@ public class MembrosFragment extends Fragment {
                 }
             });
         }
-    }
 
-    /********************************************************
-     * PUBLIC METHODS
-     *******************************************************/
+    }
 
     /********************************************************
      * ACTION METHODS
@@ -236,4 +287,76 @@ public class MembrosFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    public void actionSairGrupo(Bundle fields) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Grupo.FIELD_GRNID, fields.getInt(Grupo.FIELD_GRNID));
+            params.put(Usuario.FIELD_USNID, fields.getInt(Usuario.FIELD_USNID));
+            params.put(Usuario.FIELD_USNID2, fields.getInt(Usuario.FIELD_USNID2));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_GROUP_UNSUBSCRIBE,
+                    params
+            );
+            new NetworkConnection(MembrosFragment.this.getContext()).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(MembrosFragment.this.getContext(), message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                String message = String.format(
+                                        "Código: %d\n%s\n%s",
+                                        response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                        response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                        BiblivirtiUtils.createStringErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS))
+                                );
+                                BiblivirtiDialogs.showMessageDialog(
+                                        MembrosFragment.this.getContext(),
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS))
+                                        ),
+                                        "Ok"
+                                );
+                                Toast.makeText(MembrosFragment.this.getContext(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MembrosFragment.this.getContext(), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE), Toast.LENGTH_SHORT).show();
+                                Log.i(String.format("%s:", getClass().getSimpleName().toString()), response.getString(BiblivirtiConstants.RESPONSE_MESSAGE));
+                                GruposFragment.hasDataChanged = true;
+                                ((GrupoActivity) getActivity()).finish();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    layoutEmpty.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

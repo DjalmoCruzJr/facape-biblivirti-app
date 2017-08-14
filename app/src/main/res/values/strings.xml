@@ -113,6 +113,7 @@
     <string name="adapter_list_pesquisar_usuarios_button_adicionar_remover_usuario_remover">Remover do Grupo</string>
     <string name="adapter_list_perfil_grupos_button_sair_participar_sair">Sair do Grupo</string>
     <string name="adapter_list_perfil_grupos_button_sair_participar_participar">Participar do Grupo</string>
+    <string name="fragment_membros_button_sair_grupo_text">Sair do Grupo</string>
 
     <string-array name="dialog_opcoes_grupos_texts">
         <item>Informações do Grupo</item>

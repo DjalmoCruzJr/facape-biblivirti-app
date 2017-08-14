@@ -146,21 +146,26 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
                     String message = "Você não está conectado a internet.\nPor favor, verifique sua conexão e tente novamente!";
                     Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
                 } else {
-                    BiblivirtiDialogs.showInputDialog(ConfirmarEmailActivity.this, R.layout.dialog_confirmar_email, "Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                TextView editEmail = (TextView) ((AlertDialog) dialog).findViewById(R.id.editEmail);
-                                if (new AccountBO(ConfirmarEmailActivity.this).validateRecovery()) {
-                                    Bundle fields = new Bundle();
-                                    fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
-                                    actionReenviarToken(fields);
+                    BiblivirtiDialogs.showInputDialog(
+                            ConfirmarEmailActivity.this,
+                            R.layout.dialog_confirmar_email,
+                            "Ok",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        TextView editEmail = (TextView) ((AlertDialog) dialog).findViewById(R.id.editEmail);
+                                        if (new AccountBO(ConfirmarEmailActivity.this).validateRecovery()) {
+                                            Bundle fields = new Bundle();
+                                            fields.putString(Usuario.FIELD_USCMAIL, editEmail.getText().toString().trim());
+                                            actionReenviarToken(fields);
+                                        }
+                                    } catch (ValidationException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            } catch (ValidationException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    });
+                    );
                 }
             }
         });
@@ -178,9 +183,85 @@ public class ConfirmarEmailActivity extends AppCompatActivity {
     /********************************************************
      * ACTION METHODS
      *******************************************************/
+    /*****************************************************
+     * ACTION METHODS
+     *****************************************************/
     public void actionReenviarToken(Bundle fields) {
-        Log.i(getClass().getSimpleName().toString(), String.format("E-mail=%s:", fields.get(Usuario.FIELD_USCMAIL)));
-        Toast.makeText(ConfirmarEmailActivity.this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject params = new JSONObject();
+            params.put(Usuario.FIELD_USCMAIL, fields.getString(Usuario.FIELD_USCMAIL));
+            RequestData requestData = new RequestData(
+                    this.getClass().getSimpleName(),
+                    Request.Method.POST,
+                    BiblivirtiConstants.API_ACCOUNT_ACTIVATION_RESEND,
+                    params
+            );
+            new NetworkConnection(this).execute(requestData, new ITransaction() {
+                @Override
+                public void onBeforeRequest() {
+                    progressBar.setVisibility(View.VISIBLE);
+                    enableWidgets(false);
+                }
+
+                @Override
+                public void onAfterRequest(JSONObject response) {
+                    if (response == null) {
+                        String message = "Não houve resposta do servidor.\nTente novamente e em caso de falha entre em contato com a equipe de suporte do Biblivirti.";
+                        Toast.makeText(ConfirmarEmailActivity.this, message, Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            if (response.getInt(BiblivirtiConstants.RESPONSE_CODE) != BiblivirtiConstants.RESPONSE_CODE_OK) {
+                                BiblivirtiDialogs.showMessageDialog(
+                                        ConfirmarEmailActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE),
+                                                BiblivirtiUtils.createStringErrors(response.opt(BiblivirtiConstants.RESPONSE_ERRORS) != null ? response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS) : null)
+                                        ),
+                                        "Ok"
+                                );
+                                // Carrega as mensagens de erro nos widgets
+                                loadErrors(response.getJSONObject(BiblivirtiConstants.RESPONSE_ERRORS));
+                            } else {
+                                final String responseMessage = response.getString(BiblivirtiConstants.RESPONSE_MESSAGE);
+                                final JSONObject responseData = response.getJSONObject(BiblivirtiConstants.RESPONSE_DATA);
+                                BiblivirtiDialogs.showMessageDialog(
+                                        ConfirmarEmailActivity.this,
+                                        "Mensagem",
+                                        String.format(
+                                                "Código: %d\n%s",
+                                                response.getInt(BiblivirtiConstants.RESPONSE_CODE),
+                                                response.getString(BiblivirtiConstants.RESPONSE_MESSAGE)
+                                        ),
+                                        "Ok",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(ConfirmarEmailActivity.this, responseMessage, Toast.LENGTH_LONG).show();
+                                                Log.i(String.format("%s:", RecuperarSenhaActivity.class.getSimpleName().toString()), responseMessage);
+                                            }
+                                        }
+                                );
+                            }
+                        } catch (JSONException e) {
+                            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    enableWidgets(true);
+                }
+
+                @Override
+                public void onAfterRequest(String response) {
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(String.format("%s:", getClass().getSimpleName().toString()), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void actionValidarToken(Bundle fields) {

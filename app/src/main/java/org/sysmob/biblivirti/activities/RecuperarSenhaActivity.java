@@ -121,7 +121,6 @@ public class RecuperarSenhaActivity extends AppCompatActivity {
     /*****************************************************
      * ACTION METHODS
      *****************************************************/
-
     public void actionConfirmarEmail(Bundle fields) {
         try {
             JSONObject params = new JSONObject();

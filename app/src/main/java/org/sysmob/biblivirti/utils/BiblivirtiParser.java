@@ -42,7 +42,7 @@ public abstract class BiblivirtiParser {
             usuario.setUscstat(EUsuarioStatus.ATIVO.getValue() == json.getString(Usuario.FIELD_USCSTAT).charAt(0) ? EUsuarioStatus.ATIVO : EUsuarioStatus.INATIVO);
             usuario.setUsdcadt(Timestamp.valueOf(json.getString(Usuario.FIELD_USDCADT)));
             usuario.setUsdaldt(Timestamp.valueOf(json.getString(Usuario.FIELD_USDALDT)));
-            usuario.setGrupos(json.opt(Usuario.FIELD_USGROUPS) != null ? parseToGrupos(json.getJSONArray(Usuario.FIELD_USGROUPS)) : null);
+            usuario.setGrupos(json.opt(Usuario.FIELD_USGROUPS) != null && json.optJSONArray(Usuario.FIELD_USGROUPS) != null ? parseToGrupos(json.getJSONArray(Usuario.FIELD_USGROUPS)) : null);
         }
         return usuario;
     }
@@ -110,7 +110,7 @@ public abstract class BiblivirtiParser {
 
     public static List<Grupo> parseToGrupos(JSONArray json) throws JSONException {
         List<Grupo> grupos = null;
-        if (json != null) {
+        if (json != null && !json.equals("null")) {
             grupos = new ArrayList<>();
             for (int i = 0; i < json.length(); i++) {
                 Grupo grupo = null;
