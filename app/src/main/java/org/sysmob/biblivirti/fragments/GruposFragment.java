@@ -198,7 +198,7 @@ public class GruposFragment extends Fragment {
                                                         getContext(),
                                                         "Confirmaçao",
                                                         "Deseja realmete excluir este grupo ?",
-                                                        "Sim,",
+                                                        "Sim",
                                                         "Não",
                                                         new DialogInterface.OnClickListener() {
                                                             @Override
