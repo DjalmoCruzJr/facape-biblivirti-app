@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.sysmob.biblivirti.R;
+import org.sysmob.biblivirti.application.BiblivirtiApplication;
 import org.sysmob.biblivirti.fragments.GruposFragment;
 import org.sysmob.biblivirti.model.Usuario;
 import org.sysmob.biblivirti.utils.BiblivirtiConstants;
@@ -125,6 +126,11 @@ public class HomeActivity extends AppCompatActivity {
                 fragment = currentItemId != item.getItemId() ? new GruposFragment() : currentFragment;
                 break;
             case R.id.drawer_menu_perfil:
+                Bundle extras = new Bundle();
+                extras.putInt(Usuario.FIELD_USNID, BiblivirtiApplication.getInstance().getLoggedUser().getUsnid());
+                Intent intent = new Intent(this, PerfilActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
                 break;
             case R.id.drawer_menu_notificacoes:
                 break;

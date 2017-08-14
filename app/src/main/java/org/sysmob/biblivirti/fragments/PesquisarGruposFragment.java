@@ -61,6 +61,7 @@ public class PesquisarGruposFragment extends Fragment {
         ((PesquisarGruposFragmentAdapter) this.recyclerGrupos.getAdapter()).setOnItemClickListener(new PesquisarGruposFragmentAdapter.OnItemClickListener() {
             @Override
             public void onCLick(View view, int position) {
+                // Verifica se o usuario clicado ja EH membro do grupo (ACAO SAIR DO GRUPO)
                 if (Collections.binarySearch(grupos.get(position).getUsuarios(), usuarioLogado, new UsuarioComparatorByUsnid()) >= 0) {
                     try {
                         if (new GroupBO(getActivity()).validateUnsubscribe()) {
@@ -73,7 +74,7 @@ public class PesquisarGruposFragment extends Fragment {
                     } catch (ValidationException e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else { // Verifica se o usuario clicado NAO EH membro do grupo (ACAO PARTICIPAR DO GRUPO)
                     try {
                         if (new GroupBO(getActivity()).validateSubscribe()) {
                             Bundle fields = new Bundle();

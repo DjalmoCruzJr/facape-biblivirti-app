@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
 
 public class PerfilActivity extends AppCompatActivity {
 
+    public static boolean hasDataChanged;
+
     private View activityPerfil;
     private View layoutEmpty;
     private ProgressBar progressBar;
@@ -98,9 +100,7 @@ public class PerfilActivity extends AppCompatActivity {
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 } else {
                     fields = new Bundle();
-                    fields.putInt(Usuario.FIELD_USNID, this.usuario.getUsnid());
-                    fields.putInt(BiblivirtiConstants.ACTIVITY_MODE_KEY, BiblivirtiConstants.ACTIVITY_MODE_EDITING);
-                    fields.putString(BiblivirtiConstants.ACTIVITY_TITLE, getString(R.string.activity_editar_perfil_label));
+                    fields.putSerializable(Usuario.KEY_USUARIO, this.usuario);
                     intent = new Intent(this, EditarPerfilActivity.class);
                     intent.putExtras(fields);
                     startActivity(intent);
@@ -109,6 +109,18 @@ public class PerfilActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (PerfilActivity.hasDataChanged) {
+            PerfilActivity.hasDataChanged = false;
+            this.usuario = null;
+            Bundle fields = new Bundle();
+            fields.putInt(Usuario.FIELD_USNID, getIntent().getExtras().getInt(Usuario.FIELD_USNID));
+            actionCarregarUsuario(fields);
+        }
     }
 
     /********************************************************

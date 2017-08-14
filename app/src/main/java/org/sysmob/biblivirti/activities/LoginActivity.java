@@ -31,10 +31,8 @@ import org.sysmob.biblivirti.utils.BiblivirtiUtils;
 public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
-
     private EditText editEmail;
     private EditText editSenha;
-
     private Button buttonEntrar;
     private Button buttonRecuperarSenha;
     private Button buttonNovaConta;
@@ -45,22 +43,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        String email = BiblivirtiPreferences.getProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_EMAIL);
-        String senha = BiblivirtiPreferences.getProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_SENHA);
-
-        // Verifica se o email e a senha ja estao salvos nas preferencias do app
-        if ((email != null && !email.isEmpty()) && (senha != null && !senha.isEmpty())) {
-            Bundle fields = new Bundle();
-            fields.putString("uscmail", email);
-            fields.putString("uscsenh", senha);
-            actionLogin(fields);
-        }
-
         // Carrega os widgets da tela
         loadWidgets();
 
         // Carrega os listeners do widgets
         loadListeners();
+
+        String email = BiblivirtiPreferences.getProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_EMAIL);
+        String senha = BiblivirtiPreferences.getProperty(this, BiblivirtiConstants.PREFERENCE_PROPERTY_SENHA);
+        // Verifica se o email e a senha ja estao salvos nas preferencias do app
+        if ((email != null && !email.isEmpty()) && (senha != null && !senha.isEmpty())) {
+            Bundle fields = new Bundle();
+            fields.putString(Usuario.FIELD_USCMAIL, email);
+            fields.putString(Usuario.FIELD_USCSENH, senha);
+            actionLogin(fields);
+        }
     }
 
     /********************************************************
@@ -203,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
     public void actionFacebookLogin() {
         this.progressBar.setVisibility(View.VISIBLE);
         this.enableWidgets(false);
-        Toast.makeText(this, "Esta funcionalidade ainda não foi implementacada!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Esta funcionalidade ainda não foi implementada!", Toast.LENGTH_SHORT).show();
         this.enableWidgets(true);
         this.progressBar.setVisibility(View.GONE);
     }

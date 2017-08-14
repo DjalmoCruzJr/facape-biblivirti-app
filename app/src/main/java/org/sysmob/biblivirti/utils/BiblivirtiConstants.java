@@ -56,7 +56,7 @@ public abstract class BiblivirtiConstants {
     /**
      * Constantes que definem a localizacao da API de servicos
      */
-    public static final String SERVER_HOST = "192.168.1.4";
+    public static final String SERVER_HOST = "192.168.1.2";
     public static final int SERVER_PORT = 8081;
     public static final String SERVER_API = "http://" + SERVER_HOST + ":" + SERVER_PORT + "/projetos/sysmob/biblivirti/API";
 

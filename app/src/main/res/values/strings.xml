@@ -27,6 +27,8 @@
     <string name="activity_editar_grupo_label">Editar Grupo</string>
     <string name="activity_novo_grupo_text_image_info_set">Toque na imagem para selecionar uma foto.</string>
     <string name="activity_novo_grupo_text_image_info_unset">Toque na imagem para remover uma foto.</string>
+    <string name="activity_editar_perfil_text_image_info_set">Toque na imagem para selecionar uma foto.</string>
+    <string name="activity_editar_perfil_text_image_info_unset">Toque na imagem para remover uma foto.</string>
     <string name="activity_novo_grupo_hint_nome_grupo">Nome do Grupo (Ex: Sysmob)</string>
     <string name="activity_novo_grupo_hint_area_interesse">Área de Interesse (Ex: Física)</string>
     <string name="activity_novo_material_label">Novo Matetial</string>
