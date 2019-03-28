@@ -132,7 +132,7 @@
   </tr>
   <tr>
     <td><img src="https://raw.githubusercontent.com/DjalmoCruzJr/sistema-facape-biblivirti-api/master/_prototyping/45_pesquisa_de_duvidas.png"></td>
-    <td><img src="https://raw.githubusercontent.com/DjalmoCruzJr/sistema-facape-biblivirti-api/master/_prototyping/"></td>
+    <td><img src="https://raw.githubusercontent.com/DjalmoCruzJr/sistema-facape-biblivirti-api/master/_prototyping/46%20-%20Editar%20Senha.png"></td>
     <td><img src="https://raw.githubusercontent.com/DjalmoCruzJr/sistema-facape-biblivirti-api/master/_prototyping/47_confirmar_recuperacao.png"></td>
   </tr>
 </table>
